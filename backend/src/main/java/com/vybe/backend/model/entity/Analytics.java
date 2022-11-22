@@ -10,7 +10,7 @@ public class Analytics {
     /**
      * List of badges acquired 
      */
-    private List<String> badges;
+    private List<Badge> badges;
 
     /**
      * points of the owner of the analytics instance

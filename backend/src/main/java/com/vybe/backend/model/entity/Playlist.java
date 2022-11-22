@@ -25,6 +25,11 @@ public class Playlist {
     private List<String> permittedGenres;
 
     /**
+     * List of genres that the song requests are not permitted in
+     */
+    private List<String> bannedGenres;
+
+    /**
      * Reference to the currently playing song
      */
     private Song currentlyPlayingSong;
@@ -35,20 +40,38 @@ public class Playlist {
     private String currentMode;
 
     /**
-     * Adds a permited genre to the permitted genres list
+     * Adds a permitted genre to the permitted genres list
      * @param genre the genre that will be added to the list
      * @return TRUE if the genre was added successfully, FALSE otherwise 
      */
-    public Boolean addGenre(String genre) {
+    public Boolean addPermittedGenre(String genre) {
         return null;
     }
 
     /**
-     * Removes a permited genre from the permitted genres list
+     * Removes a permitted genre from the permitted genres list
      * @param genre the genre that will be removed from the list
      * @return TRUE if the genre was removed successfully, FALSE otherwise 
      */
-    public Boolean removeGenre(String genre) {
+    public Boolean removePermittedGenre(String genre) {
+        return null;
+    }
+
+    /**
+     * Adds a banned genre to the permitted banned list
+     * @param genre the genre that will be added to the list
+     * @return TRUE if the genre was added successfully, FALSE otherwise
+     */
+    public Boolean addBannedGenre(String genre) {
+        return null;
+    }
+
+    /**
+     * Removes a banned genre from the banned genres list
+     * @param genre the genre that will be removed from the list
+     * @return TRUE if the genre was removed successfully, FALSE otherwise
+     */
+    public Boolean removeBannedGenre(String genre) {
         return null;
     }
 

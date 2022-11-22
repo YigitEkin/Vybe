@@ -1,7 +1,7 @@
 package com.vybe.backend.model.entity;
 
 /**
- * Badge class that is similar to an achivement
+ * Badge class that is similar to an achievement
  * @author Oğuz Ata Çal
  */
 public class Badge {
