@@ -1,5 +1,8 @@
 package com.vybe.backend.model.entity;
 
+import lombok.Data;
+
+import javax.persistence.*;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -8,35 +11,63 @@ import java.util.Queue;
  * Playlist class that will govern the restrictions and the next song playing
  * @author Oğuz Ata Çal
  */
+@Data
+@Entity
 public class Playlist {
+    /**
+     * unique id
+     */
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    private Integer id;
+
+
     /**
      * Priority queue of requested songs, based on weight of song
      */
-    private PriorityQueue<SongNode> requestedSongs;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "playlist_id")
+    // TODO: supposed to be priority queue
+    private List<SongNode> requestedSongs;
 
     /**
      * Default song queue playlist to play when there are no requested songs
      */
-    private Queue<Song> defaultPlaylist;
+    @ManyToMany
+    @JoinTable(
+            name = "song_playlist",
+            joinColumns = @JoinColumn(name = "playlist_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "id")
+    )
+    // TODO: supposed to be queue
+    private List<Song> defaultPlaylist;
 
     /**
      * List of genres that the song requests are permitted in
      */
+    @ElementCollection
+    @CollectionTable(name = "playlist_permitted_genres", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "permitted_genres")
     private List<String> permittedGenres;
 
     /**
      * List of genres that the song requests are not permitted in
      */
+    @ElementCollection
+    @CollectionTable(name = "playlist_banned_genres", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "banned_genres")
     private List<String> bannedGenres;
 
     /**
      * Reference to the currently playing song
      */
+    @Transient
     private Song currentlyPlayingSong;
 
     /**
      * Current mode of the playlist, to see if its playing default or requested songs
      */
+    @Transient
     private String currentMode;
 
     /**

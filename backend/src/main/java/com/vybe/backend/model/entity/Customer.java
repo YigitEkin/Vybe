@@ -1,5 +1,10 @@
 package com.vybe.backend.model.entity;
 
+import lombok.Data;
+
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import java.util.HashMap;
 import java.util.List;
 
@@ -7,6 +12,8 @@ import java.util.List;
  * Customer class that is the representation of each customer
  * @author Oğuz Ata Çal
  */
+@Data
+@Entity
 public class Customer extends User {
     /**
      * date of birth of the customer
@@ -16,23 +23,27 @@ public class Customer extends User {
     /**
      * Analytics object that holds statistics of the customer
      */
+    @OneToOne
+    @JoinColumn(name = "analytics_id", referencedColumnName = "id")
     private Analytics analytics;
 
     /**
      * Wallet object that holds financial information of the customer
      */
+    @OneToOne
+    @JoinColumn(name = "wallet_id", referencedColumnName = "id")
     private Wallet wallet;
 
     /**
      * list that holds the friends of the holder customer
      */
-    private List<Customer> friends;
+    //private List<Customer> friends;
 
     /**
      * hashmap to holds the streak information of the user to venues
      * (key, value) pair is (venue.id, streak_count)
      */
-    private HashMap<Integer, Integer> streaks;
+    //private HashMap<Integer, Integer> streaks;
 
     /**
      * date of creation of the customer account
@@ -41,7 +52,7 @@ public class Customer extends User {
 
     /**
      * Checking the customer in to a venue (entering a venue)
-     * @param venueID id of the venue that the customer is being checked in to
+     * @param venueId id of the venue that the customer is being checked in to
      * @return TRUE if the checkin was successful, FALSE otherwise
      */
     public Boolean checkIn(Integer venueId) {

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    password:
+    password: postgres
     url: jdbc:postgresql://localhost:5432/vybe_db
-    username:
+    username: postgres
     driver-class-name: org.postgresql.Driver

@@ -1,14 +1,22 @@
 package com.vybe.backend.model.entity;
 
+import lombok.Data;
+
+import javax.persistence.*;
+
 /**
  * Rating class that holds the information of the rating that a customer gave to a venue
  * @author Oğuz Ata Çal
  */
+@Entity
+@Data
 public class Rating {
 
     /**
      * Unique id of the rating
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     /**
@@ -17,13 +25,16 @@ public class Rating {
     private Double rating;
 
     /**
-     * The user that the rating is given by
+     * The customer that the rating is given by
      */
-    private User ratedBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_username", referencedColumnName = "username")
+    private Customer ratedBy;
 
     /**
      * The venue that the rating was given on
      */
+    @ManyToOne(fetch = FetchType.LAZY)
     private Venue venue;
 
 }

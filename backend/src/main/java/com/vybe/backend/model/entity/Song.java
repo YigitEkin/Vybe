@@ -1,13 +1,21 @@
 package com.vybe.backend.model.entity;
 
+import lombok.Data;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 /**
  * Song class that will be used to represent a song in the database
  * @author Harun Can Surav
  */
+@Data
+@Entity
 public class Song {
     /**
      * The song's id
      */
+    @Id
     private Integer id;
     /**
      * The song's name
