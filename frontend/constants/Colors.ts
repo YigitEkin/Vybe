@@ -1,2 +1,22 @@
 //will be filled when the figma file is ready
-export const Colors = {};
+//will be filled when the figma file is ready
+export const Colors = {
+  purple: {
+    primary: "#964fd0",
+    dark: "#6b4eff",
+    text: "#9990ff",
+    lighter: "#c6c4ff",
+  },
+  gray: {
+    bottomBar: "#090a0a",
+    text: "#7c757e",
+  },
+  button: {
+    disabled: "#303437",
+  },
+  red: {
+    error: "#ba1a1a",
+  },
+};
+
+//font family inter normal
