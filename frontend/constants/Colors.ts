@@ -17,6 +17,7 @@ export const Colors = {
   red: {
     error: "#ba1a1a",
   },
+  background: "#000000",
 };
 
 //font family inter normal
