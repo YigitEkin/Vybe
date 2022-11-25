@@ -28,8 +28,9 @@ public class SongNode implements Comparable<SongNode> {
      * {@link Song}
      */
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "song_id", referencedColumnName = "id")
+    @JoinColumn(name = "song_id")
     private Song song;
+    
     /**
      * Weight of the song in queue
      */

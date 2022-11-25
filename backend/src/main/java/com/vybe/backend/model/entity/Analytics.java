@@ -23,6 +23,7 @@ public class Analytics {
      * List of badges acquired 
      */
     @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "analytics_id")
     private List<Badge> badges;
 
     /**

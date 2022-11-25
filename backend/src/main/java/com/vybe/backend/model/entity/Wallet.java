@@ -34,7 +34,7 @@ public class Wallet {
      * List of transactions made by the customer
      */
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "wallet_id", referencedColumnName = "id")
+    @JoinColumn(name = "wallet_id")
     private List<Transaction> transactions;
 
     /**

@@ -46,16 +46,16 @@ public class Playlist {
      * List of genres that the song requests are permitted in
      */
     @ElementCollection
-    @CollectionTable(name = "playlist_permitted_genres", joinColumns = @JoinColumn(name = "id"))
-    @Column(name = "permitted_genres")
+    @CollectionTable(name = "playlist_permitted_genres", joinColumns = @JoinColumn(name = "playlist_id"))
+    @Column(name = "permitted_genre")
     private List<String> permittedGenres;
 
     /**
      * List of genres that the song requests are not permitted in
      */
     @ElementCollection
-    @CollectionTable(name = "playlist_banned_genres", joinColumns = @JoinColumn(name = "id"))
-    @Column(name = "banned_genres")
+    @CollectionTable(name = "playlist_banned_genres", joinColumns = @JoinColumn(name = "playlist_id"))
+    @Column(name = "banned_genre")
     private List<String> bannedGenres;
 
     /**

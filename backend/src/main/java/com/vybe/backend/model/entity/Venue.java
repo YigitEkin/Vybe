@@ -52,7 +52,7 @@ public class Venue {
      * List of playlists defined for the venue
      */
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "venue_id", referencedColumnName = "id")
+    @JoinColumn(name = "venue_id")
     private List<Playlist> playlist;
 
     /**

@@ -24,14 +24,14 @@ public class Customer extends User {
      * Analytics object that holds statistics of the customer
      */
     @OneToOne
-    @JoinColumn(name = "analytics_id", referencedColumnName = "id")
+    @JoinColumn(name = "analytics_id")
     private Analytics analytics;
 
     /**
      * Wallet object that holds financial information of the customer
      */
     @OneToOne
-    @JoinColumn(name = "wallet_id", referencedColumnName = "id")
+    @JoinColumn(name = "wallet_id")
     private Wallet wallet;
 
     /**

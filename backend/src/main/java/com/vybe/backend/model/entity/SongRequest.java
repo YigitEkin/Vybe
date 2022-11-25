@@ -23,7 +23,7 @@ public class SongRequest {
      * {@link Song}
      */
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "song_id", referencedColumnName = "id")
+    @JoinColumn(name = "song_id")
     private Song song;
 
     /**
@@ -31,7 +31,7 @@ public class SongRequest {
      * {@link User}
      */
     @OneToOne
-    @JoinColumn(name = "requested_by_username", referencedColumnName = "username")
+    @JoinColumn(name = "requested_by_username")
     private User requestedBy;
 
     /**
