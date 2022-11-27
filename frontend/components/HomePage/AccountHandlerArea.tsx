@@ -3,10 +3,15 @@ import { Text, StyleSheet, Pressable, Button, View } from "react-native";
 import { Colors } from "../../constants/Colors";
 import { DimensionsHelper } from "../../hooks/DimensionsHelper";
 import CreateAccountButton from "./CreateAccountButton";
+import * as Font from "expo-font";
 
 const dimensions = DimensionsHelper();
 
 const AccountHandlerArea = () => {
+  const [fontsLoaded] = Font.useFonts({
+    "Inter-Regular": require("../../assets/fonts/Inter/static/Inter-Regular.ttf"),
+  });
+
   return (
     <View style={styles.container}>
       <CreateAccountButton />
@@ -41,17 +46,20 @@ const styles = StyleSheet.create({
   text: {
     color: "#fff",
     fontSize: 18,
+    fontFamily: "Inter-Regular",
   },
   logInText: {
     color: Colors.purple.primary,
     fontSize: 18,
     marginLeft: 5,
+    fontFamily: "Inter-Regular",
   },
   logInTextPressed: {
     color: Colors.purple.primary,
     fontSize: 18,
     marginLeft: 5,
     opacity: 0.7,
+    fontFamily: "Inter-Regular",
   },
 });
 
