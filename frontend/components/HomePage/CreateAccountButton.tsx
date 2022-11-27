@@ -2,10 +2,15 @@ import React from "react";
 import { Text, StyleSheet, Pressable } from "react-native";
 import { Colors } from "../../constants/Colors";
 import { DimensionsHelper } from "../../hooks/DimensionsHelper";
+import * as Font from "expo-font";
 
 const dimensions = DimensionsHelper();
 
 const CreateAccountButton = () => {
+  const [fontsLoaded] = Font.useFonts({
+    "Inter-Medium": require("../../assets/fonts/Inter/static/Inter-Medium.ttf"),
+  });
+
   return (
     //TODO: onPress will navigate the user to the create an account page
     <Pressable
@@ -41,6 +46,7 @@ const styles = StyleSheet.create({
   text: {
     color: "#fff",
     fontSize: 20,
+    fontFamily: "Inter-Medium",
   },
 });
 

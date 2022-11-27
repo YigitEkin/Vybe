@@ -12,7 +12,6 @@ const dimensions = DimensionsHelper();
 
 const HomePage = () => {
   const [fontsLoaded] = Font.useFonts({
-    "Inter-Bold": require("../assets/fonts/Inter/static/Inter-Bold.ttf"),
     "Inter-ExtraBold": require("../assets/fonts/Inter/static/Inter-ExtraBold.ttf"),
   });
 
