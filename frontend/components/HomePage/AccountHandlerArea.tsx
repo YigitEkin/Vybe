@@ -2,7 +2,7 @@ import React from "react";
 import { Text, StyleSheet, Pressable, Button, View } from "react-native";
 import { Colors } from "../../constants/Colors";
 import { DimensionsHelper } from "../../hooks/DimensionsHelper";
-import CreateAccountButton from "./CreateAccountButton";
+import StyledButton from "./StyledButton";
 import * as Font from "expo-font";
 
 const dimensions = DimensionsHelper();
@@ -14,7 +14,11 @@ const AccountHandlerArea = () => {
 
   return (
     <View style={styles.container}>
-      <CreateAccountButton />
+      {
+        //TODO: onPress will navigate the user to the Sign Up page
+      }
+      <StyledButton onPress={() => {}} buttonText={"Create Account"} />
+      {/* Create Account */}
       <View style={styles.row}>
         <Text style={styles.text}>Have an account?</Text>
         {

@@ -6,26 +6,33 @@ import * as Font from "expo-font";
 
 const dimensions = DimensionsHelper();
 
-const CreateAccountButton = () => {
+type StyledButtonProps = {
+  onPress: () => void;
+  buttonText: string;
+  style?: any;
+};
+
+const StyledButton = ({ onPress, buttonText, style }: StyledButtonProps) => {
   const [fontsLoaded] = Font.useFonts({
     "Inter-Medium": require("../../assets/fonts/Inter/static/Inter-Medium.ttf"),
   });
 
-  return (
-    //TODO: onPress will navigate the user to the create an account page
+  return fontsLoaded ? (
     <Pressable
-      style={({ pressed }) => (pressed ? styles.pressed : styles.container)}
-      onPress={() => {}}
+      style={({ pressed }) =>
+        pressed ? [styles.pressed, style] : [styles.container, style]
+      }
+      onPress={onPress}
       android_ripple={{ color: Colors.purple.primary }}
     >
-      <Text style={styles.text}>Create Account</Text>
+      <Text style={styles.text}>{buttonText}</Text>
     </Pressable>
-  );
+  ) : null;
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: 250,
+    width: "90%",
     height: 50,
     backgroundColor: Colors.purple.primary,
     borderRadius: 100,
@@ -34,7 +41,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   pressed: {
-    width: 250,
+    width: "90%",
     height: 50,
     backgroundColor: Colors.purple.primary,
     borderRadius: 100,
@@ -50,4 +57,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateAccountButton;
+export default StyledButton;

@@ -46,5 +46,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#000",
     alignItems: "center",
+    width: "100%",
   },
 });
