@@ -37,13 +37,15 @@ public class Customer extends User {
     /**
      * list that holds the friends of the holder customer
      */
-    //private List<Customer> friends;
+    @OneToMany( mappedBy = "sender")
+    private List<Customer> friends;
 
+    // TODO: map streaks to database
     /**
      * hashmap to holds the streak information of the user to venues
      * (key, value) pair is (venue.id, streak_count)
      */
-    //private HashMap<Integer, Integer> streaks;
+    private HashMap<Integer, Integer> streaks;
 
     /**
      * date of creation of the customer account
