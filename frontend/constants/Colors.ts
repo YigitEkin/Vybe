@@ -6,9 +6,11 @@ export const Colors = {
     dark: "#6b4eff",
     text: "#9990ff",
     lighter: "#c6c4ff",
+    selectedInput: "#6B4EFF",
   },
   gray: {
     bottomBar: "#090a0a",
+    muted: "#979C9E",
     text: "#7c757e",
   },
   button: {

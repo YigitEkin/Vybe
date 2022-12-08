@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#000",
     alignItems: "center",
+    width: "100%",
   },
   icon: {
     alignSelf: "center",
@@ -52,6 +53,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: "auto",
     marginBottom: 50,
+    width: "80%",
   },
   justifyAndAlignCenter: {
     justifyContent: "center",
