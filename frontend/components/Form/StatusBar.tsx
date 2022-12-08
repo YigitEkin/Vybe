@@ -17,6 +17,7 @@ const StatusBar = ({ currentStep, totalSteps }: StatusBarProps) => {
           backgroundColor: Colors.purple.primary,
           marginHorizontal: 0,
           borderRadius: 5,
+          marginTop: 20,
         }}
       />
       <View
@@ -25,6 +26,7 @@ const StatusBar = ({ currentStep, totalSteps }: StatusBarProps) => {
           height: "100%",
           backgroundColor: "#202325",
           marginHorizontal: 0,
+          marginTop: 20,
         }}
       />
     </View>

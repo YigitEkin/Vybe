@@ -5,6 +5,11 @@ import HomePage from "./screens/HomePage";
 import { useCallback } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import SignUpMail from "./screens/signup/SignUpMail";
+import SignUpCompletedScreen from "./screens/signup/SignUpCompletedScreen";
+import SignUpPassword from "./screens/signup/SignUpPassword";
+import SignUpUsername from "./screens/signup/SignupUsername";
+import EnterPhoneNumber from "./screens/2fa/EnterPhoneNumber";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -35,7 +40,11 @@ export default function App() {
     <View style={styles.container} onLayout={onLayoutRootView}>
       <SafeAreaView style={styles.container}>
         <StatusBar style="light" networkActivityIndicatorVisible={true} />
-        <HomePage />
+        <EnterPhoneNumber
+          headerText="Welcome Back"
+          subHeaderText="Log in to your account"
+          buttonText="Log in"
+        />
       </SafeAreaView>
     </View>
   );

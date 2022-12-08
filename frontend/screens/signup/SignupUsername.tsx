@@ -9,7 +9,6 @@ const SignUpUsername = () => {
         label: "What’s your  name?",
         component: (
           <TextInput
-            secureTextEntry={true}
             selectTextOnFocus={true}
             keyboardAppearance="dark"
             style={styles.textInput}
@@ -35,6 +34,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     marginTop: 20,
+    fontFamily: "Inter-Regular",
   },
 });
 

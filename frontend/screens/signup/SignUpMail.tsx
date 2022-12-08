@@ -9,7 +9,6 @@ const SignUpMail = () => {
         label: "What's your email address?",
         component: (
           <TextInput
-            secureTextEntry={true}
             selectTextOnFocus={true}
             keyboardAppearance="dark"
             keyboardType="email-address"

@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: "auto",
     marginBottom: 50,
+    width: "80%",
   },
   justifyAndAlignCenter: {
     justifyContent: "center",

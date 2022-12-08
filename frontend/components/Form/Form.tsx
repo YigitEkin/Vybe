@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Pressable,
   View,
-  ScrollView,
   KeyboardAvoidingView,
 } from "react-native";
 import StyledButton from "../HomePage/StyledButton";
@@ -13,6 +12,8 @@ import StatusBar from "./StatusBar";
 
 export type FormItem = {
   label: string;
+  wrapperStyle?: any;
+  labelStyle?: any;
   component: JSX.Element;
 };
 
@@ -20,6 +21,28 @@ type FormProps = {
   items: FormItem[];
   currentStep: number;
   totalSteps: number;
+};
+
+type LabelProps = {
+  label: string;
+  wrapperStyle?: any;
+  labelStyle?: any;
+};
+
+const Label = (item: LabelProps) => {
+  const labelStyle = [styles.labelText];
+
+  if (item.labelStyle) {
+    labelStyle.push(item.labelStyle);
+  }
+
+  return item.wrapperStyle ? (
+    <View style={item.wrapperStyle}>
+      <Text style={labelStyle}>{item.label}</Text>
+    </View>
+  ) : (
+    <Text style={labelStyle}>{item.label}</Text>
+  );
 };
 
 const Form = ({ items, currentStep, totalSteps }: FormProps) => {
@@ -34,7 +57,11 @@ const Form = ({ items, currentStep, totalSteps }: FormProps) => {
         <View style={styles.formAreaContainer}>
           {items.map((item, index) => (
             <View style={styles.inputContainer} key={index}>
-              <Text style={styles.labelText}>{item.label}</Text>
+              <Label
+                label={item.label}
+                wrapperStyle={item.wrapperStyle}
+                labelStyle={item.labelStyle}
+              />
               {item.component}
             </View>
           ))}

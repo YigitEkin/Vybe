@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
+    width: "100%",
   },
   row: {
     flexDirection: "row",
