@@ -2,9 +2,7 @@ package com.vybe.backend.model.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,7 +35,7 @@ public class Customer extends User {
     /**
      * list that holds the friends of the holder customer
      */
-    @OneToMany( mappedBy = "sender")
+    @OneToMany( mappedBy = "username")
     private List<Customer> friends;
 
     // TODO: map streaks to database
@@ -45,6 +43,7 @@ public class Customer extends User {
      * hashmap to holds the streak information of the user to venues
      * (key, value) pair is (venue.id, streak_count)
      */
+    @Transient
     private HashMap<Integer, Integer> streaks;
 
     /**
