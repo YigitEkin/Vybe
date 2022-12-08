@@ -1,15 +1,29 @@
 package com.vybe.backend.model.entity;
 
+import lombok.Data;
+
+import javax.persistence.*;
 import java.util.List;
 
 /**
  * Analytics class that holds possible statistics and badges
  * @author Oğuz Ata Çal
  */
+@Data
+@Entity
 public class Analytics {
+    /**
+     * Unique id
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     /**
      * List of badges acquired 
      */
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "analytics_id")
     private List<Badge> badges;
 
     /**

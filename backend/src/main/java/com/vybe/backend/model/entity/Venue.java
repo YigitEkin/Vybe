@@ -1,57 +1,89 @@
 package com.vybe.backend.model.entity;
 
+import lombok.Data;
+
+import javax.persistence.*;
 import java.util.List;
 
 /**
  * Venue class, representation of physical venues in the database
  * @author Harun Can Surav
  */
+@Data
+@Entity
 public class Venue {
     /**
      * Venue id that will be used for object identification
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     /**
      * Name of the venue that will be shown in map and used in search
      */
     private String name;
+
     /**
      * Venue description that will be shown in the venue page
      */
     private String description;
+
     /**
      * Venue location that will be used in map
      */
     private String location;
+
     /**
      * Analytics class that will store badges, points and other analytics data
      */
+    @OneToOne
+    @JoinColumn(name = "analytics_id", referencedColumnName = "id")
     private Analytics analytics;
+
     /**
      * Photos of the venue
      */
     //TODO: Decide on Object type
+    @Transient
     private List<Object> photos;
+
     /**
      * List of playlists defined for the venue
      */
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "venue_id")
     private List<Playlist> playlist;
+
     /**
      * Active playlist
      */
+    @Transient
     private Playlist currentPlaylist;
+
     /**
      * List of users that are currently checked in
      */
+    @Transient
     private List<Customer> checkedInCustomers;
+
     /**
      * List of ratings left to the venue
      */
+    @OneToMany(
+            mappedBy = "venue",
+            cascade = CascadeType.ALL)
     private List<Rating> ratings;
+
     /**
      * List of comments left to the venue
      */
+    @OneToMany(
+            mappedBy = "venue",
+            cascade = CascadeType.ALL
+    )
     private List<Comment> comments;
+
     /**
      * QR code of the venue
      */
