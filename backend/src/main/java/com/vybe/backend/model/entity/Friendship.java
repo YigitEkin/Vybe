@@ -1,10 +1,10 @@
 package com.vybe.backend.model.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 /**
  * Customer class that is the representation of each customer
@@ -12,7 +12,9 @@ import javax.persistence.OneToOne;
  */
 @Entity
 @Data
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"user1", "user2"}))
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"sender_customer_username", "receiver_customer_username"}))
 public class Friendship {
     /*
      * unique id

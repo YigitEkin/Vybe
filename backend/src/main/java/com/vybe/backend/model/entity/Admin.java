@@ -11,6 +11,8 @@ import javax.persistence.Id;
  */
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Admin {
     /**
      * Unique username

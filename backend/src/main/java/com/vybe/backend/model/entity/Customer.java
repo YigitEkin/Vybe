@@ -1,12 +1,13 @@
 package com.vybe.backend.model.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Customer class that is the representation of each customer
@@ -14,7 +15,19 @@ import java.util.List;
  */
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Customer extends User {
+    public Customer(String username, String password, String email, String phoneNumber, Object profilePicture, Venue currentVenue, Stack<SongRequest> requests, List<Customer> friendships,
+                    String dateOfBirth, String dateOfCreation) {
+        super(username, password, email, phoneNumber, profilePicture, currentVenue, requests);
+        this.friends = friendships;
+        this.dateOfBirth = dateOfBirth;
+        this.dateOfCreation = dateOfCreation;
+
+    }
+
+
     /**
      * date of birth of the customer
      */
@@ -37,7 +50,7 @@ public class Customer extends User {
     /**
      * list that holds the friends of the holder customer
      */
-    @OneToMany( mappedBy = "sender")
+    @OneToMany( mappedBy = "username")
     private List<Customer> friends;
 
     // TODO: map streaks to database
@@ -45,6 +58,7 @@ public class Customer extends User {
      * hashmap to holds the streak information of the user to venues
      * (key, value) pair is (venue.id, streak_count)
      */
+    @Transient
     private HashMap<Integer, Integer> streaks;
 
     /**

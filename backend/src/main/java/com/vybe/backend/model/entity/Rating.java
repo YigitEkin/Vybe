@@ -1,6 +1,8 @@
 package com.vybe.backend.model.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -10,6 +12,8 @@ import javax.persistence.*;
  */
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Rating {
 
     /**
