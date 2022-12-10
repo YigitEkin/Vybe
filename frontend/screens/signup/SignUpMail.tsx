@@ -1,8 +1,9 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
 import { TextInput, StyleSheet } from "react-native";
 import Form from "../../components/Form/Form";
 
 const SignUpMail = () => {
+  const inputRef = useRef();
   const formItems = useMemo(
     () => [
       {
@@ -20,7 +21,15 @@ const SignUpMail = () => {
     []
   );
 
-  return <Form items={formItems} currentStep={1} totalSteps={4} />;
+  const navigateRoute = "SignUpUsername" as never;
+  return (
+    <Form
+      items={formItems}
+      currentStep={1}
+      totalSteps={4}
+      navigateRoute={navigateRoute}
+    />
+  );
 };
 
 const styles = StyleSheet.create({

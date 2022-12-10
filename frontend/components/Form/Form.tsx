@@ -9,6 +9,7 @@ import {
 import StyledButton from "../HomePage/StyledButton";
 import * as Font from "expo-font";
 import StatusBar from "./StatusBar";
+import { useNavigation } from "@react-navigation/native";
 
 export type FormItem = {
   label: string;
@@ -21,6 +22,7 @@ type FormProps = {
   items: FormItem[];
   currentStep: number;
   totalSteps: number;
+  navigateRoute: never;
 };
 
 type LabelProps = {
@@ -45,13 +47,14 @@ const Label = (item: LabelProps) => {
   );
 };
 
-const Form = ({ items, currentStep, totalSteps }: FormProps) => {
+const Form = ({ items, currentStep, totalSteps, navigateRoute }: FormProps) => {
   const [fontsLoaded] = Font.useFonts({
     "Inter-Bold": require("../../assets/fonts/Inter/static/Inter-Bold.ttf"),
   });
+  const navigation = useNavigation();
 
   return fontsLoaded ? (
-    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+    <KeyboardAvoidingView behavior="height" style={styles.container}>
       <StatusBar currentStep={currentStep} totalSteps={totalSteps} />
       <View style={styles.container}>
         <View style={styles.formAreaContainer}>
@@ -68,7 +71,9 @@ const Form = ({ items, currentStep, totalSteps }: FormProps) => {
         </View>
         <StyledButton
           style={styles.StyledButton}
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate(navigateRoute);
+          }}
           buttonText={"Continue"}
         />
       </View>

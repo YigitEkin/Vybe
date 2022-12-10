@@ -1,16 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import HomePage from './screens/HomePage';
-import { useCallback } from 'react';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import SignUpMail from './screens/signup/SignUpMail';
-import SignUpCompletedScreen from './screens/signup/SignUpCompletedScreen';
-import SignUpPassword from './screens/signup/SignUpPassword';
-import SignUpUsername from './screens/signup/SignupUsername';
-import EnterPhoneNumber from './screens/2fa/EnterPhoneNumber';
-import LoginVerification from './screens/Verification/LoginVerification';
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import HomePage from "./screens/HomePage";
+import { useCallback } from "react";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import SignUpMail from "./screens/signup/SignUpMail";
+import SignUpCompletedScreen from "./screens/signup/SignUpCompletedScreen";
+import SignUpPassword from "./screens/signup/SignUpPassword";
+import SignUpUsername from "./screens/signup/SignupUsername";
+import EnterPhoneNumber from "./components/2fa/EnterPhoneNumber";
+import Router from "./navigation/Router";
+
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,16 +41,8 @@ export default function App() {
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
       <SafeAreaView style={styles.container}>
-        <StatusBar style='light' networkActivityIndicatorVisible={true} />
-        {/*<EnterPhoneNumber
-          headerText="Welcome Back"
-          subHeaderText="Log in to your account"
-          buttonText="Log in"
-        />*/}
-        <LoginVerification
-          headerText='Enter authentication code'
-          phoneNumber='+1 222-828292'
-        />
+        <StatusBar style="light" networkActivityIndicatorVisible={true} />
+        <Router />
       </SafeAreaView>
     </View>
   );
@@ -58,8 +51,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
-    alignItems: 'center',
-    width: '100%',
+    backgroundColor: "#000",
+    width: "100%",
   },
 });

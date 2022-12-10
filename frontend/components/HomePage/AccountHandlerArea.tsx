@@ -7,27 +7,29 @@ import * as Font from "expo-font";
 
 const dimensions = DimensionsHelper();
 
-const AccountHandlerArea = () => {
+const AccountHandlerArea = ({ navigation }: any) => {
   const [fontsLoaded] = Font.useFonts({
     "Inter-Regular": require("../../assets/fonts/Inter/static/Inter-Regular.ttf"),
   });
 
   return (
     <View style={styles.container}>
-      {
-        //TODO: onPress will navigate the user to the Sign Up page
-      }
-      <StyledButton onPress={() => {}} buttonText={"Create Account"} />
+      <StyledButton
+        onPress={() => {
+          navigation.navigate("EnterPhoneNumberSignUp");
+        }}
+        buttonText={"Create Account"}
+      />
       {/* Create Account */}
       <View style={styles.row}>
         <Text style={styles.text}>Have an account?</Text>
-        {
-          //TODO: onPress will navigate the user to the login page
-        }
         <Pressable
           style={({ pressed }) =>
             pressed ? styles.logInTextPressed : styles.logInText
           }
+          onPress={() => {
+            navigation.navigate("EnterPhoneNumberLogin");
+          }}
         >
           <Text style={styles.logInText}>Log in</Text>
         </Pressable>

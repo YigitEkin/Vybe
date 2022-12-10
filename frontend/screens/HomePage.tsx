@@ -10,7 +10,7 @@ import * as Font from "expo-font";
 
 const dimensions = DimensionsHelper();
 
-const HomePage = () => {
+const HomePage = ({ navigation }: any) => {
   const [fontsLoaded] = Font.useFonts({
     "Inter-ExtraBold": require("../assets/fonts/Inter/static/Inter-ExtraBold.ttf"),
   });
@@ -27,7 +27,7 @@ const HomePage = () => {
         <Text style={styles.flowWithTheVybeText}>Flow with the Vybe</Text>
       </View>
       <View style={styles.AccountHandlerArea}>
-        <AccountHandlerArea />
+        <AccountHandlerArea navigation={navigation} />
       </View>
     </View>
   ) : null;
