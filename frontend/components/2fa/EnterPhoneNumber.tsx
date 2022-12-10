@@ -22,6 +22,8 @@ type EnterPhoneNumberProps = {
   subHeaderText: string;
   buttonText: string;
   onPress: () => void;
+  onChangeText: (text: string) => void;
+  value: any;
 };
 
 type PickerDisplayProps = {
@@ -44,6 +46,8 @@ const EnterPhoneNumber = ({
   subHeaderText,
   buttonText,
   onPress,
+  onChangeText,
+  value,
 }: EnterPhoneNumberProps) => {
   const [selectedCallingCode, setSelectedCallingCode] = useState<string>("+1");
   const [image, setImage] = useState<any>(() => {
@@ -66,7 +70,12 @@ const EnterPhoneNumber = ({
           </View>
           <View style={styles.inputContainer}>
             <View style={styles.inputWrapper}>
-              <TextInput style={styles.input} keyboardType="phone-pad" />
+              <TextInput
+                value={value}
+                style={styles.input}
+                keyboardType="phone-pad"
+                onChangeText={onChangeText}
+              />
             </View>
           </View>
           <View style={styles.inputContainer}>

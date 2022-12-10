@@ -3,8 +3,19 @@ import { Image, StyleSheet, View } from "react-native";
 import Form, { FormItem } from "../../components/Form/Form";
 // @ts-ignore
 import Logo from "../../assets/Tick.png";
+import { useSignUpStore } from "../../stores/SignUpStore";
 
-const SignUpCompletedScreen = () => {
+const SignUpCompletedScreen = ({ navigation }: any) => {
+  const { setEmail, setPassword, setUsername, setPhoneNumber } = useSignUpStore(
+    (state: any) => {
+      return {
+        setEmail: state.setEmail,
+        setPassword: state.setPassword,
+        setUsername: state.setUsername,
+        setPhoneNumber: state.setPhoneNumber,
+      };
+    }
+  );
   const formItems: FormItem[] = useMemo(
     () => [
       {
@@ -29,6 +40,14 @@ const SignUpCompletedScreen = () => {
       currentStep={4}
       totalSteps={4}
       navigateRoute={navigateRoute}
+      validator={() => true}
+      cb={() => {
+        setEmail(null);
+        setPassword(null);
+        setUsername(null);
+        setPhoneNumber(null);
+        navigation.navigate(navigateRoute);
+      }}
     />
   );
 };

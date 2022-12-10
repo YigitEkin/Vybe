@@ -1,8 +1,16 @@
 import React, { useMemo } from "react";
 import { TextInput, StyleSheet } from "react-native";
 import Form from "../../components/Form/Form";
+import { SignUpStore, useSignUpStore } from "../../stores/SignUpStore";
 
 const SignUpUsername = () => {
+  const { username, setUsername } = useSignUpStore((state: any) => {
+    return {
+      username: state.username,
+      setUsername: state.setUsername,
+    };
+  });
+
   const formItems = useMemo(
     () => [
       {
@@ -12,6 +20,10 @@ const SignUpUsername = () => {
             selectTextOnFocus={true}
             keyboardAppearance="dark"
             style={styles.textInput}
+            value={username}
+            onChangeText={(text) => {
+              setUsername(text);
+            }}
           />
         ),
       },
@@ -27,6 +39,9 @@ const SignUpUsername = () => {
       currentStep={2}
       totalSteps={4}
       navigateRoute={navigateRoute}
+      validator={() => {
+        return username && username.trim().length > 0;
+      }}
     />
   );
 };

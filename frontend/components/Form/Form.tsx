@@ -23,6 +23,8 @@ type FormProps = {
   currentStep: number;
   totalSteps: number;
   navigateRoute: never;
+  validator: () => boolean;
+  cb?: () => void;
 };
 
 type LabelProps = {
@@ -47,11 +49,23 @@ const Label = (item: LabelProps) => {
   );
 };
 
-const Form = ({ items, currentStep, totalSteps, navigateRoute }: FormProps) => {
+const Form = ({
+  items,
+  currentStep,
+  totalSteps,
+  navigateRoute,
+  validator,
+  cb,
+}: FormProps) => {
   const [fontsLoaded] = Font.useFonts({
     "Inter-Bold": require("../../assets/fonts/Inter/static/Inter-Bold.ttf"),
   });
   const navigation = useNavigation();
+  const callback = cb
+    ? cb
+    : () => {
+        navigation.navigate(navigateRoute);
+      };
 
   return fontsLoaded ? (
     <KeyboardAvoidingView behavior="height" style={styles.container}>
@@ -72,7 +86,7 @@ const Form = ({ items, currentStep, totalSteps, navigateRoute }: FormProps) => {
         <StyledButton
           style={styles.StyledButton}
           onPress={() => {
-            navigation.navigate(navigateRoute);
+            validator() && callback();
           }}
           buttonText={"Continue"}
         />
