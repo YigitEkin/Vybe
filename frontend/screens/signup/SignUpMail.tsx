@@ -1,9 +1,21 @@
 import React, { useMemo, useRef } from "react";
 import { TextInput, StyleSheet } from "react-native";
 import Form from "../../components/Form/Form";
+import { useSignUpStore } from "../../stores/SignUpStore";
+
+//write a function that checks if the email is valid
+const validateEmail = (email: string) => {
+  const re = /\S+@\S+\.\S+/;
+  return re.test(email);
+};
 
 const SignUpMail = () => {
-  const inputRef = useRef();
+  const { email, setEmail } = useSignUpStore((state: any) => {
+    return {
+      email: state.email,
+      setEmail: state.setEmail,
+    };
+  });
   const formItems = useMemo(
     () => [
       {
@@ -11,9 +23,16 @@ const SignUpMail = () => {
         component: (
           <TextInput
             selectTextOnFocus={true}
+            placeholder="a@b.com"
+            autoCapitalize="none"
+            placeholderTextColor={"#666"}
             keyboardAppearance="dark"
             keyboardType="email-address"
             style={styles.textInput}
+            value={email}
+            onChangeText={(text) => {
+              setEmail(text);
+            }}
           />
         ),
       },
@@ -28,6 +47,9 @@ const SignUpMail = () => {
       currentStep={1}
       totalSteps={4}
       navigateRoute={navigateRoute}
+      validator={() => {
+        return email && email.trim().length > 0 && validateEmail(email);
+      }}
     />
   );
 };
