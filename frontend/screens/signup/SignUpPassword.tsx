@@ -1,8 +1,18 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { TextInput, StyleSheet } from "react-native";
 import Form from "../../components/Form/Form";
+import { useSignUpStore } from "../../stores/SignUpStore";
 
 const SignUpPassword = () => {
+  const { password, setPassword } = useSignUpStore((state: any) => {
+    return {
+      password: state.password,
+      setPassword: state.setPassword,
+    };
+  });
+
+  const [confirmPassword, setConfirmPassword] = useState<any>(null);
+
   const formItems = useMemo(
     () => [
       {
@@ -12,6 +22,12 @@ const SignUpPassword = () => {
             secureTextEntry={true}
             selectTextOnFocus={true}
             keyboardAppearance="dark"
+            placeholder="Password"
+            placeholderTextColor={"#666"}
+            value={password}
+            onChangeText={(text) => {
+              setPassword(text);
+            }}
             style={styles.textInput}
           />
         ),
@@ -21,6 +37,12 @@ const SignUpPassword = () => {
         component: (
           <TextInput
             secureTextEntry={true}
+            value={confirmPassword}
+            onChangeText={(text) => {
+              setConfirmPassword(text);
+            }}
+            placeholder="Confirm Password"
+            placeholderTextColor={"#666"}
             selectTextOnFocus={true}
             keyboardAppearance="dark"
             style={styles.textInput}
@@ -38,6 +60,15 @@ const SignUpPassword = () => {
       currentStep={3}
       totalSteps={4}
       navigateRoute={navigateRoute}
+      validator={() => {
+        return (
+          password &&
+          password.trim().length > 0 &&
+          confirmPassword &&
+          confirmPassword.trim().length > 0 &&
+          password === confirmPassword
+        );
+      }}
     />
   );
 };
