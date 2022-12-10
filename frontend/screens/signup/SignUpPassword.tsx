@@ -31,7 +31,15 @@ const SignUpPassword = () => {
     []
   );
 
-  return <Form items={formItems} currentStep={2} totalSteps={4} />;
+  const navigateRoute = "SignUpCompletedScreen" as never;
+  return (
+    <Form
+      items={formItems}
+      currentStep={3}
+      totalSteps={4}
+      navigateRoute={navigateRoute}
+    />
+  );
 };
 
 const styles = StyleSheet.create({

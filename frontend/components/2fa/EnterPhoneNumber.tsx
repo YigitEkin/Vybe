@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import * as Font from "expo-font";
-import StyledButton from "../../components/HomePage/StyledButton";
+import StyledButton from "../HomePage/StyledButton";
 import { Colors } from "../../constants/Colors";
 import {
   getCountryFlag,
@@ -21,6 +21,7 @@ type EnterPhoneNumberProps = {
   headerText: string;
   subHeaderText: string;
   buttonText: string;
+  onPress: () => void;
 };
 
 type PickerDisplayProps = {
@@ -42,6 +43,7 @@ const EnterPhoneNumber = ({
   headerText,
   subHeaderText,
   buttonText,
+  onPress,
 }: EnterPhoneNumberProps) => {
   const [selectedCallingCode, setSelectedCallingCode] = useState<string>("+1");
   const [image, setImage] = useState<any>(() => {
@@ -76,12 +78,14 @@ const EnterPhoneNumber = ({
         </View>
         <StyledButton
           style={styles.StyledButton}
-          onPress={() => {}}
+          onPress={onPress}
           buttonText={buttonText}
         />
       </View>
     </KeyboardAvoidingView>
-  ) : null;
+  ) : (
+    <></>
+  );
 };
 
 const styles = StyleSheet.create({

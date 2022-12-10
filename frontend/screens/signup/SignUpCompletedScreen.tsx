@@ -22,7 +22,15 @@ const SignUpCompletedScreen = () => {
     []
   );
 
-  return <Form items={formItems} currentStep={4} totalSteps={4} />;
+  const navigateRoute = "HomePage" as never;
+  return (
+    <Form
+      items={formItems}
+      currentStep={4}
+      totalSteps={4}
+      navigateRoute={navigateRoute}
+    />
+  );
 };
 
 const styles = StyleSheet.create({

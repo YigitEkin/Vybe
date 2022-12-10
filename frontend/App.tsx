@@ -9,7 +9,8 @@ import SignUpMail from "./screens/signup/SignUpMail";
 import SignUpCompletedScreen from "./screens/signup/SignUpCompletedScreen";
 import SignUpPassword from "./screens/signup/SignUpPassword";
 import SignUpUsername from "./screens/signup/SignupUsername";
-import EnterPhoneNumber from "./screens/2fa/EnterPhoneNumber";
+import EnterPhoneNumber from "./components/2fa/EnterPhoneNumber";
+import Router from "./navigation/Router";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,11 +41,7 @@ export default function App() {
     <View style={styles.container} onLayout={onLayoutRootView}>
       <SafeAreaView style={styles.container}>
         <StatusBar style="light" networkActivityIndicatorVisible={true} />
-        <EnterPhoneNumber
-          headerText="Welcome Back"
-          subHeaderText="Log in to your account"
-          buttonText="Log in"
-        />
+        <Router />
       </SafeAreaView>
     </View>
   );
@@ -54,7 +51,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000",
-    alignItems: "center",
     width: "100%",
   },
 });
