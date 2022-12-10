@@ -20,6 +20,8 @@ const SignUpUsername = () => {
             selectTextOnFocus={true}
             keyboardAppearance="dark"
             style={styles.textInput}
+            placeholder="John Doe"
+            placeholderTextColor={"#666"}
             value={username}
             onChangeText={(text) => {
               setUsername(text);

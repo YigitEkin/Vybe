@@ -23,6 +23,9 @@ const SignUpMail = () => {
         component: (
           <TextInput
             selectTextOnFocus={true}
+            placeholder="a@b.com"
+            autoCapitalize="none"
+            placeholderTextColor={"#666"}
             keyboardAppearance="dark"
             keyboardType="email-address"
             style={styles.textInput}

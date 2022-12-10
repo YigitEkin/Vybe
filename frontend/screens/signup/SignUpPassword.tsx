@@ -22,6 +22,8 @@ const SignUpPassword = () => {
             secureTextEntry={true}
             selectTextOnFocus={true}
             keyboardAppearance="dark"
+            placeholder="Password"
+            placeholderTextColor={"#666"}
             value={password}
             onChangeText={(text) => {
               setPassword(text);
@@ -39,6 +41,8 @@ const SignUpPassword = () => {
             onChangeText={(text) => {
               setConfirmPassword(text);
             }}
+            placeholder="Confirm Password"
+            placeholderTextColor={"#666"}
             selectTextOnFocus={true}
             keyboardAppearance="dark"
             style={styles.textInput}
