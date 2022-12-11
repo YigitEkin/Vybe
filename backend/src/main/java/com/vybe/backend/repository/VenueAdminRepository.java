@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VenueAdminRepository extends JpaRepository<VenueAdmin, String> {
 
+    boolean existsByUsername(String username);
+    VenueAdmin findByUsername(String username);
+    void deleteByUsername(String username);
 }
