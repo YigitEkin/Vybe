@@ -1,8 +1,10 @@
 package com.vybe.backend.service;
 
 import com.vybe.backend.DTO.*;
+import com.vybe.backend.exception.AdminNotFoundException;
 import com.vybe.backend.exception.CustomerNotFoundException;
 import com.vybe.backend.exception.UsernameTakenException;
+import com.vybe.backend.exception.VenueAdminNotFoundException;
 import com.vybe.backend.repository.AdminRepository;
 import com.vybe.backend.repository.CustomerRepository;
 import com.vybe.backend.repository.UserRepository;
@@ -10,6 +12,8 @@ import com.vybe.backend.repository.VenueAdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -38,6 +42,11 @@ public class UserService {
         // TODO: should we check if the phone number exists?
         // TODO: hash the password
         return new CustomerDTO(customerRepository.save(customerCreationDTO.toCustomer()));
+    }
+
+    // get all customers
+    public Iterable<CustomerDTO> getAllCustomers() {
+        return customerRepository.findAll().stream().map(CustomerDTO::new).collect(Collectors.toList());
     }
 
     public CustomerDTO getCustomer(String username) {
@@ -72,23 +81,28 @@ public class UserService {
         return new VenueAdminDTO(venueAdminRepository.save(venueAdminCreationDTO.toVenueAdmin()));
     }
 
+    // get all venue admins
+    public Iterable<VenueAdminDTO> getAllVenueAdmins() {
+        return venueAdminRepository.findAll().stream().map(VenueAdminDTO::new).collect(Collectors.toList());
+    }
+
     public VenueAdminDTO getVenueAdmin(String username) {
         if (!venueAdminRepository.existsByUsername(username)) {
-            throw new CustomerNotFoundException("Venue Admin with username: " + username + " not found");
+            throw new VenueAdminNotFoundException("Venue Admin with username: " + username + " not found");
         }
         return new VenueAdminDTO(venueAdminRepository.findByUsername(username));
     }
 
     public VenueAdminDTO updateVenueAdmin(VenueAdminCreationDTO venueAdminCreationDTO) {
         if (!venueAdminRepository.existsByUsername(venueAdminCreationDTO.getUsername())) {
-            throw new CustomerNotFoundException("Venue Admin with username: " + venueAdminCreationDTO.getUsername() + " not found");
+            throw new VenueAdminNotFoundException("Venue Admin with username: " + venueAdminCreationDTO.getUsername() + " not found");
         }
         return new VenueAdminDTO(venueAdminRepository.save(venueAdminCreationDTO.toVenueAdmin()));
     }
 
     public void deleteVenueAdmin(String username) {
         if (!venueAdminRepository.existsByUsername(username)) {
-            throw new CustomerNotFoundException("Venue Admin with username: " + username + " not found");
+            throw new VenueAdminNotFoundException("Venue Admin with username: " + username + " not found");
         }
         venueAdminRepository.deleteByUsername(username);
     }
@@ -104,21 +118,25 @@ public class UserService {
 
     public AdminDTO getAdmin(String username) {
         if (!adminRepository.existsByUsername(username)) {
-            throw new CustomerNotFoundException("Admin with username: " + username + " not found");
+            throw new AdminNotFoundException("Admin with username: " + username + " not found");
         }
         return new AdminDTO(adminRepository.findByUsername(username));
     }
 
+    public Iterable<AdminDTO> getAllAdmins() {
+        return adminRepository.findAll().stream().map(AdminDTO::new).collect(Collectors.toList());
+    }
+
     public AdminDTO updateAdmin(AdminCreationDTO adminCreationDTO) {
         if (!adminRepository.existsByUsername(adminCreationDTO.getUsername())) {
-            throw new CustomerNotFoundException("Admin with username: " + adminCreationDTO.getUsername() + " not found");
+            throw new AdminNotFoundException("Admin with username: " + adminCreationDTO.getUsername() + " not found");
         }
         return new AdminDTO(adminRepository.save(adminCreationDTO.toAdmin()));
     }
 
     public void deleteAdmin(String username) {
         if (!adminRepository.existsByUsername(username)) {
-            throw new CustomerNotFoundException("Admin with username: " + username + " not found");
+            throw new AdminNotFoundException("Admin with username: " + username + " not found");
         }
         adminRepository.deleteByUsername(username);
     }
