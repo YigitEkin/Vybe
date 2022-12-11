@@ -7,6 +7,7 @@ import com.vybe.backend.model.entity.User;
 import com.vybe.backend.repository.CustomerRepository;
 import com.vybe.backend.repository.SongRepository;
 import com.vybe.backend.repository.UserRepository;
+import com.vybe.backend.service.SongService;
 import com.vybe.backend.service.UserService;
 import com.vybe.backend.service.VenueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +24,17 @@ public class BackendApplication {
 	SongRepository songRepository;
 	UserService userService;
 	VenueService venueService;
+	SongService songService;
 
 	@Autowired
-	public BackendApplication(UserRepository userRepository, CustomerRepository customerRepository, SongRepository songRepository, UserService userService, VenueService venueService) {
+	public BackendApplication(UserRepository userRepository, CustomerRepository customerRepository, SongRepository songRepository,
+							  UserService userService, VenueService venueService, SongService songService) {
 		this.userRepository = userRepository;
 		this.customerRepository = customerRepository;
 		this.songRepository = songRepository;
 		this.userService = userService;
 		this.venueService = venueService;
+		this.songService = songService;
 	}
 
 	public static void main(String[] args) {
@@ -39,7 +43,7 @@ public class BackendApplication {
 
 	@Bean
 	public CommandLineRunner lineRunner(CustomerRepository customerRepository, SongRepository songRepository, UserRepository userRepository,
-										UserService userService, VenueService venueService) {
+										UserService userService, VenueService venueService, SongService songService) {
 		return args -> {
 			// test user service class using assert statements to check if the methods work
 			CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO("testmail1", "testpass1", "testname1", "testphone1", "testdate1", "testdate1");
@@ -168,6 +172,46 @@ public class BackendApplication {
 			} catch (Exception e) {
 				assert e.getMessage().equals("Venue with id: " + venueDTO.getId() + " not found");
 			}
+
+			// test adding a song
+			SongDTO songCreationDTO = new SongDTO(0, "testname1", "testartist1", "testart1", "testlink1");
+			SongDTO songDTO = songService.addSong(songCreationDTO);
+			assert songDTO.getName().equals("testname1");
+			assert songDTO.getArtist().equals("testartist1");
+			assert songDTO.getAlbumArt().equals("testart1");
+			assert songDTO.getLink().equals("testlink1");
+
+			// test getting a song
+			SongDTO songDTO2 = songService.getSong("testname1");
+			assert songDTO2.getName().equals("testname1");
+
+			// test getting a song with an id
+			SongDTO songDTO3 = songService.getSong(songDTO.getId());
+			assert songDTO3.getName().equals("testname1");
+
+			// test getting a song with a non-existent id
+			try {
+				SongDTO songDTO4 = songService.getSong(100);
+			} catch (Exception e) {
+				assert e.getMessage().equals("Song with id: 100 not found");
+			}
+
+			// test getting a song with a non-existent name
+			try {
+				SongDTO songDTO5 = songService.getSong("testname100");
+			} catch (Exception e) {
+				assert e.getMessage().equals("Song with name: testname100 not found");
+			}
+
+			// test deleting a song by id
+			songService.deleteSong(songDTO.getId());
+			try {
+				SongDTO songDTO6 = songService.getSong(songDTO.getId());
+			} catch (Exception e) {
+				assert e.getMessage().equals("Song with id: " + songDTO.getId() + " not found");
+			}
+
+
 
 			System.out.println("Tests passed");
 
