@@ -1,6 +1,6 @@
-import React from "react";
-import EnterPhoneNumber from "../../components/2fa/EnterPhoneNumber";
-import { useSignUpStore } from "../../stores/SignUpStore";
+import React from 'react';
+import EnterPhoneNumber from '../../components/2fa/EnterPhoneNumber';
+import { useSignUpStore } from '../../stores/SignUpStore';
 
 const EnterPhoneNumberSignUp = ({ navigation }: any) => {
   const { phoneNumber, setPhoneNumber } = useSignUpStore((state: any) => {
@@ -12,13 +12,13 @@ const EnterPhoneNumberSignUp = ({ navigation }: any) => {
 
   return (
     <EnterPhoneNumber
-      buttonText="Sign Up"
-      headerText="Welcome to Vybe."
-      subHeaderText="Start Vybing"
+      buttonText='Sign Up'
+      headerText='Welcome to Vybe'
+      subHeaderText='Start Vybing'
       onPress={() => {
         phoneNumber &&
-          phoneNumber.trim() !== "" &&
-          navigation.navigate("SignUpMail");
+          phoneNumber.trim() !== '' &&
+          navigation.navigate('SignupVerification');
       }}
       onChangeText={(text: string) => {
         setPhoneNumber(text);

@@ -1,14 +1,16 @@
-import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import SignUpMail from "../screens/signup/SignUpMail";
-import SignUpCompletedScreen from "../screens/signup/SignUpCompletedScreen";
-import SignUpPassword from "../screens/signup/SignUpPassword";
-import SignUpUsername from "../screens/signup/SignupUsername";
-import EnterPhoneNumber from "../components/2fa/EnterPhoneNumber";
-import HomePage from "../screens/HomePage";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import EnterPhoneNumberSignUp from "../screens/signup/EnterPhoneNumberSignUp";
-import EnterPhoneNumberLogin from "../screens/login/EnterPhoneNumberLogin";
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import SignUpMail from '../screens/signup/SignUpMail';
+import SignUpCompletedScreen from '../screens/signup/SignUpCompletedScreen';
+import SignUpPassword from '../screens/signup/SignUpPassword';
+import SignUpUsername from '../screens/signup/SignupUsername';
+import EnterPhoneNumber from '../components/2fa/EnterPhoneNumber';
+import HomePage from '../screens/HomePage';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import EnterPhoneNumberSignUp from '../screens/signup/EnterPhoneNumberSignUp';
+import EnterPhoneNumberLogin from '../screens/login/EnterPhoneNumberLogin';
+import LoginVerification from '../screens/Verification/LoginVerification';
+import SignupVerification from '../screens/Verification/SignupVerification';
 
 type Route = {
   name: string;
@@ -18,98 +20,128 @@ type Route = {
 
 const NotLoggedInRoutes: Route[] = [
   {
-    name: "SignUpMail",
+    name: 'SignUpMail',
     component: SignUpMail,
     screenOptions: {
       headerShown: true,
       headerBackTitleVisible: false,
-      headerTintColor: "#fff",
-      headerTitle: "",
+      headerTintColor: '#fff',
+      headerTitle: '',
       headerStyle: {
-        backgroundColor: "#000",
-        shadowColor: "transparent",
+        backgroundColor: '#000',
+        shadowColor: 'transparent',
         height: 0,
       },
     },
   },
   {
-    name: "HomePage",
+    name: 'HomePage',
     component: HomePage,
     screenOptions: {
       headerShown: false,
     },
   },
   {
-    name: "SignUpPassword",
+    name: 'SignUpPassword',
     component: SignUpPassword,
     screenOptions: {
       headerShown: true,
       headerBackTitleVisible: false,
-      headerTintColor: "#fff",
-      headerTitle: "",
+      headerTintColor: '#fff',
+      headerTitle: '',
       headerStyle: {
-        backgroundColor: "#000",
-        shadowColor: "transparent",
+        backgroundColor: '#000',
+        shadowColor: 'transparent',
         height: 0,
       },
     },
   },
   {
-    name: "SignUpUsername",
+    name: 'SignUpUsername',
     component: SignUpUsername,
     screenOptions: {
       headerShown: true,
       headerBackTitleVisible: false,
-      headerTintColor: "#fff",
-      headerTitle: "",
+      headerTintColor: '#fff',
+      headerTitle: '',
       headerStyle: {
-        backgroundColor: "#000",
-        shadowColor: "transparent",
+        backgroundColor: '#000',
+        shadowColor: 'transparent',
         height: 0,
       },
     },
   },
   {
-    name: "SignUpCompletedScreen",
+    name: 'LoginVerification',
+    component: LoginVerification,
+    screenOptions: {
+      headerShown: true,
+      headerBackTitleVisible: false,
+      headerTintColor: '#fff',
+      headerTitle: '',
+      headerStyle: {
+        backgroundColor: '#000',
+        shadowColor: 'transparent',
+        height: 0,
+      },
+    },
+  },
+  {
+    name: 'SignupVerification',
+    component: SignupVerification,
+    screenOptions: {
+      headerShown: true,
+      headerBackTitleVisible: false,
+      headerTintColor: '#fff',
+      headerTitle: '',
+      headerStyle: {
+        backgroundColor: '#000',
+        shadowColor: 'transparent',
+        height: 0,
+      },
+    },
+  },
+  {
+    name: 'SignUpCompletedScreen',
     component: SignUpCompletedScreen,
     screenOptions: {
       headerShown: true,
       headerBackTitleVisible: false,
-      headerTintColor: "#fff",
-      headerTitle: "",
+      headerTintColor: '#fff',
+      headerTitle: '',
       headerStyle: {
-        backgroundColor: "#000",
-        shadowColor: "transparent",
+        backgroundColor: '#000',
+        shadowColor: 'transparent',
         height: 0,
       },
     },
   },
   {
-    name: "EnterPhoneNumberLogin",
+    name: 'EnterPhoneNumberLogin',
     component: EnterPhoneNumberLogin,
     screenOptions: {
       headerShown: true,
       headerBackTitleVisible: false,
-      headerTintColor: "#fff",
-      headerTitle: "",
+      headerTintColor: '#fff',
+      headerTitle: '',
       headerStyle: {
-        backgroundColor: "#000",
-        shadowColor: "transparent",
+        backgroundColor: '#000',
+        shadowColor: 'transparent',
         height: 0,
       },
     },
   },
   {
-    name: "EnterPhoneNumberSignUp",
+    name: 'EnterPhoneNumberSignUp',
     component: EnterPhoneNumberSignUp,
     screenOptions: {
       headerShown: true,
       headerBackTitleVisible: false,
-      headerTintColor: "#fff",
-      headerTitle: "",
+      headerTintColor: '#fff',
+      headerTitle: '',
       headerStyle: {
-        backgroundColor: "#000",
-        shadowColor: "transparent",
+        backgroundColor: '#000',
+        shadowColor: 'transparent',
         height: 0,
       },
     },
@@ -123,11 +155,11 @@ export default function Router() {
     <>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="HomePage"
+          initialRouteName='HomePage'
           screenOptions={{
             contentStyle: {
-              backgroundColor: "#000",
-              width: "100%",
+              backgroundColor: '#000',
+              width: '100%',
             },
           }}
         >
@@ -136,9 +168,9 @@ export default function Router() {
               options={{
                 ...route.screenOptions,
                 contentStyle: {
-                  backgroundColor: "#000",
-                  width: "100%",
-                  alignItems: "center",
+                  backgroundColor: '#000',
+                  width: '100%',
+                  alignItems: 'center',
                 },
               }}
               key={index}
