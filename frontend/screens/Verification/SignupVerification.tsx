@@ -9,11 +9,11 @@ import {
 import * as Font from 'expo-font';
 import StyledButton from '../../components/HomePage/StyledButton';
 import OTPTextView from 'react-native-otp-textinput';
-import { useLoginStore } from '../../stores/LoginStore';
+import { useSignUpStore } from '../../stores/SignUpStore';
 
-const LoginVerification = ({ navigation }: any) => {
+const SignupVerification = ({ navigation }: any) => {
   const [OTPCode, setOTPCode] = useState(0);
-  const { phoneNumber, setPhoneNumber } = useLoginStore((state: any) => {
+  const { phoneNumber, setPhoneNumber } = useSignUpStore((state: any) => {
     return {
       phoneNumber: state.phoneNumber,
       setPhoneNumber: state.setPhoneNumber,
@@ -55,7 +55,10 @@ const LoginVerification = ({ navigation }: any) => {
           <StyledButton
             style={styles.StyledButton}
             buttonText='Continue'
-            onPress={() => console.log(OTPCode)}
+            onPress={() =>
+              OTPCode.toString().length == 4 &&
+              navigation.navigate('SignUpMail')
+            }
           />
           <TouchableHighlight onPress={() => console.log('Pressed')}>
             <Text style={styles.resendText}>{'Resend Code'}</Text>
@@ -119,4 +122,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-export default LoginVerification;
+export default SignupVerification;
