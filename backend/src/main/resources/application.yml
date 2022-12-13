@@ -3,7 +3,7 @@ spring:
     password:
     url:
     username:
-    driver-class-name:
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
