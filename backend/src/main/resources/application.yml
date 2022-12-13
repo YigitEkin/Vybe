@@ -1,10 +1,15 @@
 spring:
   datasource:
-    password: postgres
-    url: jdbc:postgresql://localhost:5432/vybe_db
-    username: postgres
-    driver-class-name: org.postgresql.Driver
+    password:
+    url:
+    username:
+    driver-class-name:
 
   jpa:
     hibernate:
       ddl-auto: create-drop
+two-factor-auth:
+  account-sid:
+  auth-token:
+  service-id:
+  channel:
