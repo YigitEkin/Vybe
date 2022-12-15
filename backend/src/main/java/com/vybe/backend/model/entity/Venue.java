@@ -3,6 +3,7 @@ package com.vybe.backend.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -55,15 +56,10 @@ public class Venue {
     /**
      * List of playlists defined for the venue
      */
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "venue_id")
-    private List<Playlist> playlist;
+    @OneToOne
+    @ToString.Exclude
+    private Playlist playlist;
 
-    /**
-     * Active playlist
-     */
-    @Transient
-    private Playlist currentPlaylist;
 
     /**
      * List of users that are currently checked in

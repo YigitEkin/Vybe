@@ -1,13 +1,16 @@
 package com.vybe.backend.model.entity;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Set;
 
 /**
  * Playlist class that will govern the restrictions and the next song playing
@@ -24,6 +27,10 @@ public class Playlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Integer id;
+
+
+    @OneToOne( mappedBy = "playlist")
+    private Venue venue;
 
 
     /**
@@ -49,18 +56,18 @@ public class Playlist {
     /**
      * List of genres that the song requests are permitted in
      */
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "playlist_permitted_genres", joinColumns = @JoinColumn(name = "playlist_id"))
     @Column(name = "permitted_genre")
-    private List<String> permittedGenres;
+    private Set<String> permittedGenres;
 
     /**
      * List of genres that the song requests are not permitted in
      */
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "playlist_banned_genres", joinColumns = @JoinColumn(name = "playlist_id"))
     @Column(name = "banned_genre")
-    private List<String> bannedGenres;
+    private Set<String> bannedGenres;
 
     /**
      * Reference to the currently playing song

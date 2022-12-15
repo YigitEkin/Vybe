@@ -17,6 +17,6 @@ public class VenueCreationDTO {
     private String location;
 
     public Venue toVenue() {
-        return new Venue(0, name, description, location, null, null, null, null, null, null, null, null);
+        return new Venue(0, name, description, location, null, null, null, null, null, null, null);
     }
 }

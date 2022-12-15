@@ -7,6 +7,7 @@ import com.vybe.backend.model.entity.User;
 import com.vybe.backend.repository.CustomerRepository;
 import com.vybe.backend.repository.SongRepository;
 import com.vybe.backend.repository.UserRepository;
+import com.vybe.backend.service.PlaylistService;
 import com.vybe.backend.service.SongService;
 import com.vybe.backend.service.UserService;
 import com.vybe.backend.service.VenueService;
@@ -15,6 +16,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import java.util.Arrays;
 
 @SpringBootApplication
 public class BackendApplication {
@@ -25,16 +28,18 @@ public class BackendApplication {
 	UserService userService;
 	VenueService venueService;
 	SongService songService;
+	PlaylistService playlistService;
 
 	@Autowired
 	public BackendApplication(UserRepository userRepository, CustomerRepository customerRepository, SongRepository songRepository,
-							  UserService userService, VenueService venueService, SongService songService) {
+							  UserService userService, VenueService venueService, SongService songService, PlaylistService playlistService) {
 		this.userRepository = userRepository;
 		this.customerRepository = customerRepository;
 		this.songRepository = songRepository;
 		this.userService = userService;
 		this.venueService = venueService;
 		this.songService = songService;
+		this.playlistService = playlistService;
 	}
 
 	public static void main(String[] args) {
@@ -43,7 +48,7 @@ public class BackendApplication {
 
 	@Bean
 	public CommandLineRunner lineRunner(CustomerRepository customerRepository, SongRepository songRepository, UserRepository userRepository,
-										UserService userService, VenueService venueService, SongService songService) {
+										UserService userService, VenueService venueService, SongService songService, PlaylistService playlistService) {
 		return args -> {
 			// test user service class using assert statements to check if the methods work
 			CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO("testmail1", "testpass1", "testname1", "testphone1", "testdate1", "testdate1");
@@ -211,9 +216,95 @@ public class BackendApplication {
 				assert e.getMessage().equals("Song with id: " + songDTO.getId() + " not found");
 			}
 
+			// test adding a playlist
+			VenueCreationDTO venueCreationDTO2 = new VenueCreationDTO("testname2", "testdescription2", "testlocation2");
+			venueDTO2 = venueService.addVenue(venueCreationDTO2);
+			PlaylistCreationDTO playlistCreationDTO = new PlaylistCreationDTO(venueDTO2.getId());
+
+			VenueDTO venueDTO4 = venueService.getVenue(venueDTO2.getId());
+			assert venueDTO4.getName().equals("testname2");
+
+			PlaylistDTO playlistDTO = playlistService.createPlaylist(playlistCreationDTO);
+			assert playlistDTO.getVenueId() == venueDTO2.getId();
+
+
+
+			// test getting a playlist
+			PlaylistDTO playlistDTO2 = playlistService.getPlaylist(playlistDTO.getId());
+			assert playlistDTO2.getVenueId() == venueDTO2.getId();
+
+			// test getting a playlist with a non-existent id
+			try {
+				PlaylistDTO playlistDTO3 = playlistService.getPlaylist(100);
+			} catch (Exception e) {
+				assert e.getMessage().equals("Playlist with id: 100 not found");
+			}
+
+			// test getting playlist by venue id
+			PlaylistDTO playlistDTO4 = playlistService.getPlaylistOfVenue(venueDTO2.getId());
+			assert playlistDTO4.getVenueId() == venueDTO2.getId();
+
+			// test getting playlist by non-existent venue id
+			try {
+				PlaylistDTO playlistDTO5 = playlistService.getPlaylistOfVenue(100);
+			} catch (Exception e) {
+				assert e.getMessage().equals("Playlist of venue with id: 100 not found");
+			}
+
+			// test the playlist from the venue
+			VenueDTO venueDTO5 = venueService.getVenue(venueDTO2.getId());
+			assert venueDTO5.getPlaylist().getId().equals(playlistDTO4.getId());
+
+			// test adding banned genres to a playlist
+			playlistService.addBannedGenresToPlaylist(playlistDTO.getId(), Arrays.asList("testgenre1", "testgenre2"));
+			PlaylistDTO playlistDTO6 = playlistService.getPlaylist(playlistDTO.getId());
+			assert playlistDTO6.getBannedGenres().size() == 2;
+			assert playlistDTO6.getBannedGenres().contains("testgenre1");
+			assert playlistDTO6.getBannedGenres().contains("testgenre2");
+
+			// test adding banned genres to a playlist with a non-existent id
+			try {
+				playlistService.addBannedGenresToPlaylist(100, Arrays.asList("testgenre1", "testgenre2"));
+			} catch (Exception e) {
+				assert e.getMessage().equals("Playlist with id: 100 not found");
+			}
+
+			// test adding banned genres to a playlist with a null list
+			try {
+				playlistService.addBannedGenresToPlaylist(playlistDTO.getId(), null);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				assert e.getMessage().equals("Banned genres list cannot be null");
+			}
+
+			// test to see if the banned genres are added to the playlist of the venue
+			VenueDTO venueDTO6 = venueService.getVenue(venueDTO2.getId());
+			assert venueDTO6.getPlaylist().getBannedGenres().size() == 2;
+			assert venueDTO6.getPlaylist().getBannedGenres().contains("testgenre1");
+			assert venueDTO6.getPlaylist().getBannedGenres().contains("testgenre2");
+
+			// test deleting banned genres from a playlist
+			playlistService.removeBannedGenresFromPlaylist(playlistDTO.getId(), Arrays.asList("testgenre1", "testgenre2"));
+			PlaylistDTO playlistDTO7 = playlistService.getPlaylist(playlistDTO.getId());
+			assert playlistDTO7.getBannedGenres().size() == 0;
+
+			// test deleting banned genres from a playlist with a non-existent id
+			try {
+				playlistService.removeBannedGenresFromPlaylist(100, Arrays.asList("testgenre1", "testgenre2"));
+			} catch (Exception e) {
+				assert e.getMessage().equals("Playlist with id: 100 not found");
+			}
+
+			// test to see if the banned genres are deleted from the playlist of the venue
+			VenueDTO venueDTO7 = venueService.getVenue(venueDTO2.getId());
+			assert venueDTO7.getPlaylist().getBannedGenres().size() == 0;
 
 
 			System.out.println("Tests passed");
+
+			//TODO: add tests for setting the mode, and getting the mode
+			//TODO: add tests for adding and removing songs from the playlist
+			//TODO: add tests for adding and removing songs from the request queue
 
 
 		};

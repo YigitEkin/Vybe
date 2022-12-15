@@ -32,10 +32,12 @@ public class User {
     /**
      * The users email
      */
+    // TODO: remove email from user
     private String email;
     /**
      * The users phone number
      */
+    // TODO: add unique constraint to phone number
     private String phoneNumber;
     /**
      * The users profile picture
