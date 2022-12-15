@@ -55,7 +55,7 @@ const LoginVerification = ({ navigation }: any) => {
           <StyledButton
             style={styles.StyledButton}
             buttonText='Continue'
-            onPress={() => console.log(OTPCode)}
+            onPress={() => navigation.navigate('HomeNotCheckedIn')}
           />
           <TouchableHighlight onPress={() => console.log('Pressed')}>
             <Text style={styles.resendText}>{'Resend Code'}</Text>
