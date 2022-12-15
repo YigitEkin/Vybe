@@ -303,10 +303,8 @@ public class BackendApplication {
 			System.out.println("Tests passed");
 
 			//TODO: add tests for setting the mode, and getting the mode
-			//TODO: add tests for adding and removing songs from the playlist
+			//TODO: add tests for adding and removing songs from the default playlist
 			//TODO: add tests for adding and removing songs from the request queue
-
-
 		};
 	}
 

@@ -108,14 +108,6 @@ public class Venue {
     }
 
     /**
-     * Called when creating an empty playlist for the venue
-     * @return TRUE if the customer was added successfully, FALSE otherwise
-     */
-    public Boolean createPlaylist() {
-        return null;
-    }
-
-    /**
      * Called when a venue admin wants to migrate their playlist to the venue
      * @param url is the url of the playlist on Spotify
      * @return TRUE if the playlist was migrated successfully, FALSE otherwise

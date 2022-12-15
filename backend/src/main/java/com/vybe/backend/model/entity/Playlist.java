@@ -81,42 +81,7 @@ public class Playlist {
     @Transient
     private String currentMode;
 
-    /**
-     * Adds a permitted genre to the permitted genres list
-     * @param genre the genre that will be added to the list
-     * @return TRUE if the genre was added successfully, FALSE otherwise 
-     */
-    public Boolean addPermittedGenre(String genre) {
-        return null;
-    }
-
-    /**
-     * Removes a permitted genre from the permitted genres list
-     * @param genre the genre that will be removed from the list
-     * @return TRUE if the genre was removed successfully, FALSE otherwise 
-     */
-    public Boolean removePermittedGenre(String genre) {
-        return null;
-    }
-
-    /**
-     * Adds a banned genre to the permitted banned list
-     * @param genre the genre that will be added to the list
-     * @return TRUE if the genre was added successfully, FALSE otherwise
-     */
-    public Boolean addBannedGenre(String genre) {
-        return null;
-    }
-
-    /**
-     * Removes a banned genre from the banned genres list
-     * @param genre the genre that will be removed from the list
-     * @return TRUE if the genre was removed successfully, FALSE otherwise
-     */
-    public Boolean removeBannedGenre(String genre) {
-        return null;
-    }
-
+   
     /**
      * Adds a song to the default playlist
      * @param Song the song that will be added to the default playlist
