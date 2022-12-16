@@ -26,6 +26,8 @@ public class PlaylistDTO {
     private Set<String> bannedGenres;
     private Song currentlyPlayingSong;
     private String currentMode;
+    private String defaultPlaylistId;
+    private String requestPlaylistId;
 
     public PlaylistDTO(Playlist playlist) {
         this.id = playlist.getId();
@@ -36,6 +38,8 @@ public class PlaylistDTO {
         this.bannedGenres = playlist.getBannedGenres();
         this.currentlyPlayingSong = playlist.getCurrentlyPlayingSong();
         this.currentMode = playlist.getCurrentMode();
+        this.defaultPlaylistId = playlist.getDefaultPlaylistId();
+        this.requestPlaylistId = playlist.getRequestPlaylistId();
     }
 
 

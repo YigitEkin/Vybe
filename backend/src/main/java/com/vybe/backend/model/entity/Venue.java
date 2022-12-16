@@ -89,6 +89,9 @@ public class Venue {
      */
     private String qrCode;
 
+
+    private String soundzoneId;
+
     /**
      * Called when coins are spent on the venue
      * @param points the amount of points to be added to the venue

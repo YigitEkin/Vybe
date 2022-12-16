@@ -23,6 +23,7 @@ public class VenueDTO {
     private List<Rating> ratings;
     private List<Comment> comments;
     private String qrCode;
+    private String soundzoneId;
 
     public VenueDTO(Venue venue) {
         this.id = venue.getId();
@@ -35,9 +36,10 @@ public class VenueDTO {
         this.ratings = venue.getRatings();
         this.comments = venue.getComments();
         this.qrCode = venue.getQrCode();
+        this.soundzoneId = venue.getSoundzoneId();
     }
 
     public Venue toVenue() {
-        return new Venue(id, name, description, location, analytics, photos, playlist, null, ratings, comments, qrCode);
+        return new Venue(id, name, description, location, analytics, photos, playlist, null, ratings, comments, qrCode, soundzoneId);
     }
 }

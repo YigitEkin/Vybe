@@ -12,12 +12,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SongDTO {
-    private Integer id;
+    private String id;
     private String name;
     private String artist;
     // TODO: Decide on Object type
     private String albumArt;
     private String link;
+    private String soundtrackYBId;
 
     public SongDTO(Song song) {
         this.id = song.getId();

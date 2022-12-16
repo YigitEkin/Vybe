@@ -28,6 +28,11 @@ public class Playlist {
     @Id
     private Integer id;
 
+    @Column(unique = true)
+    private String defaultPlaylistId;
+
+    @Column(unique = true)
+    private String requestPlaylistId;
 
     @OneToOne( mappedBy = "playlist")
     private Venue venue;
@@ -84,7 +89,7 @@ public class Playlist {
    
     /**
      * Adds a song to the default playlist
-     * @param Song the song that will be added to the default playlist
+     * @param song the song that will be added to the default playlist
      * @return TRUE if the song was added successfully, FALSE otherwise 
      */
     public Boolean addSong(Song song) {

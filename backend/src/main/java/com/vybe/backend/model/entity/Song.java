@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -20,7 +21,8 @@ public class Song {
      * The song's id
      */
     @Id
-    private Integer id;
+    private String id;
+
     /**
      * The song's name
      */

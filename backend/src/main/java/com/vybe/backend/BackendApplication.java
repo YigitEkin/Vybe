@@ -73,6 +73,8 @@ public class BackendApplication {
 			AdminDTO adminDTO = userService.addAdmin(adminCreationDTO);
 			assert adminDTO.getUsername().equals("testname5");
 
+			// TODO: test phone number exception
+
 			// test get customer
 			CustomerDTO customerDTO2 = userService.getCustomer("testname1");
 			assert customerDTO2.getUsername().equals("testname1");
@@ -138,7 +140,7 @@ public class BackendApplication {
 			}
 
 			// test adding a venue
-			VenueCreationDTO venueCreationDTO = new VenueCreationDTO("testname1", "testdescription1", "testlocation1");
+			VenueCreationDTO venueCreationDTO = new VenueCreationDTO("testname1", "testdescription1", "testlocation1", "testsoundzoneID");
 			VenueDTO venueDTO = venueService.addVenue(venueCreationDTO);
 			assert venueDTO.getName().equals("testname1");
 			assert venueDTO.getDescription().equals("testdescription1");
@@ -175,7 +177,7 @@ public class BackendApplication {
 			}
 
 			// test adding a song
-			SongDTO songCreationDTO = new SongDTO(0, "testname1", "testartist1", "testart1", "testlink1");
+			SongDTO songCreationDTO = new SongDTO("0", "testname1", "testartist1", "testart1", "testlink1", "testsoundtrackYBId");
 			SongDTO songDTO = songService.addSong(songCreationDTO);
 			assert songDTO.getName().equals("testname1");
 			assert songDTO.getArtist().equals("testartist1");
@@ -183,7 +185,7 @@ public class BackendApplication {
 			assert songDTO.getLink().equals("testlink1");
 
 			// test getting a song
-			SongDTO songDTO2 = songService.getSong("testname1");
+			SongDTO songDTO2 = songService.getSongByName("testname1");
 			assert songDTO2.getName().equals("testname1");
 
 			// test getting a song with an id
@@ -192,14 +194,14 @@ public class BackendApplication {
 
 			// test getting a song with a non-existent id
 			try {
-				SongDTO songDTO4 = songService.getSong(100);
+				SongDTO songDTO4 = songService.getSong("100");
 			} catch (Exception e) {
 				assert e.getMessage().equals("Song with id: 100 not found");
 			}
 
 			// test getting a song with a non-existent name
 			try {
-				SongDTO songDTO5 = songService.getSong("testname100");
+				SongDTO songDTO5 = songService.getSongByName("testname100");
 			} catch (Exception e) {
 				assert e.getMessage().equals("Song with name: testname100 not found");
 			}
@@ -213,9 +215,9 @@ public class BackendApplication {
 			}
 
 			// test adding a playlist
-			VenueCreationDTO venueCreationDTO2 = new VenueCreationDTO("testname2", "testdescription2", "testlocation2");
+			VenueCreationDTO venueCreationDTO2 = new VenueCreationDTO("testname2", "testdescription2", "testlocation2", "testsoundzoneID");
 			venueDTO2 = venueService.addVenue(venueCreationDTO2);
-			PlaylistCreationDTO playlistCreationDTO = new PlaylistCreationDTO(venueDTO2.getId());
+			PlaylistCreationDTO playlistCreationDTO = new PlaylistCreationDTO(venueDTO2.getId(), "defaultplaylistid", "requestplaylistid");
 
 			VenueDTO venueDTO4 = venueService.getVenue(venueDTO2.getId());
 			assert venueDTO4.getName().equals("testname2");

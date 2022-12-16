@@ -71,7 +71,7 @@ public class PlaylistService {
     }
 
     // add song to default playlist from song id
-    public SongDTO addSongToDefaultPlaylist(Integer id, Integer songId) {
+    public SongDTO addSongToDefaultPlaylist(Integer id, String songId) {
         Playlist playlist = playlistRepository.findById(id).orElseThrow(() -> new PlaylistNotFoundException("Playlist with id: " + id + " not found"));
         Song song = songRepository.findById(songId).orElseThrow(() -> new SongNotFoundException("Song with id: " + songId + " not found"));
 
@@ -81,7 +81,7 @@ public class PlaylistService {
     }
 
     // remove song from default playlist from song id
-    public SongDTO removeSongFromDefaultPlaylist(Integer id, Integer songId) {
+    public SongDTO removeSongFromDefaultPlaylist(Integer id, String songId) {
         Playlist playlist = playlistRepository.findById(id).orElseThrow(() -> new PlaylistNotFoundException("Playlist with id: " + id + " not found"));
         Song songToRemove = songRepository.findById(songId).orElseThrow(() -> new SongNotFoundException("Song with id: " + songId + " not found"));
         playlist.getDefaultPlaylist().removeIf(song -> song.getId().equals(songId));

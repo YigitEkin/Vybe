@@ -17,9 +17,11 @@ import java.util.HashSet;
 @Setter
 public class PlaylistCreationDTO {
     private Integer venueId;
+    private String defaultPlaylistId;
+    private String requestPlaylistId;
 
 
     public Playlist toPlaylist() {
-        return new Playlist(0, null, null, new ArrayList<Song>(), new HashSet<>(), new HashSet<>(), null, null);
+        return new Playlist(0, defaultPlaylistId, requestPlaylistId, null, null, new ArrayList<Song>(), new HashSet<>(), new HashSet<>(), null, null);
     }
 }
