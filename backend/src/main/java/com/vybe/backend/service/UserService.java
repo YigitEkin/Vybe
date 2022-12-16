@@ -1,10 +1,7 @@
 package com.vybe.backend.service;
 
 import com.vybe.backend.DTO.*;
-import com.vybe.backend.exception.AdminNotFoundException;
-import com.vybe.backend.exception.CustomerNotFoundException;
-import com.vybe.backend.exception.UsernameTakenException;
-import com.vybe.backend.exception.VenueAdminNotFoundException;
+import com.vybe.backend.exception.*;
 import com.vybe.backend.repository.AdminRepository;
 import com.vybe.backend.repository.CustomerRepository;
 import com.vybe.backend.repository.UserRepository;
@@ -38,8 +35,9 @@ public class UserService {
         if(userRepository.existsByUsername(customerCreationDTO.getUsername())) {
             throw new UsernameTakenException("Username already exists");
         }
-
-        // TODO: should we check if the phone number exists?
+        if (userRepository.existsByPhoneNumber(customerCreationDTO.getPhoneNumber())) {
+            throw new PhoneNumberTakenException("Phone number already exists");
+        }
         // TODO: hash the password
         return new CustomerDTO(customerRepository.save(customerCreationDTO.toCustomer()));
     }
@@ -76,7 +74,9 @@ public class UserService {
         if (userRepository.existsByUsername(venueAdminCreationDTO.getUsername())) {
             throw new UsernameTakenException("Username already exists");
         }
-        // TODO: should we check if the phone number exists?
+        if (userRepository.existsByPhoneNumber(venueAdminCreationDTO.getPhoneNumber())) {
+            throw new PhoneNumberTakenException("Phone number already exists");
+        }
         // TODO: hash the password
         return new VenueAdminDTO(venueAdminRepository.save(venueAdminCreationDTO.toVenueAdmin()));
     }

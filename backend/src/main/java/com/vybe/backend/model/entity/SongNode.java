@@ -46,6 +46,6 @@ public class SongNode implements Comparable<SongNode> {
      * @return the result of the compare operation
      */
     public int compareTo(SongNode songNode){
-        return Integer.compare(this.song.getId(), songNode.song.getId());
+        return Double.compare(this.weight, songNode.weight);
     }
 }

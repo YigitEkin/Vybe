@@ -12,7 +12,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CustomerCreationDTO {
-    private String email;
     private String password;
     private String username;
     private String phoneNumber;
@@ -20,7 +19,7 @@ public class CustomerCreationDTO {
     private String dateOfCreation;
 
     public Customer toCustomer() {
-        return new Customer(username, password, email, phoneNumber, null, null, null, null, dateOfBirth, dateOfCreation);
+        return new Customer(username, password, phoneNumber, null, null, null, null, dateOfBirth, dateOfCreation);
     }
 
 }

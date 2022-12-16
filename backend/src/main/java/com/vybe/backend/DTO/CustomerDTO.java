@@ -13,14 +13,12 @@ import lombok.Setter;
 @Setter
 public class CustomerDTO {
     private String username;
-    private String email;
     private String phoneNumber;
     private String dateOfBirth;
     private String dateOfCreation;
 
     public CustomerDTO(Customer customer) {
         this.username = customer.getUsername();
-        this.email = customer.getEmail();
         this.phoneNumber = customer.getPhoneNumber();
         this.dateOfBirth = customer.getDateOfBirth();
         this.dateOfCreation = customer.getDateOfCreation();

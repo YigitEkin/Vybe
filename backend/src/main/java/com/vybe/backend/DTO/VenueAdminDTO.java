@@ -12,13 +12,11 @@ import lombok.Setter;
 @Setter
 public class VenueAdminDTO {
     private String username;
-    private String email;
     private String phoneNumber;
     private String venueName;
 
     public VenueAdminDTO(VenueAdmin venueAdmin) {
         this.username = venueAdmin.getUsername();
-        this.email = venueAdmin.getEmail();
         this.phoneNumber = venueAdmin.getPhoneNumber();
         //this.venueName = venueAdmin.getVenue().getName();
     }

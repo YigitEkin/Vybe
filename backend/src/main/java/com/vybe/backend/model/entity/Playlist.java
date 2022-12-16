@@ -1,13 +1,16 @@
 package com.vybe.backend.model.entity;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Set;
 
 /**
  * Playlist class that will govern the restrictions and the next song playing
@@ -24,6 +27,15 @@ public class Playlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Integer id;
+
+    @Column(unique = true)
+    private String defaultPlaylistId;
+
+    @Column(unique = true)
+    private String requestPlaylistId;
+
+    @OneToOne( mappedBy = "playlist")
+    private Venue venue;
 
 
     /**
@@ -49,18 +61,18 @@ public class Playlist {
     /**
      * List of genres that the song requests are permitted in
      */
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "playlist_permitted_genres", joinColumns = @JoinColumn(name = "playlist_id"))
     @Column(name = "permitted_genre")
-    private List<String> permittedGenres;
+    private Set<String> permittedGenres;
 
     /**
      * List of genres that the song requests are not permitted in
      */
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "playlist_banned_genres", joinColumns = @JoinColumn(name = "playlist_id"))
     @Column(name = "banned_genre")
-    private List<String> bannedGenres;
+    private Set<String> bannedGenres;
 
     /**
      * Reference to the currently playing song
@@ -74,45 +86,10 @@ public class Playlist {
     @Transient
     private String currentMode;
 
-    /**
-     * Adds a permitted genre to the permitted genres list
-     * @param genre the genre that will be added to the list
-     * @return TRUE if the genre was added successfully, FALSE otherwise 
-     */
-    public Boolean addPermittedGenre(String genre) {
-        return null;
-    }
-
-    /**
-     * Removes a permitted genre from the permitted genres list
-     * @param genre the genre that will be removed from the list
-     * @return TRUE if the genre was removed successfully, FALSE otherwise 
-     */
-    public Boolean removePermittedGenre(String genre) {
-        return null;
-    }
-
-    /**
-     * Adds a banned genre to the permitted banned list
-     * @param genre the genre that will be added to the list
-     * @return TRUE if the genre was added successfully, FALSE otherwise
-     */
-    public Boolean addBannedGenre(String genre) {
-        return null;
-    }
-
-    /**
-     * Removes a banned genre from the banned genres list
-     * @param genre the genre that will be removed from the list
-     * @return TRUE if the genre was removed successfully, FALSE otherwise
-     */
-    public Boolean removeBannedGenre(String genre) {
-        return null;
-    }
-
+   
     /**
      * Adds a song to the default playlist
-     * @param Song the song that will be added to the default playlist
+     * @param song the song that will be added to the default playlist
      * @return TRUE if the song was added successfully, FALSE otherwise 
      */
     public Boolean addSong(Song song) {

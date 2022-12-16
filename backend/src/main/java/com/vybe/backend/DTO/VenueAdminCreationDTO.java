@@ -26,6 +26,6 @@ public class VenueAdminCreationDTO {
     }
 
     public VenueAdmin toVenueAdmin() {
-        return new VenueAdmin(username, password, email, phoneNumber, null, null, null, true);
+        return new VenueAdmin(username, password, phoneNumber, null, null, null, true);
     }
 }
