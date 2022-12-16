@@ -18,9 +18,9 @@ import java.util.Stack;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Customer extends User {
-    public Customer(String username, String password, String email, String phoneNumber, Object profilePicture, Venue currentVenue, Stack<SongRequest> requests, List<Customer> friendships,
+    public Customer(String username, String password, String phoneNumber, Object profilePicture, Venue currentVenue, Stack<SongRequest> requests, List<Customer> friendships,
                     String dateOfBirth, String dateOfCreation) {
-        super(username, password, email, phoneNumber, profilePicture, currentVenue, requests);
+        super(username, password, phoneNumber, profilePicture, currentVenue, requests);
         this.friends = friendships;
         this.dateOfBirth = dateOfBirth;
         this.dateOfCreation = dateOfCreation;

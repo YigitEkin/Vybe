@@ -51,7 +51,7 @@ public class BackendApplication {
 										UserService userService, VenueService venueService, SongService songService, PlaylistService playlistService) {
 		return args -> {
 			// test user service class using assert statements to check if the methods work
-			CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO("testmail1", "testpass1", "testname1", "testphone1", "testdate1", "testdate1");
+			CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO( "testpass1", "testname1", "testphone1", "testdate1", "testdate1");
 			VenueAdminCreationDTO venueAdminCreationDTO = new VenueAdminCreationDTO("testname3", "testpass3", "testmail3", "testphone3");
 			AdminCreationDTO adminCreationDTO = new AdminCreationDTO("testname5", "testpass5");
 
@@ -60,7 +60,6 @@ public class BackendApplication {
 			// test create customer
 			CustomerDTO customerDTO = userService.addCustomer(customerCreationDTO);
 			assert customerDTO.getUsername().equals("testname1");
-			assert customerDTO.getEmail().equals("testmail1");
 			assert customerDTO.getPhoneNumber().equals("testphone1");
 			assert customerDTO.getDateOfBirth().equals("testdate1");
 			assert customerDTO.getDateOfCreation().equals("testdate1");
@@ -68,7 +67,6 @@ public class BackendApplication {
 			// test create venue admin
 			VenueAdminDTO venueAdminDTO = userService.addVenueAdmin(venueAdminCreationDTO);
 			assert venueAdminDTO.getUsername().equals("testname3");
-			assert venueAdminDTO.getEmail().equals("testmail3");
 			assert venueAdminDTO.getPhoneNumber().equals("testphone3");
 
 			// test create admin
@@ -78,7 +76,6 @@ public class BackendApplication {
 			// test get customer
 			CustomerDTO customerDTO2 = userService.getCustomer("testname1");
 			assert customerDTO2.getUsername().equals("testname1");
-			assert customerDTO2.getEmail().equals("testmail1");
 			assert customerDTO2.getPhoneNumber().equals("testphone1");
 			assert customerDTO2.getDateOfBirth().equals("testdate1");
 			assert customerDTO2.getDateOfCreation().equals("testdate1");
@@ -86,7 +83,6 @@ public class BackendApplication {
 			// test get venue admin
 			VenueAdminDTO venueAdminDTO2 = userService.getVenueAdmin("testname3");
 			assert venueAdminDTO2.getUsername().equals("testname3");
-			assert venueAdminDTO2.getEmail().equals("testmail3");
 			assert venueAdminDTO2.getPhoneNumber().equals("testphone3");
 
 			// test get admin
@@ -94,7 +90,7 @@ public class BackendApplication {
 			assert adminDTO2.getUsername().equals("testname5");
 
 			// test adding a customer with an existing username
-			CustomerCreationDTO customerCreationDTO3 = new CustomerCreationDTO("testmail1", "testpass1", "testname1", "testphone1", "testdate1", "testgender1");
+			CustomerCreationDTO customerCreationDTO3 = new CustomerCreationDTO( "testpass1", "testname1", "testphone1", "testdate1", "testgender1");
 			try {
 				CustomerDTO customerDTO3 = userService.addCustomer(customerCreationDTO3);
 			} catch (Exception e) {
@@ -273,7 +269,6 @@ public class BackendApplication {
 			try {
 				playlistService.addBannedGenresToPlaylist(playlistDTO.getId(), null);
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
 				assert e.getMessage().equals("Banned genres list cannot be null");
 			}
 
