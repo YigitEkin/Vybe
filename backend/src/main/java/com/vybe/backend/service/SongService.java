@@ -1,7 +1,7 @@
 package com.vybe.backend.service;
 
 
-import com.vybe.backend.DTO.SongDTO;
+import com.vybe.backend.model.dto.SongDTO;
 import com.vybe.backend.exception.SongNotFoundException;
 import com.vybe.backend.repository.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;

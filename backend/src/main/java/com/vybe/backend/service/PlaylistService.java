@@ -1,9 +1,9 @@
 package com.vybe.backend.service;
 
 
-import com.vybe.backend.DTO.PlaylistCreationDTO;
-import com.vybe.backend.DTO.PlaylistDTO;
-import com.vybe.backend.DTO.SongDTO;
+import com.vybe.backend.model.dto.PlaylistCreationDTO;
+import com.vybe.backend.model.dto.PlaylistDTO;
+import com.vybe.backend.model.dto.SongDTO;
 import com.vybe.backend.exception.InputException;
 import com.vybe.backend.exception.PlaylistNotFoundException;
 import com.vybe.backend.exception.SongNotFoundException;
@@ -16,7 +16,6 @@ import com.vybe.backend.repository.SongRepository;
 import com.vybe.backend.repository.VenueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

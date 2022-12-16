@@ -1,4 +1,4 @@
-package com.vybe.backend.DTO;
+package com.vybe.backend.model.dto;
 
 import com.vybe.backend.model.entity.Admin;
 import lombok.AllArgsConstructor;
@@ -10,10 +10,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AdminDTO {
+public class AdminCreationDTO {
     private String username;
+    private String password;
 
-    public AdminDTO(Admin admin) {
-        this.username = admin.getUsername();
+    public Admin toAdmin() {
+        return new Admin(username, password);
     }
 }

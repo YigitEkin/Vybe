@@ -1,4 +1,4 @@
-package com.vybe.backend.DTO;
+package com.vybe.backend.model.dto;
 
 
 import com.vybe.backend.model.entity.VenueAdmin;

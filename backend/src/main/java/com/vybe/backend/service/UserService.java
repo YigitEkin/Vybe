@@ -1,7 +1,7 @@
 package com.vybe.backend.service;
 
-import com.vybe.backend.DTO.*;
 import com.vybe.backend.exception.*;
+import com.vybe.backend.model.dto.*;
 import com.vybe.backend.repository.AdminRepository;
 import com.vybe.backend.repository.CustomerRepository;
 import com.vybe.backend.repository.UserRepository;

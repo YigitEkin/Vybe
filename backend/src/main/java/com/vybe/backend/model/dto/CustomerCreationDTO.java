@@ -1,4 +1,4 @@
-package com.vybe.backend.DTO;
+package com.vybe.backend.model.dto;
 
 
 import com.vybe.backend.model.entity.Customer;
@@ -11,16 +11,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CustomerDTO {
+public class CustomerCreationDTO {
+    private String password;
     private String username;
     private String phoneNumber;
     private String dateOfBirth;
     private String dateOfCreation;
 
-    public CustomerDTO(Customer customer) {
-        this.username = customer.getUsername();
-        this.phoneNumber = customer.getPhoneNumber();
-        this.dateOfBirth = customer.getDateOfBirth();
-        this.dateOfCreation = customer.getDateOfCreation();
+    public Customer toCustomer() {
+        return new Customer(username, password, phoneNumber, null, null, null, null, dateOfBirth, dateOfCreation);
     }
+
 }

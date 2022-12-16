@@ -1,9 +1,6 @@
 package com.vybe.backend;
 
-import com.vybe.backend.DTO.*;
-import com.vybe.backend.model.entity.Customer;
-import com.vybe.backend.model.entity.Song;
-import com.vybe.backend.model.entity.User;
+import com.vybe.backend.model.dto.*;
 import com.vybe.backend.repository.CustomerRepository;
 import com.vybe.backend.repository.SongRepository;
 import com.vybe.backend.repository.UserRepository;

@@ -1,8 +1,8 @@
 package com.vybe.backend.service;
 
 
-import com.vybe.backend.DTO.VenueCreationDTO;
-import com.vybe.backend.DTO.VenueDTO;
+import com.vybe.backend.model.dto.VenueCreationDTO;
+import com.vybe.backend.model.dto.VenueDTO;
 import com.vybe.backend.exception.VenueNotFoundException;
 import com.vybe.backend.repository.VenueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
