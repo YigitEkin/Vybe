@@ -4,18 +4,20 @@ import com.twilio.Twilio;
 import com.twilio.rest.verify.v2.service.Verification;
 import com.twilio.rest.verify.v2.service.VerificationCheck;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TwoFactorUtil {
     @Value("${two-factor-auth.account-sid}")
-    private static String ACCOUNT_SID;
+    private String ACCOUNT_SID = "";
     @Value("${two-factor-auth.auth-token}")
-    public static String AUTH_TOKEN;
+    public String AUTH_TOKEN;
     @Value("${two-factor-auth.service-id}")
-    public static String SERVICE_ID;
+    public String SERVICE_ID;
     @Value("${two-factor-auth.channel}")
-    public static String CHANNEL;
+    public String CHANNEL;
 
-    public static void sendVerificationToken(String number) {
+    public void sendVerificationToken(String number) {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         Verification verification = Verification.creator(
                         SERVICE_ID,
@@ -24,7 +26,9 @@ public class TwoFactorUtil {
                 .create();
     }
 
-    public static boolean verifyToken(String number, String token) {
+    public boolean verifyToken(String number, String token) {
+        System.out.println("Account SID: " + ACCOUNT_SID);
+        System.out.println("Auth Token: " + AUTH_TOKEN);
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         VerificationCheck verificationCheck = VerificationCheck.creator(
                         SERVICE_ID)

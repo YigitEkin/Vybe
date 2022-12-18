@@ -17,10 +17,11 @@ public class AuthService {
     @Resource
     private UserService userService;
 
+    @Resource TwoFactorUtil twoFactorUtil;
     public Boolean authorizeUsernameAndPassword(String username, String password) {
        try {
            User user = userService.authorizeCustomer(username, password);
-           TwoFactorUtil.sendVerificationToken(user.getPhoneNumber());
+           twoFactorUtil.sendVerificationToken(user.getPhoneNumber());
            return true;
        } catch (Exception e) {
            return false;
@@ -28,26 +29,26 @@ public class AuthService {
     }
     public CustomerDTO authorizeCustomer2FA(String code, String username) {
         CustomerDTO customer = userService.getCustomer(username);
-        if(TwoFactorUtil.verifyToken(customer.getPhoneNumber(), code)) {
+        if(twoFactorUtil.verifyToken(customer.getPhoneNumber(), code)) {
             return customer;
         }
         return null;
     }
     public Boolean send2FA(String phoneNumber) {
-        TwoFactorUtil.sendVerificationToken(phoneNumber);
+        twoFactorUtil.sendVerificationToken(phoneNumber);
         return true;
     }
 
     public VenueAdminDTO authorizeVenueAdmin2FA(String code, String username) {
         VenueAdminDTO venueAdmin = userService.getVenueAdmin(username);
-        if(TwoFactorUtil.verifyToken(venueAdmin.getPhoneNumber(), code)) {
+        if(twoFactorUtil.verifyToken(venueAdmin.getPhoneNumber(), code)) {
             return venueAdmin;
         }
         return null;
     }
     public CustomerDTO registerCustomer(CustomerCreationDTO customerCreationDTO, String code) {
 
-        if (TwoFactorUtil.verifyToken(customerCreationDTO.getPhoneNumber(), code)) {
+        if (twoFactorUtil.verifyToken(customerCreationDTO.getPhoneNumber(), code)) {
             try {
                 return userService.addCustomer(customerCreationDTO);
 
@@ -58,7 +59,7 @@ public class AuthService {
         return null;
     }
     public VenueAdminDTO registerVenueAdmin(VenueAdminCreationDTO venueAdminCreationDTO, String code) {
-        if (TwoFactorUtil.verifyToken(venueAdminCreationDTO.getPhoneNumber(), code)) {
+        if (twoFactorUtil.verifyToken(venueAdminCreationDTO.getPhoneNumber(), code)) {
             try {
                 return userService.addVenueAdmin(venueAdminCreationDTO);
             } catch (Exception e) {

@@ -3,6 +3,7 @@ package com.vybe.backend.util;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.graphql.client.HttpGraphQlClient;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+@UtilityClass
 public class SoundtrackUtil {
 
     private static WebClient webClient = WebClient.create();

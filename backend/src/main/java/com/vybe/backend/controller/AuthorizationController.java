@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
-@RestController("/api/auth")
+@RestController
+@RequestMapping("/api/auth")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthorizationController {
 
@@ -40,7 +41,7 @@ public class AuthorizationController {
 
     @GetMapping("/2FA")
     public Boolean send2FA(@RequestParam String phoneNumber) {
-        return authService.send2FA(phoneNumber);
+        return authService.send2FA("+" + phoneNumber);
     }
 
 
