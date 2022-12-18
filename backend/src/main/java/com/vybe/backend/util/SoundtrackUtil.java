@@ -53,7 +53,7 @@ public class SoundtrackUtil {
                 .toEntity(Object.class)
                 .block();
         LinkedHashMap<String, Object> playlist = (LinkedHashMap<String, Object>) ((LinkedHashMap<String, Object>) response).get("playlist");
-        LinkedHashMap<String, Object> tracks = (LinkedHashMap<String, Object>) ((LinkedHashMap<String, Object>) playlist).get("tracks");
+        LinkedHashMap<String, Object> tracks = (LinkedHashMap<String, Object>) (playlist).get("tracks");
         ArrayList<LinkedHashMap<String, Object>> edges = (ArrayList<LinkedHashMap<String, Object>> ) ((LinkedHashMap<String, Object>) tracks).get("edges");
         ArrayList<String> trackNames = new ArrayList<>();
         for (LinkedHashMap<String, Object> edge : edges) {
