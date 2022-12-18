@@ -48,7 +48,7 @@ public class BackendApplication {
 										UserService userService, VenueService venueService, SongService songService, PlaylistService playlistService) {
 		return args -> {
 			// test user service class using assert statements to check if the methods work
-			CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO( "testpass1", "testname1", "testphone1", "testdate1", "testdate1");
+			CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO( "testpass1", "testname1", "testphone1", "testdate1", "testdate1", "000000");
 			VenueAdminCreationDTO venueAdminCreationDTO = new VenueAdminCreationDTO("testname3", "testpass3", "testmail3", "testphone3");
 			AdminCreationDTO adminCreationDTO = new AdminCreationDTO("testname5", "testpass5");
 
@@ -89,7 +89,7 @@ public class BackendApplication {
 			assert adminDTO2.getUsername().equals("testname5");
 
 			// test adding a customer with an existing username
-			CustomerCreationDTO customerCreationDTO3 = new CustomerCreationDTO( "testpass1", "testname1", "testphone1", "testdate1", "testgender1");
+			CustomerCreationDTO customerCreationDTO3 = new CustomerCreationDTO( "testpass1", "testname1", "testphone1", "testdate1", "testgender1", "000000");
 			try {
 				CustomerDTO customerDTO3 = userService.addCustomer(customerCreationDTO3);
 			} catch (Exception e) {

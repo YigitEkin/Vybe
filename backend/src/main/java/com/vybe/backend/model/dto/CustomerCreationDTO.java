@@ -18,6 +18,7 @@ public class CustomerCreationDTO {
     private String dateOfBirth;
     private String dateOfCreation;
 
+    private String code;
     public Customer toCustomer() {
         return new Customer(username, password, phoneNumber, null, null, null, null, dateOfBirth, dateOfCreation);
     }

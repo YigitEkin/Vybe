@@ -2,10 +2,12 @@ package com.vybe.backend.service;
 
 import com.vybe.backend.exception.*;
 import com.vybe.backend.model.dto.*;
+import com.vybe.backend.model.entity.User;
 import com.vybe.backend.repository.AdminRepository;
 import com.vybe.backend.repository.CustomerRepository;
 import com.vybe.backend.repository.UserRepository;
 import com.vybe.backend.repository.VenueAdminRepository;
+import org.apache.http.auth.InvalidCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +42,11 @@ public class UserService {
         }
         // TODO: hash the password
         return new CustomerDTO(customerRepository.save(customerCreationDTO.toCustomer()));
+    }
+
+    public User authorizeCustomer(String username, String password) throws InvalidCredentialsException {
+        return userRepository.getUserByUsernameAndPassword(username, password)
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid credentials"));
     }
 
     // get all customers

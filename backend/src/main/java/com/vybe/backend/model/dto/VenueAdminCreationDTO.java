@@ -18,6 +18,7 @@ public class VenueAdminCreationDTO {
     private String phoneNumber;
     private String venueName;
 
+    private String code;
     public VenueAdminCreationDTO(String username, String password, String email, String phoneNumber) {
         this.username = username;
         this.password = password;
