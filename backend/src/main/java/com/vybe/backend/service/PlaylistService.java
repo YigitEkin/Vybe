@@ -14,10 +14,12 @@ import com.vybe.backend.model.entity.Venue;
 import com.vybe.backend.repository.PlaylistRepository;
 import com.vybe.backend.repository.SongRepository;
 import com.vybe.backend.repository.VenueRepository;
+import com.vybe.backend.util.SoundtrackUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,7 +72,7 @@ public class PlaylistService {
     }
 
     // add song to default playlist from song id
-    public SongDTO addSongToDefaultPlaylist(Integer id, String songId) {
+    public SongDTO addSongToDefaultPlaylist(Integer id, Integer songId) {
         Playlist playlist = playlistRepository.findById(id).orElseThrow(() -> new PlaylistNotFoundException("Playlist with id: " + id + " not found"));
         Song song = songRepository.findById(songId).orElseThrow(() -> new SongNotFoundException("Song with id: " + songId + " not found"));
 
@@ -80,7 +82,7 @@ public class PlaylistService {
     }
 
     // remove song from default playlist from song id
-    public SongDTO removeSongFromDefaultPlaylist(Integer id, String songId) {
+    public SongDTO removeSongFromDefaultPlaylist(Integer id, Integer songId) {
         Playlist playlist = playlistRepository.findById(id).orElseThrow(() -> new PlaylistNotFoundException("Playlist with id: " + id + " not found"));
         Song songToRemove = songRepository.findById(songId).orElseThrow(() -> new SongNotFoundException("Song with id: " + songId + " not found"));
         playlist.getDefaultPlaylist().removeIf(song -> song.getId().equals(songId));
@@ -135,6 +137,26 @@ public class PlaylistService {
         playlist.getPermittedGenres().removeAll(permittedGenres);
         return new PlaylistDTO(playlistRepository.save(playlist));
     }
+
+    // add all songs returned from soundtrackyourbrand to song repository then add them to default playlist
+    public List<SongDTO> addAllSongsToDefaultPlaylist(Integer id) {
+        Playlist playlist = playlistRepository.findById(id).orElseThrow(() -> new PlaylistNotFoundException("Playlist with id: " + id + " not found"));
+        List<String> songs = SoundtrackUtil.getTracksOnPlaylist(playlist.getDefaultPlaylistId(), playlist.getVenue().getToken());
+        List<SongDTO> songDTOs = new ArrayList<>();
+        for (String song : songs) {
+            SongDTO songDTO = new SongDTO();
+            songDTO.setName(song);
+            Song song1 = songRepository.save(songDTO.toSong());
+            playlist.getDefaultPlaylist().add(song1);
+            songDTO = new SongDTO(song1);
+            songDTOs.add(songDTO);
+
+            addSongToDefaultPlaylist(id, songDTO.getId());
+        }
+
+        return songDTOs;
+    }
+
 
     // TODO: add get next music method
 

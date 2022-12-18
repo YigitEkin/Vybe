@@ -55,6 +55,7 @@ public class BackendApplication {
 
 			System.out.println("Testing");
 
+
 			// test create customer
 			CustomerDTO customerDTO = userService.addCustomer(customerCreationDTO);
 			assert customerDTO.getUsername().equals("testname1");
@@ -175,7 +176,7 @@ public class BackendApplication {
 			}
 
 			// test adding a song
-			SongDTO songCreationDTO = new SongDTO("0", "testname1", "testartist1", "testart1", "testlink1", "testsoundtrackYBId");
+			SongDTO songCreationDTO = new SongDTO(0, "testname1", "testartist1", "testart1", "testlink1");
 			SongDTO songDTO = songService.addSong(songCreationDTO);
 			assert songDTO.getName().equals("testname1");
 			assert songDTO.getArtist().equals("testartist1");
@@ -192,7 +193,7 @@ public class BackendApplication {
 
 			// test getting a song with a non-existent id
 			try {
-				SongDTO songDTO4 = songService.getSong("100");
+				SongDTO songDTO4 = songService.getSong(100);
 			} catch (Exception e) {
 				assert e.getMessage().equals("Song with id: 100 not found");
 			}
@@ -213,9 +214,9 @@ public class BackendApplication {
 			}
 
 			// test adding a playlist
-			VenueCreationDTO venueCreationDTO2 = new VenueCreationDTO("testname2", "testdescription2", "testlocation2", "token","testsoundzoneID");
+			VenueCreationDTO venueCreationDTO2 = new VenueCreationDTO("testname2", "testdescription2", "testlocation2", "U291bmRab25lLCwxZXB1NDM3OGJuay9Mb2NhdGlvbiwsMWZlbHNmMGFkcTgvQWNjb3VudCwsMW96ZDN6dGk0ZzAv","WkxnTVI0RW9YRWdPRWVsOEZ5TzZJZFBtSzFzOWpUQ0c6aVlxcVdIVXY3NGFLaXREQVFFQ2V3WmJHUHVxeVRNMlpybUo4Ulp3R3BQS2N3NEZpWGczT2FnUTFFVGtudGlPZQ==");
 			venueDTO2 = venueService.addVenue(venueCreationDTO2);
-			PlaylistCreationDTO playlistCreationDTO = new PlaylistCreationDTO(venueDTO2.getId(), "defaultplaylistid", "requestplaylistid");
+			PlaylistCreationDTO playlistCreationDTO = new PlaylistCreationDTO(venueDTO2.getId(), "Q29sbGVjdGlvbiwsMXQyNzIwYmp5ZjQvU3lzdGVtLHN5c3RlbSwwLw..", "Q29sbGVjdGlvbiwsMXM1NzczbXV6OWMvU291bmRab25lLCwxZXB1NDM3OGJuay9Mb2NhdGlvbiwsMWZlbHNmMGFkcTgvQWNjb3VudCwsMW96ZDN6dGk0ZzAv");
 
 			VenueDTO venueDTO4 = venueService.getVenue(venueDTO2.getId());
 			assert venueDTO4.getName().equals("testname2");
@@ -295,9 +296,9 @@ public class BackendApplication {
 			assert venueDTO7.getPlaylist().getBannedGenres().size() == 0;
 
 			// test adding songs
-			SongDTO songCreationDTO1 = new SongDTO("0", "testname1", "testartist1", "testart1", "testlink1", "testsoundtrackYBId");
-			SongDTO songCreationDTO2 = new SongDTO("2", "testname2", "testartist2", "testart2", "testlink2", "testsoundtrackYBId");
-			SongDTO songCreationDTO3 = new SongDTO("3", "testname3", "testartist3", "testart3", "testlink3", "testsoundtrackYBId");
+			SongDTO songCreationDTO1 = new SongDTO(0, "testname1", "testartist1", "testart1", "testlink1");
+			SongDTO songCreationDTO2 = new SongDTO(2, "testname2", "testartist2", "testart2", "testlink2");
+			SongDTO songCreationDTO3 = new SongDTO(3, "testname3", "testartist3", "testart3", "testlink3");
 			SongDTO songCreatedDTO = songService.addSong(songCreationDTO1);
 			SongDTO songCreatedDTO2 = songService.addSong(songCreationDTO2);
 			SongDTO songCreatedDTO3 = songService.addSong(songCreationDTO3);
@@ -326,22 +327,38 @@ public class BackendApplication {
 			SongNodeDTO songNodeDTO1 = new SongNodeDTO(playlistDTO.getId(), songCreatedDTO.getId(), 1.0);
 			SongNodeDTO songNodeDTO2 = new SongNodeDTO(playlistDTO.getId(), songCreatedDTO2.getId(), 1.0);
 
-			songService.addSongRequest(songNodeDTO1);
-			songService.addSongRequest(songNodeDTO2);
-			songService.addSongRequest(songNodeDTO1);
-			assert playlistService.getPlaylist(playlistDTO.getId()).getRequestedSongs().size() == 2;
-			System.out.println(playlistService.getPlaylist(playlistDTO.getId()).getRequestedSongs());
+			//songService.addSongRequest(songNodeDTO1);
+			//songService.addSongRequest(songNodeDTO2);
+			//songService.addSongRequest(songNodeDTO1);
+			//assert playlistService.getPlaylist(playlistDTO.getId()).getRequestedSongs().size() == 2;
+			//System.out.println(playlistService.getPlaylist(playlistDTO.getId()).getRequestedSongs());
 
 			// test getting next song from request playlist
-			SongDTO songDTO14 = venueService.getNextSong(venueDTO2.getId());
-			System.out.println(songDTO14);
-			assert songDTO14.getId().equals(songCreatedDTO.getId());
+			//ongDTO songDTO14 = venueService.getNextSong(venueDTO2.getId());
+			//System.out.println(songDTO14);
+			//assert songDTO14.getId().equals(songCreatedDTO.getId());
 
-			Song song = venueService.startSong(venueDTO2.getId());
-			System.out.println(song);
+			//Song song = venueService.startSong(venueDTO2.getId());
+			//System.out.println(song);
+
+
 
 			// assert that the song is removed from the request playlist
-			assert playlistService.getPlaylist(playlistDTO.getId()).getRequestedSongs().size() == 1;
+			//assert playlistService.getPlaylist(playlistDTO.getId()).getRequestedSongs().size() == 1;
+
+			playlistService.addAllSongsToDefaultPlaylist(playlistDTO.getId());
+
+			// create song nodes
+			SongNodeDTO songNodeDTO3 = new SongNodeDTO(playlistDTO.getId(), 464, 1.0);
+			SongNodeDTO songNodeDTO4 = new SongNodeDTO(playlistDTO.getId(), 373, 1.0);
+			SongNodeDTO songNodeDTO5 = new SongNodeDTO(playlistDTO.getId(), 464, 1.0);
+
+			// add song nodes to request playlist
+			songService.addSongRequest(songNodeDTO3);
+			songService.addSongRequest(songNodeDTO4);
+			songService.addSongRequest(songNodeDTO5);
+
+			venueService.startSong(venueDTO2.getId());
 
 			System.out.println("Tests passed");
 

@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SongNodeDTO {
     private Integer playlistId;
-    private String songId;
+    private Integer songId;
     private Double weight;
 
     public SongNodeDTO(SongNode songNode){

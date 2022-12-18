@@ -112,10 +112,10 @@ public class VenueService {
 
         String soundzoneId = venue.getSoundzoneId();
         String token = venue.getToken();
-        //String soundtrackYBId = nextSong.getSoundtrackYBId();
-        //int index = SoundtrackUtil.findIndexOfSongInPlaylist(playlistId, soundtrackYBId, token);
-        //System.out.println("playing song in index: " + index);
-        //SoundtrackUtil.playSong(playlistId, index, Collections.singletonList(soundzoneId), token);
+        String name = nextSong.getName();
+        int index = SoundtrackUtil.findIndexOfSongInPlaylist(playlistId, name, token);
+        System.out.println("playing song in index: " + index);
+        SoundtrackUtil.playSong(playlistId, index, Collections.singletonList(soundzoneId), token);
 
         return nextSong.toSong();
     }

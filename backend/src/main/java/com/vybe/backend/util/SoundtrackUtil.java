@@ -21,8 +21,8 @@ public class SoundtrackUtil {
     private static HttpGraphQlClient graphQlClient = HttpGraphQlClient.builder(webClient)
             .build();
 
-    @Value("${soundtrackyourbrand.api.url}")
-    private static String url;
+    //@Value("${soundtrackyourbrand.api.url}")
+    private static final String url = "https://api.soundtrackyourbrand.com/v2";
 
     public static List<String> getTracksOnPlaylist(String playlistId, String token) {
         HashMap<String, Object> variables = new HashMap<>();

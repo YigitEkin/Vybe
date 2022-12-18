@@ -37,7 +37,7 @@ public class SongService {
     }
 
     // get song by id
-    public SongDTO getSong(String id) {
+    public SongDTO getSong(Integer id) {
         if (!songRepository.existsById(id)) {
             throw new SongNotFoundException("Song with id: " + id + " not found");
         }
@@ -61,7 +61,7 @@ public class SongService {
     }
 
     // update song
-    public SongDTO updateSong(String id, SongDTO songDTO) {
+    public SongDTO updateSong(Integer id, SongDTO songDTO) {
         if (!songRepository.existsById(id)) {
             throw new SongNotFoundException("Song with id: " + id + " not found");
         }
@@ -70,12 +70,11 @@ public class SongService {
         songDTO1.setArtist(songDTO.getArtist());
         songDTO1.setAlbumArt(songDTO.getAlbumArt());
         songDTO1.setLink(songDTO.getLink());
-        songDTO1.setSoundtrackYBId(songDTO.getSoundtrackYBId());
         return new SongDTO(songRepository.save(songDTO1.toSong()));
     }
 
     // delete song
-    public void deleteSong(String id) {
+    public void deleteSong(Integer id) {
         if (!songRepository.existsById(id)) {
             throw new SongNotFoundException("Song with id: " + id + " not found");
         }
