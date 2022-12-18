@@ -1,17 +1,16 @@
-import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
-import HomePage from "./screens/HomePage";
-import { useCallback } from "react";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import SignUpMail from "./screens/signup/SignUpMail";
-import SignUpCompletedScreen from "./screens/signup/SignUpCompletedScreen";
-import SignUpPassword from "./screens/signup/SignUpPassword";
-import SignUpUsername from "./screens/signup/SignupUsername";
-import EnterPhoneNumber from "./components/2fa/EnterPhoneNumber";
-import Router from "./navigation/Router";
-
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import HomePage from './screens/HomePage';
+import { useCallback } from 'react';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import SignUpMail from './screens/signup/SignUpMail';
+import SignUpCompletedScreen from './screens/signup/SignUpCompletedScreen';
+import SignUpPassword from './screens/signup/SignUpPassword';
+import SignUpUsername from './screens/signup/SignupUsername';
+import EnterPhoneNumber from './components/2fa/EnterPhoneNumber';
+import Router from './navigation/Router';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -39,19 +38,29 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
-      <SafeAreaView style={styles.container}>
-        <StatusBar style="light" networkActivityIndicatorVisible={true} />
+    <>
+      <SafeAreaView style={styles.container} />
+      {/*<SafeAreaView style={styles.container2}>*/}
+      <View
+        style={{ flex: 1, backgroundColor: '#000', width: '100%' }}
+        onLayout={onLayoutRootView}
+      >
+        <StatusBar style='light' networkActivityIndicatorVisible={true} />
         <Router />
-      </SafeAreaView>
-    </View>
+      </View>
+      {/*</SafeAreaView>*/}
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 0,
+    backgroundColor: '#000',
+    width: '100%',
+  },
+  container2: {
     flex: 1,
-    backgroundColor: "#000",
-    width: "100%",
+    backgroundColor: '#6C7072',
   },
 });
