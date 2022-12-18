@@ -12,6 +12,7 @@ import GroupItem from '../../components/HomePage/GroupItem';
 import { Colors } from '../../constants/Colors';
 import { Camera, CameraType } from 'expo-camera';
 
+import FriendItem from '../../components/HomePage/FriendItem';
 import FAButton from '../../components/HomePage/FAButton';
 import SearchIcon from '../../assets/SearchIcon.png';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -68,7 +69,12 @@ const HomeNotCheckedIn = () => {
   ];
   return !startCamera ? (
     <View style={styles.container}>
-      <View>
+      <View
+        style={{
+          flex: 1,
+          width: '100%',
+        }}
+      >
         <View
           style={{
             flexDirection: 'row',
@@ -94,8 +100,14 @@ const HomeNotCheckedIn = () => {
           data={data}
           renderItem={({ item }) => <GroupItem text={item.text} />}
           horizontal={true}
+          style={{ flexGrow: 0, marginBottom: 100 }}
         />
+        <Text style={[styles.textStyle, { marginBottom: 20 }]}>
+          {'Friends currently Vybing'}
+        </Text>
+        <FriendItem />
       </View>
+
       <FAButton
         style={{ zIndex: 100, bottom: 100, position: 'absolute' }}
         onPress={__startCamera}
