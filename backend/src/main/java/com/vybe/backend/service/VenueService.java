@@ -2,7 +2,6 @@ package com.vybe.backend.service;
 
 
 import com.vybe.backend.model.dto.SongDTO;
-import com.vybe.backend.model.dto.SongNodeDTO;
 import com.vybe.backend.model.dto.VenueCreationDTO;
 import com.vybe.backend.model.dto.VenueDTO;
 import com.vybe.backend.exception.VenueNotFoundException;
@@ -11,7 +10,6 @@ import com.vybe.backend.model.entity.Song;
 import com.vybe.backend.model.entity.Venue;
 import com.vybe.backend.repository.PlaylistRepository;
 import com.vybe.backend.repository.SongNodeRepository;
-import com.vybe.backend.repository.SongRepository;
 import com.vybe.backend.repository.VenueRepository;
 import com.vybe.backend.util.SoundtrackUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,7 @@ public class VenueService {
     VenueRepository venueRepository;
     SongNodeRepository songNodeRepository;
     PlaylistRepository playlistRepository;
+
 
     @Autowired
     public VenueService(VenueRepository venueRepository, SongNodeRepository songNodeRepository, PlaylistRepository playlistRepository) {
@@ -86,16 +85,21 @@ public class VenueService {
             throw new VenueNotFoundException("Venue with id: " + venueId + " not found");
         }
         Venue venue = venueRepository.findById(venueId).get();
-        Song song = venue.getPlaylist().playNextSong();
+        Song song = venue.getPlaylist().playNextSong(songNodeRepository);
         // find the playlist and update the currentMode
         Playlist playlist = playlistRepository.findById(venue.getPlaylist().getId()).get();
         playlist.setCurrentMode(venue.getPlaylist().getCurrentMode());
+        Integer songNodeId = songNodeRepository.findBySong_IdAndPlaylistId(song.getId(), playlist.getId()).getId();
+        songNodeRepository.deleteById(songNodeId);
         playlistRepository.save(playlist);
+
         venueRepository.save(venue);
         return new SongDTO(song);
     }
 
     public Song startSong(Integer venueId) {
+        // delete null song nodes
+
         if (!venueRepository.existsById(venueId))
             throw new VenueNotFoundException("Venue with id: " + venueId + " not found");
 
@@ -105,7 +109,6 @@ public class VenueService {
 
         if (venue.getPlaylist().getCurrentMode().equals("request")) {
             playlistId = venue.getPlaylist().getRequestPlaylistId();
-            songNodeRepository.deleteById(songNodeRepository.findBySong_IdAndPlaylistId(nextSong.getId(), venue.getPlaylist().getId()).getId());
         }
         else
             playlistId = venue.getPlaylist().getDefaultPlaylistId();
@@ -118,6 +121,10 @@ public class VenueService {
         SoundtrackUtil.playSong(playlistId, index, Collections.singletonList(soundzoneId), token);
 
         return nextSong.toSong();
+    }
+
+    public void deleteNull() {
+        songNodeRepository.deleteAllByPlaylistIdIsNull();
     }
 
 }

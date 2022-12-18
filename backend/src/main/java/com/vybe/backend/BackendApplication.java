@@ -317,11 +317,11 @@ public class BackendApplication {
 
 
 			// test get song from playlist
-			SongDTO songDTO12 = venueService.getNextSong(venueDTO2.getId());
-			System.out.println(songDTO12);
+			//SongDTO songDTO12 = venueService.getNextSong(venueDTO2.getId());
+			//System.out.println(songDTO12);
 
-			SongDTO songDTO13 = venueService.getNextSong(venueDTO2.getId());
-			System.out.println(songDTO13);
+			//SongDTO songDTO13 = venueService.getNextSong(venueDTO2.getId());
+			//System.out.println(songDTO13);
 
 			// test adding songs to request playlist
 			SongNodeDTO songNodeDTO1 = new SongNodeDTO(playlistDTO.getId(), songCreatedDTO.getId(), 1.0);
@@ -349,9 +349,9 @@ public class BackendApplication {
 			playlistService.addAllSongsToDefaultPlaylist(playlistDTO.getId());
 
 			// create song nodes
-			SongNodeDTO songNodeDTO3 = new SongNodeDTO(playlistDTO.getId(), 464, 1.0);
-			SongNodeDTO songNodeDTO4 = new SongNodeDTO(playlistDTO.getId(), 373, 1.0);
-			SongNodeDTO songNodeDTO5 = new SongNodeDTO(playlistDTO.getId(), 464, 1.0);
+			SongNodeDTO songNodeDTO3 = new SongNodeDTO(playlistDTO.getId(), 17, 1.0);
+			SongNodeDTO songNodeDTO4 = new SongNodeDTO(playlistDTO.getId(), 36, 1.0);
+			SongNodeDTO songNodeDTO5 = new SongNodeDTO(playlistDTO.getId(), 17, 1.0);
 
 			// add song nodes to request playlist
 			songService.addSongRequest(songNodeDTO3);

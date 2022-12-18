@@ -1,7 +1,9 @@
 package com.vybe.backend.controller;
 
 import com.vybe.backend.model.dto.SongDTO;
+import com.vybe.backend.model.dto.SongNodeDTO;
 import com.vybe.backend.service.PlaylistService;
+import com.vybe.backend.service.SongService;
 import com.vybe.backend.service.VenueService;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +21,12 @@ public class VenueController {
     @Resource
     private PlaylistService playlistService;
 
+    @Resource
+    private SongService songService;
+
     @GetMapping("/{venueId}/nextSong")
     public SongDTO playNextSong(@PathVariable Integer venueId) {
+
         return new SongDTO(venueService.startSong(venueId));
     }
 
@@ -28,4 +34,6 @@ public class VenueController {
     public List<SongDTO> syncDefaultPlaylist(@PathVariable Integer venueId) {
         return playlistService.addAllSongsToDefaultPlaylist(venueId);
     }
+
+
 }

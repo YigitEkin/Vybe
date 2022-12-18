@@ -56,7 +56,7 @@ public class Venue {
     /**
      * List of playlists defined for the venue
      */
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @ToString.Exclude
     private Playlist playlist;
 

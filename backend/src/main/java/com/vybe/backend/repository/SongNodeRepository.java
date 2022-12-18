@@ -9,4 +9,6 @@ public interface SongNodeRepository extends JpaRepository<SongNode, Integer> {
 
     boolean existsBySong_IdAndPlaylistId(Integer song_id, Integer playlistId);
     SongNode findBySong_IdAndPlaylistId(Integer songId, Integer playlistId);
+
+    Integer deleteAllByPlaylistIdIsNull();
 }

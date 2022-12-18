@@ -1,5 +1,6 @@
 package com.vybe.backend.model.entity;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ public class SongNode implements Comparable<SongNode> {
     /**
      * reference to the playlist id that the song node belongs to
      */
+    // force the playlist id to be not null
     private Integer playlistId;
 
     /**

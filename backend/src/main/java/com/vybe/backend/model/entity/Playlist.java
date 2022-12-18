@@ -1,6 +1,7 @@
 package com.vybe.backend.model.entity;
 
 import com.sun.istack.NotNull;
+import com.vybe.backend.repository.SongNodeRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -111,7 +112,7 @@ public class Playlist {
      * Removes the next song from the appropriate queue and returns it
      * @return next song
      */
-    public Song playNextSong() {
+    public Song playNextSong(SongNodeRepository songNodeRepository) {
         if(requestedSongs.size() > 0) {
             currentMode = "request";
             // find the max weight song from the requested songs
@@ -122,6 +123,7 @@ public class Playlist {
                 }
             }
             // remove the song from the requested songs
+            //songNodeRepository.deleteById(maxWeightSong.getId());
             requestedSongs.remove(maxWeightSong);
             currentlyPlayingSong = maxWeightSong.getSong();
             return maxWeightSong.getSong();
