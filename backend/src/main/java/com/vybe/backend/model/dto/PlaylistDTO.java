@@ -18,10 +18,10 @@ import java.util.Set;
 public class PlaylistDTO {
     private Integer id;
     // TODO: supposed to be priority queue
-    private List<SongNode> requestedSongs;
+    private Set<SongNode> requestedSongs;
     private Integer venueId;
     // TODO: supposed to be queue
-    private List<Song> defaultPlaylist;
+    private Set<Song> defaultPlaylist;
     private Set<String> permittedGenres;
     private Set<String> bannedGenres;
     private Song currentlyPlayingSong;

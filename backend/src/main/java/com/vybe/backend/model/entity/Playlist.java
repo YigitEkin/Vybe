@@ -41,22 +41,22 @@ public class Playlist {
     /**
      * Priority queue of requested songs, based on weight of song
      */
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "playlist_id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "playlistId")
     // TODO: supposed to be priority queue
-    private List<SongNode> requestedSongs;
+    private Set<SongNode> requestedSongs;
 
     /**
      * Default song queue playlist to play when there are no requested songs
      */
-    @ManyToMany
+    @ManyToMany (cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "song_playlist",
             joinColumns = @JoinColumn(name = "playlist_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "id")
     )
     // TODO: supposed to be queue
-    private List<Song> defaultPlaylist;
+    private Set<Song> defaultPlaylist;
 
     /**
      * List of genres that the song requests are permitted in
@@ -83,7 +83,6 @@ public class Playlist {
     /**
      * Current mode of the playlist, to see if its playing default or requested songs
      */
-    @Transient
     private String currentMode;
 
    
@@ -93,16 +92,19 @@ public class Playlist {
      * @return TRUE if the song was added successfully, FALSE otherwise 
      */
     public Boolean addSong(Song song) {
-        return null;
+        defaultPlaylist.add(song);
+        return true;
     }
 
     /**
      * Adds a song request to the song requests queue
-     * @param songRequest the song request that will be added to the requests queue
+     * @param songNode the song request that will be added to the requests queue
      * @return TRUE if the song request was added successfully, FALSE otherwise 
      */
-    public Boolean addSongRequest(SongRequest songRequest) {
-        return null;
+    // TODO: change to song request
+    public Boolean addSongRequest(SongNode songNode) {
+        requestedSongs.add(songNode);
+        return true;
     }
 
     /**
@@ -110,6 +112,25 @@ public class Playlist {
      * @return next song
      */
     public Song playNextSong() {
-        return null;
+        if(requestedSongs.size() > 0) {
+            currentMode = "request";
+            // find the max weight song from the requested songs
+            SongNode maxWeightSong = requestedSongs.stream().toList().get(0);
+            for(SongNode songNode : requestedSongs) {
+                if(songNode.getWeight() > maxWeightSong.getWeight()) {
+                    maxWeightSong = songNode;
+                }
+            }
+            // remove the song from the requested songs
+            requestedSongs.remove(maxWeightSong);
+            currentlyPlayingSong = maxWeightSong.getSong();
+            return maxWeightSong.getSong();
+        } else {
+            currentMode = "default";
+            // get a random song from the default playlist
+            int randomIndex = (int) (Math.random() * defaultPlaylist.size());
+            currentlyPlayingSong = defaultPlaylist.stream().toList().get(randomIndex);
+            return currentlyPlayingSong;
+        }
     }
 }

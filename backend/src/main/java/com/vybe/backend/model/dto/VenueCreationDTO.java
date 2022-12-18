@@ -16,8 +16,9 @@ public class VenueCreationDTO {
     private String description;
     private String location;
     private String soundzoneId;
+    private String token;
 
     public Venue toVenue() {
-        return new Venue(0, name, description, location, null, null, null, null, null, null, null, soundzoneId);
+        return new Venue(0, name, description, location, null, null, null, null, null, null, null, token, soundzoneId);
     }
 }

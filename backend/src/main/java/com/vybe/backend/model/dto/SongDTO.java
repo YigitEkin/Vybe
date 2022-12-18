@@ -2,15 +2,11 @@ package com.vybe.backend.model.dto;
 
 
 import com.vybe.backend.model.entity.Song;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class SongDTO {
     private String id;
     private String name;
@@ -26,9 +22,10 @@ public class SongDTO {
         this.artist = song.getArtist();
         this.albumArt = song.getAlbumArt();
         this.link = song.getLink();
+        this.soundtrackYBId = song.getSoundtrackYBId();
     }
 
     public Song toSong() {
-        return new Song(id, name, artist, albumArt, link);
+        return new Song(id, name, artist, albumArt, link, soundtrackYBId);
     }
 }

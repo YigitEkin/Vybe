@@ -25,13 +25,13 @@ public class SongNode implements Comparable<SongNode> {
     /**
      * reference to the playlist id that the song node belongs to
      */
-    private Integer playlist_id;
+    private Integer playlistId;
 
     /**
      * Song instance
      * {@link Song}
      */
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "song_id")
     private Song song;
     

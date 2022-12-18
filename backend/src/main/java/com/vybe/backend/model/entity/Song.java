@@ -40,4 +40,9 @@ public class Song {
      * The song's link in SoundTrackYourBrand
      */
     private String link;
+
+    /**
+     * The song's link in SoundTrackYourBrand
+     */
+    private String soundtrackYBId;
 }

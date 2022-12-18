@@ -1,6 +1,7 @@
 package com.vybe.backend;
 
 import com.vybe.backend.model.dto.*;
+import com.vybe.backend.model.entity.Song;
 import com.vybe.backend.repository.CustomerRepository;
 import com.vybe.backend.repository.SongRepository;
 import com.vybe.backend.repository.UserRepository;
@@ -137,7 +138,7 @@ public class BackendApplication {
 			}
 
 			// test adding a venue
-			VenueCreationDTO venueCreationDTO = new VenueCreationDTO("testname1", "testdescription1", "testlocation1", "testsoundzoneID");
+			VenueCreationDTO venueCreationDTO = new VenueCreationDTO("testname1", "testdescription1", "testlocation1", "testtoken", "testsoundzoneID");
 			VenueDTO venueDTO = venueService.addVenue(venueCreationDTO);
 			assert venueDTO.getName().equals("testname1");
 			assert venueDTO.getDescription().equals("testdescription1");
@@ -212,7 +213,7 @@ public class BackendApplication {
 			}
 
 			// test adding a playlist
-			VenueCreationDTO venueCreationDTO2 = new VenueCreationDTO("testname2", "testdescription2", "testlocation2", "testsoundzoneID");
+			VenueCreationDTO venueCreationDTO2 = new VenueCreationDTO("testname2", "testdescription2", "testlocation2", "token","testsoundzoneID");
 			venueDTO2 = venueService.addVenue(venueCreationDTO2);
 			PlaylistCreationDTO playlistCreationDTO = new PlaylistCreationDTO(venueDTO2.getId(), "defaultplaylistid", "requestplaylistid");
 
@@ -293,12 +294,62 @@ public class BackendApplication {
 			VenueDTO venueDTO7 = venueService.getVenue(venueDTO2.getId());
 			assert venueDTO7.getPlaylist().getBannedGenres().size() == 0;
 
+			// test adding songs
+			SongDTO songCreationDTO1 = new SongDTO("0", "testname1", "testartist1", "testart1", "testlink1", "testsoundtrackYBId");
+			SongDTO songCreationDTO2 = new SongDTO("2", "testname2", "testartist2", "testart2", "testlink2", "testsoundtrackYBId");
+			SongDTO songCreationDTO3 = new SongDTO("3", "testname3", "testartist3", "testart3", "testlink3", "testsoundtrackYBId");
+			SongDTO songCreatedDTO = songService.addSong(songCreationDTO1);
+			SongDTO songCreatedDTO2 = songService.addSong(songCreationDTO2);
+			SongDTO songCreatedDTO3 = songService.addSong(songCreationDTO3);
+
+			assert songCreatedDTO.getName().equals("testname1");
+			assert songCreatedDTO2.getName().equals("testname2");
+			assert songCreatedDTO3.getName().equals("testname3");
+
+			// test adding songs to a playlist
+			playlistService.addSongToDefaultPlaylist(playlistDTO.getId(), songCreatedDTO.getId());
+			playlistService.addSongToDefaultPlaylist(playlistDTO.getId(), songCreatedDTO2.getId());
+
+			assert playlistService.getPlaylist(playlistDTO.getId()).getDefaultPlaylist().size() == 2;
+			assert playlistService.getPlaylist(playlistDTO.getId()).getDefaultPlaylist().contains(songCreatedDTO.toSong());
+			assert playlistService.getPlaylist(playlistDTO.getId()).getDefaultPlaylist().contains(songCreatedDTO2.toSong());
+
+
+			// test get song from playlist
+			SongDTO songDTO12 = venueService.getNextSong(venueDTO2.getId());
+			System.out.println(songDTO12);
+
+			SongDTO songDTO13 = venueService.getNextSong(venueDTO2.getId());
+			System.out.println(songDTO13);
+
+			// test adding songs to request playlist
+			SongNodeDTO songNodeDTO1 = new SongNodeDTO(playlistDTO.getId(), songCreatedDTO.getId(), 1.0);
+			SongNodeDTO songNodeDTO2 = new SongNodeDTO(playlistDTO.getId(), songCreatedDTO2.getId(), 1.0);
+
+			songService.addSongRequest(songNodeDTO1);
+			songService.addSongRequest(songNodeDTO2);
+			songService.addSongRequest(songNodeDTO1);
+			assert playlistService.getPlaylist(playlistDTO.getId()).getRequestedSongs().size() == 2;
+			System.out.println(playlistService.getPlaylist(playlistDTO.getId()).getRequestedSongs());
+
+			// test getting next song from request playlist
+			SongDTO songDTO14 = venueService.getNextSong(venueDTO2.getId());
+			System.out.println(songDTO14);
+			assert songDTO14.getId().equals(songCreatedDTO.getId());
+
+			Song song = venueService.startSong(venueDTO2.getId());
+			System.out.println(song);
+
+			// assert that the song is removed from the request playlist
+			assert playlistService.getPlaylist(playlistDTO.getId()).getRequestedSongs().size() == 1;
 
 			System.out.println("Tests passed");
 
 			//TODO: add tests for setting the mode, and getting the mode
 			//TODO: add tests for adding and removing songs from the default playlist
 			//TODO: add tests for adding and removing songs from the request queue
+
+
 		};
 	}
 

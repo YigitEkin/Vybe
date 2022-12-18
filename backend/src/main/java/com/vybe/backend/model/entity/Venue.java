@@ -89,6 +89,7 @@ public class Venue {
      */
     private String qrCode;
 
+    private String token;
 
     private String soundzoneId;
 

@@ -136,7 +136,6 @@ public class PlaylistService {
         return new PlaylistDTO(playlistRepository.save(playlist));
     }
 
-    // TODO: add methods for adding and removing requested songs
     // TODO: add get next music method
 
 
