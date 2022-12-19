@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
@@ -20,7 +22,9 @@ public class Song {
      * The song's id
      */
     @Id
+    @GeneratedValue
     private Integer id;
+
     /**
      * The song's name
      */
@@ -38,4 +42,9 @@ public class Song {
      * The song's link in SoundTrackYourBrand
      */
     private String link;
+
+    /**
+     * The song's link in SoundTrackYourBrand
+     */
+    //private String soundtrackYBId;
 }

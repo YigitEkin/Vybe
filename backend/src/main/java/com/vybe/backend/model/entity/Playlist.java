@@ -1,13 +1,17 @@
 package com.vybe.backend.model.entity;
 
+import com.sun.istack.NotNull;
+import com.vybe.backend.repository.SongNodeRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Set;
 
 /**
  * Playlist class that will govern the restrictions and the next song playing
@@ -25,42 +29,51 @@ public class Playlist {
     @Id
     private Integer id;
 
+    @Column(unique = true)
+    private String defaultPlaylistId;
+
+    @Column(unique = true)
+    private String requestPlaylistId;
+
+    @OneToOne( mappedBy = "playlist")
+    private Venue venue;
+
 
     /**
      * Priority queue of requested songs, based on weight of song
      */
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "playlist_id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "playlistId")
     // TODO: supposed to be priority queue
-    private List<SongNode> requestedSongs;
+    private Set<SongNode> requestedSongs;
 
     /**
      * Default song queue playlist to play when there are no requested songs
      */
-    @ManyToMany
+    @ManyToMany (cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "song_playlist",
             joinColumns = @JoinColumn(name = "playlist_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "id")
     )
     // TODO: supposed to be queue
-    private List<Song> defaultPlaylist;
+    private Set<Song> defaultPlaylist;
 
     /**
      * List of genres that the song requests are permitted in
      */
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "playlist_permitted_genres", joinColumns = @JoinColumn(name = "playlist_id"))
     @Column(name = "permitted_genre")
-    private List<String> permittedGenres;
+    private Set<String> permittedGenres;
 
     /**
      * List of genres that the song requests are not permitted in
      */
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "playlist_banned_genres", joinColumns = @JoinColumn(name = "playlist_id"))
     @Column(name = "banned_genre")
-    private List<String> bannedGenres;
+    private Set<String> bannedGenres;
 
     /**
      * Reference to the currently playing song
@@ -71,68 +84,55 @@ public class Playlist {
     /**
      * Current mode of the playlist, to see if its playing default or requested songs
      */
-    @Transient
     private String currentMode;
 
-    /**
-     * Adds a permitted genre to the permitted genres list
-     * @param genre the genre that will be added to the list
-     * @return TRUE if the genre was added successfully, FALSE otherwise 
-     */
-    public Boolean addPermittedGenre(String genre) {
-        return null;
-    }
-
-    /**
-     * Removes a permitted genre from the permitted genres list
-     * @param genre the genre that will be removed from the list
-     * @return TRUE if the genre was removed successfully, FALSE otherwise 
-     */
-    public Boolean removePermittedGenre(String genre) {
-        return null;
-    }
-
-    /**
-     * Adds a banned genre to the permitted banned list
-     * @param genre the genre that will be added to the list
-     * @return TRUE if the genre was added successfully, FALSE otherwise
-     */
-    public Boolean addBannedGenre(String genre) {
-        return null;
-    }
-
-    /**
-     * Removes a banned genre from the banned genres list
-     * @param genre the genre that will be removed from the list
-     * @return TRUE if the genre was removed successfully, FALSE otherwise
-     */
-    public Boolean removeBannedGenre(String genre) {
-        return null;
-    }
-
+   
     /**
      * Adds a song to the default playlist
-     * @param Song the song that will be added to the default playlist
+     * @param song the song that will be added to the default playlist
      * @return TRUE if the song was added successfully, FALSE otherwise 
      */
     public Boolean addSong(Song song) {
-        return null;
+        defaultPlaylist.add(song);
+        return true;
     }
 
     /**
      * Adds a song request to the song requests queue
-     * @param songRequest the song request that will be added to the requests queue
+     * @param songNode the song request that will be added to the requests queue
      * @return TRUE if the song request was added successfully, FALSE otherwise 
      */
-    public Boolean addSongRequest(SongRequest songRequest) {
-        return null;
+    // TODO: change to song request
+    public Boolean addSongRequest(SongNode songNode) {
+        requestedSongs.add(songNode);
+        return true;
     }
 
     /**
      * Removes the next song from the appropriate queue and returns it
      * @return next song
      */
-    public Song playNextSong() {
-        return null;
+    public Song playNextSong(SongNodeRepository songNodeRepository) {
+        if(requestedSongs.size() > 0) {
+            currentMode = "request";
+            // find the max weight song from the requested songs
+            SongNode maxWeightSong = requestedSongs.stream().toList().get(0);
+            for(SongNode songNode : requestedSongs) {
+                if(songNode.getWeight() > maxWeightSong.getWeight()) {
+                    maxWeightSong = songNode;
+                }
+            }
+            // remove the song from the requested songs
+            //songNodeRepository.deleteById(maxWeightSong.getId());
+            requestedSongs.remove(maxWeightSong);
+            currentlyPlayingSong = maxWeightSong.getSong();
+            return maxWeightSong.getSong();
+        } else {
+            currentMode = "default";
+            // get a random song from the default playlist
+            int randomIndex = (int) (Math.random() * defaultPlaylist.size());
+            currentlyPlayingSong = defaultPlaylist.stream().toList().get(randomIndex);
+            return currentlyPlayingSong;
+        }
     }
 }

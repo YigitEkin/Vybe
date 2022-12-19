@@ -1,5 +1,6 @@
 package com.vybe.backend.model.entity;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,13 +26,14 @@ public class SongNode implements Comparable<SongNode> {
     /**
      * reference to the playlist id that the song node belongs to
      */
-    private Integer playlist_id;
+    // force the playlist id to be not null
+    private Integer playlistId;
 
     /**
      * Song instance
      * {@link Song}
      */
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "song_id")
     private Song song;
     
@@ -46,6 +48,6 @@ public class SongNode implements Comparable<SongNode> {
      * @return the result of the compare operation
      */
     public int compareTo(SongNode songNode){
-        return Integer.compare(this.song.getId(), songNode.song.getId());
+        return Double.compare(this.weight, songNode.weight);
     }
 }

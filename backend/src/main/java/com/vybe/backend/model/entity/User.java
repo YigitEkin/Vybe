@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Stack;
 
 /**
@@ -30,12 +27,9 @@ public class User {
      */
     private String password;
     /**
-     * The users email
-     */
-    private String email;
-    /**
      * The users phone number
      */
+    @Column(unique=true)
     private String phoneNumber;
     /**
      * The users profile picture

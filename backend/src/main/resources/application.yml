@@ -8,3 +8,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+two-factor-auth:
+  account-sid:
+  auth-token:
+  service-id:
+  channel:
+
+soundtrackyourbrand:
+  api:
+    url: https://api.soundtrackyourbrand.com/v2
