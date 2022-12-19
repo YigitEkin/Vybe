@@ -127,19 +127,13 @@ const HomeNotCheckedIn = () => {
         barCodeScannerSettings={{
           barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
         }}
-        onBarCodeScanned={(result: any) => console.log(result)}
+        onBarCodeScanned={(result: any) => console.log(result.data)}
       >
         <Pressable
           onPress={() => setStartCamera(false)}
-          style={{
-            position: 'absolute',
-            width: 60,
-            height: 60,
-            marginTop: 10,
-            marginLeft: 10,
-            top: 10,
-            left: 10,
-          }}
+          style={({ pressed }) =>
+            pressed ? [styles.backButtonPressed] : [styles.backButton]
+          }
         >
           <Icon name='chevron-back' color='#fff' size={40} />
         </Pressable>
@@ -188,6 +182,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     //marginTop: 20,
+  },
+  backButton: {
+    position: 'absolute',
+    width: 60,
+    height: 60,
+    marginTop: 10,
+    marginLeft: 10,
+    top: 10,
+    left: 10,
+  },
+  backButtonPressed: {
+    position: 'absolute',
+    width: 60,
+    height: 60,
+    marginTop: 10,
+    marginLeft: 10,
+    top: 10,
+    left: 10,
+    opacity: 0.5,
   },
   pressed: {
     width: 20,
