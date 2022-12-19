@@ -78,18 +78,49 @@ public class SoundtrackUtil {
         HashMap<String, Object> variables = new HashMap<>();
         HashMap<String, Object> input = new HashMap<>();
 
+        String document = """         
+                mutation Play($playInput2: PlayInput!) {
+                    play(input: $playInput2) {
+                        clientMutationId
+                    }
+                }
+        """;
+
+        input.put("soundZone", soundZones.get(0));
+        variables.put("playInput2", input);
+
+        graphQlClient.mutate()
+                .header("Authorization", "Basic " + token)
+                .header("Content-Type", "application/json")
+                .header("Accept", "*/*")
+                .header("Accept-Encoding", "gzip, deflate, br")
+                .header("Connection", "keep-alive")
+                .url(url)
+                .build()
+                .document(document)
+                .variables(variables)
+                .retrieve("")
+                .toEntity(Object.class)
+                .block();
+        variables = new HashMap<>();
+        input = new HashMap<>();
+
+
+
         input.put("source", playlistId);
         input.put("sourceTrackIndex", index);
         input.put("soundZones", soundZones);
         input.put("immediate", true);
         variables.put("input", input);
-        String document = """
+
+        document = """
                 mutation Mutation($input: SoundZoneAssignSourceInput!) {
                   soundZoneAssignSource(input: $input) {
                     soundZones
                   }
                 }
                 """;
+
         Object response = (LinkedHashMap) graphQlClient.mutate()
                 .header("Authorization", "Basic " + token)
                 .header("Content-Type", "application/json")

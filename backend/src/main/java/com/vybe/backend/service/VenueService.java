@@ -7,6 +7,7 @@ import com.vybe.backend.model.dto.VenueDTO;
 import com.vybe.backend.exception.VenueNotFoundException;
 import com.vybe.backend.model.entity.Playlist;
 import com.vybe.backend.model.entity.Song;
+import com.vybe.backend.model.entity.SongNode;
 import com.vybe.backend.model.entity.Venue;
 import com.vybe.backend.repository.PlaylistRepository;
 import com.vybe.backend.repository.SongNodeRepository;
@@ -89,8 +90,13 @@ public class VenueService {
         // find the playlist and update the currentMode
         Playlist playlist = playlistRepository.findById(venue.getPlaylist().getId()).get();
         playlist.setCurrentMode(venue.getPlaylist().getCurrentMode());
-        Integer songNodeId = songNodeRepository.findBySong_IdAndPlaylistId(song.getId(), playlist.getId()).getId();
-        songNodeRepository.deleteById(songNodeId);
+        SongNode songNode = songNodeRepository.findBySong_IdAndPlaylistId(song.getId(), playlist.getId());
+        int songNodeId = -1;
+        if(songNode != null){
+            songNodeId = songNode.getId();
+            songNodeRepository.deleteById(songNodeId);
+        }
+
         playlistRepository.save(playlist);
 
         venueRepository.save(venue);
