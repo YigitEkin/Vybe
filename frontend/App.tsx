@@ -10,6 +10,7 @@ import SignUpCompletedScreen from './screens/signup/SignUpCompletedScreen';
 import SignUpPassword from './screens/signup/SignUpPassword';
 import SignUpUsername from './screens/signup/SignupUsername';
 import EnterPhoneNumber from './components/2fa/EnterPhoneNumber';
+
 import Router from './navigation/Router';
 
 SplashScreen.preventAutoHideAsync();
