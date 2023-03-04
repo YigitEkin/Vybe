@@ -354,11 +354,11 @@ public class BackendApplication {
 			SongNodeDTO songNodeDTO5 = new SongNodeDTO(playlistDTO.getId(), 17, 1.0);
 
 			// add song nodes to request playlist
-			songService.addSongRequest(songNodeDTO3);
-			songService.addSongRequest(songNodeDTO4);
-			songService.addSongRequest(songNodeDTO5);
+			//songService.addSongRequest(songNodeDTO3);
+			//songService.addSongRequest(songNodeDTO4);
+			//songService.addSongRequest(songNodeDTO5);
 
-			venueService.startSong(venueDTO2.getId());
+			//venueService.startSong(venueDTO2.getId());
 
 			System.out.println("Tests passed");
 

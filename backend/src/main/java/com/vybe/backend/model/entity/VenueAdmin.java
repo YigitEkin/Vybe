@@ -18,7 +18,7 @@ import java.util.Stack;
 @NoArgsConstructor
 public class VenueAdmin extends User {
 
-    // TODO: one to many or one to one, decide if we want to have multiple admins for a venue
+    //TODO: one to many or one to one, decide if we want to have multiple admins for a venue
     //@OneToOne
     //private Venue venue;
 
