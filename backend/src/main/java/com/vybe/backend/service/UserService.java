@@ -68,11 +68,11 @@ public class UserService {
         return  new CustomerDTO(customerRepository.save(customerCreationDTO.toCustomer()));
     }
 
-    public void deleteCustomer(String username) {
+    public boolean deleteCustomer(String username) {
         if (!customerRepository.existsByUsername(username)) {
             throw new CustomerNotFoundException("Customer with username: " + username + " not found");
         }
-        customerRepository.deleteByUsername(username);
+        return customerRepository.deleteByUsername(username);
     }
 
 

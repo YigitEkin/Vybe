@@ -1,5 +1,7 @@
 package com.vybe.backend;
 
+import com.vybe.backend.exception.CustomerNotFoundException;
+import com.vybe.backend.exception.UsernameTakenException;
 import com.vybe.backend.model.dto.*;
 import com.vybe.backend.model.entity.Admin;
 import com.vybe.backend.model.entity.Customer;
@@ -9,6 +11,7 @@ import com.vybe.backend.repository.CustomerRepository;
 import com.vybe.backend.repository.UserRepository;
 import com.vybe.backend.repository.VenueAdminRepository;
 import com.vybe.backend.service.UserService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -33,6 +36,8 @@ public class UserServiceTests {
     @Mock private AdminRepository adminRepository;
     @Mock private VenueAdminRepository venueAdminRepository;
 
+
+    // ********** CUSTOMER TESTS **********
     @Test
     void should_save_one_customer() {
         // Arrange
@@ -49,6 +54,73 @@ public class UserServiceTests {
     }
 
     @Test
+    void should_find_and_return_one_customer(){
+        // Arrange
+        final Customer customer = new Customer();
+        customer.setUsername("testname1");
+        customer.setPhoneNumber("testphone1");
+        customer.setDateOfBirth("testdate1");
+        customer.setDateOfCreation("testdate2");
+        when(customerRepository.findByUsername("testname1")).thenReturn(customer);
+        when(customerRepository.existsByUsername("testname1")).thenReturn(true);
+
+        // Act
+        final CustomerDTO actual = userService.getCustomer("testname1");
+
+        // Assert
+        assertThat(actual).usingRecursiveComparison().isEqualTo(customer);
+        verify(customerRepository, times(1)).findByUsername("testname1");
+        verifyNoMoreInteractions(customerRepository);
+    }
+
+    @Test
+    void should_not_find_a_non_existent_customer(){
+        // Arrange
+        when(customerRepository.existsByUsername("testname1")).thenReturn(false);
+
+        // Act & Assert
+        Assertions.assertThrows(CustomerNotFoundException.class, () -> userService.getCustomer("testname1"));
+        verify(customerRepository, times(1)).existsByUsername("testname1");
+        verifyNoMoreInteractions(customerRepository);
+    }
+
+    @Test
+    void should_not_save_customer_with_taken_username(){
+        // Arrange
+        when(userRepository.existsByUsername("testname1")).thenReturn(true);
+        CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO( "testpass1", "testname1", "testphone1", "testdate1", "testdate1", "000000");
+
+        // Act & Assert
+        Assertions.assertThrows(UsernameTakenException.class, () -> userService.addCustomer(customerCreationDTO));
+        verifyNoMoreInteractions(customerRepository);
+    }
+
+    @Test
+    void should_delete_one_customer(){
+        // Arrange
+        when(customerRepository.existsByUsername("testname1")).thenReturn(true);
+        when(customerRepository.deleteByUsername("testname1")).thenReturn(true);
+
+        // Act & Assert
+        Assertions.assertDoesNotThrow(() -> userService.deleteCustomer("testname1"));
+        verify(customerRepository, times(1)).deleteByUsername("testname1");
+        verifyNoMoreInteractions(customerRepository);
+    }
+
+    @Test
+    void should_not_delete_customer_with_non_existent_username(){
+        // Arrange
+        when(customerRepository.existsByUsername("testname1")).thenReturn(false);
+
+        // Act & Assert
+        Assertions.assertThrows(CustomerNotFoundException.class, () -> userService.deleteCustomer("testname1"));
+        verify(customerRepository, times(0)).deleteByUsername("testname1");
+        verifyNoMoreInteractions(customerRepository);
+    }
+
+
+    // ********** ADMIN TESTS **********
+    @Test
     void should_save_one_admin() {
         // Arrange
         final AdminCreationDTO adminCreationDTO = new AdminCreationDTO( "testname2", "testpass2");
@@ -64,6 +136,7 @@ public class UserServiceTests {
     }
 
 
+    // ********** VENUE ADMIN TESTS **********
     // TODO: get the venue of the venue admin working
     /* @Test
     void should_save_one_venueAdmin() {

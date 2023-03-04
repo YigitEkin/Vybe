@@ -9,6 +9,6 @@ public interface CustomerRepository extends JpaRepository<Customer, String> {
 
     Customer findByUsername(String username);
     boolean existsByUsername(String username);
-    void deleteByUsername(String username);
+    boolean deleteByUsername(String username);
 }
 
