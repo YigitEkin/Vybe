@@ -21,15 +21,7 @@ import SettingsPage from "../screens/homePages/Settings";
 import MapPage from "../screens/homePages/Map";
 import HomePageWrapper from "../screens/homePages/HomePageWrapper";
 
-//const Tab = createBottomTabNavigator();
 
-//export const BottomTab = () => {
-//  return (
-//    <Tab.Navigator>
-//      <Tab.Screen name='Home' component={HomeNotCheckedIn} />
-//    </Tab.Navigator>
-//  );
-//};
 
 type Route = {
   name: string;
@@ -166,7 +158,6 @@ const NotLoggedInRoutes: Route[] = [
       },
     },
   },
-  //TODO: Seperate this from not logged in routes !!!
 ];
 const loggedInRoutes: Route[] = [
   {
