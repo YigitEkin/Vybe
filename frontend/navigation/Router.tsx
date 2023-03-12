@@ -17,6 +17,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon from "react-native-vector-icons/EvilIcons";
+import SettingsPage from "../screens/homePages/Settings";
+import MapPage from "../screens/homePages/Map";
+import HomePageWrapper from "../screens/homePages/HomePageWrapper";
 
 //const Tab = createBottomTabNavigator();
 
@@ -32,6 +35,7 @@ type Route = {
   name: string;
   component: any;
   screenOptions?: any;
+  icon?: any;
 };
 
 const NotLoggedInRoutes: Route[] = [
@@ -166,8 +170,8 @@ const NotLoggedInRoutes: Route[] = [
 ];
 const loggedInRoutes: Route[] = [
   {
-    name: "HomeNotCheckedIn",
-    component: HomeNotCheckedIn,
+    name: "HomePage",
+    component: HomePageWrapper,
     screenOptions: {
       headerShown: true,
       headerBackTitleVisible: false,
@@ -179,29 +183,51 @@ const loggedInRoutes: Route[] = [
         height: 0,
       },
     },
+    icon: ({ color, size }: any) => (
+      <MaterialCommunityIcons name="home-outline" color={color} size={size} />
+    ),
+  },
+  {
+    name: "Map",
+    component: MapPage,
+    screenOptions: {
+      headerShown: true,
+      headerBackTitleVisible: false,
+      headerTintColor: "#fff",
+      headerTitle: "",
+      headerStyle: {
+        backgroundColor: "#000",
+        shadowColor: "transparent",
+        height: 0,
+      },
+    },
+    icon: ({ color, size }: any) => (
+      <Icon name="location" color={color} size={size} />
+    ),
+  },
+  {
+    name: "Settings",
+    component: SettingsPage,
+    screenOptions: {
+      headerShown: true,
+      headerBackTitleVisible: false,
+      headerTintColor: "#fff",
+      headerTitle: "",
+      headerStyle: {
+        backgroundColor: "#000",
+        shadowColor: "transparent",
+        height: 0,
+      },
+    },
+    icon: ({ color, size }: any) => (
+      <Icon name="user" color={color} size={size} />
+    ),
   },
 ];
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-const MainTabNavigator = () => {
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        headerShown: true,
-        //headerBackTitleVisible: false,
-        //headerTintColor: '#fff',
-        headerTitle: "",
-        headerStyle: {
-          backgroundColor: "#000",
-          shadowColor: "transparent",
-          height: 0,
-        },
-      }}
-    >
-      <Tab.Screen name="HomeNotCheckedIn" component={HomeNotCheckedIn} />
-    </Tab.Navigator>
-  );
-};
+
 export default function Router() {
   const [loggedIn, setLoggedIn] = useState(true);
   return !loggedIn ? (
@@ -263,28 +289,17 @@ export default function Router() {
               },
             }}
           >
-            <Tab.Screen
-              name="Home"
-              component={HomeNotCheckedIn}
-              options={{
-                tabBarIcon: ({ color, size }) => (
-                  <MaterialCommunityIcons
-                    name="home-outline"
-                    color={color}
-                    size={size}
-                  />
-                ),
-              }}
-            />
-            <Tab.Screen
-              name="Home2"
-              component={HomeNotCheckedIn}
-              options={{
-                tabBarIcon: ({ color, size }) => (
-                  <Icon name="location" color={color} size={size} />
-                ),
-              }}
-            />
+            {loggedInRoutes.map((route, index) => (
+              <Tab.Screen
+                options={{
+                  ...route.screenOptions,
+                  tabBarIcon: route.icon,
+                }}
+                key={index}
+                name={route.name}
+                component={route.component}
+              />
+            ))}
           </Tab.Navigator>
         </NavigationContainer>
       </SafeAreaView>
