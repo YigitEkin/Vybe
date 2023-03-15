@@ -25,7 +25,7 @@ const StyledButton = ({ onPress, buttonText, style }: StyledButtonProps) => {
       onPress={onPress}
       android_ripple={{ color: Colors.purple.primary }}
     >
-      <Text style={styles.text}>{buttonText}</Text>
+      <Text style={[styles.text, style.text]}>{buttonText}</Text>
     </Pressable>
   ) : null;
 };

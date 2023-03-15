@@ -21,8 +21,6 @@ import SettingsPage from "../screens/homePages/Settings";
 import MapPage from "../screens/homePages/Map";
 import HomePageWrapper from "../screens/homePages/HomePageWrapper";
 
-
-
 type Route = {
   name: string;
   component: any;
@@ -203,11 +201,15 @@ const loggedInRoutes: Route[] = [
       headerShown: true,
       headerBackTitleVisible: false,
       headerTintColor: "#fff",
-      headerTitle: "",
+      headerTitle: "My Details",
+      headerTitleStyle: {
+        color: "#fff",
+        fontSize: 20,
+      },
       headerStyle: {
         backgroundColor: "#000",
         shadowColor: "transparent",
-        height: 0,
+        height: 30,
       },
     },
     icon: ({ color, size }: any) => (
