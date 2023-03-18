@@ -7,11 +7,12 @@ import {
   Pressable,
   ScrollView,
 } from "react-native";
-import StyledButton from "../../components/HomePage/StyledButton";
-import { Colors } from "../../constants/Colors";
+import StyledButton from "../../../components/HomePage/StyledButton";
+import { Colors } from "../../../constants/Colors";
 import * as Font from "expo-font";
 // @ts-ignore
-import CoinIcon from "../../assets/coin.png";
+import CoinIcon from "../../../assets/coin.png";
+import { useNavigation } from "@react-navigation/native";
 
 type editSectionArea = {
   name: string;
@@ -19,9 +20,10 @@ type editSectionArea = {
   borderBottomless?: boolean;
   marginTop?: number;
   notificationCount?: number;
+  onPress?: () => void;
 };
 
-const editSections = [
+const editSections: editSectionArea[] = [
   {
     name: "First Name",
     editability: true,
@@ -40,6 +42,7 @@ const editSections = [
     editability: false,
     borderBottomless: true,
     notificationCount: 0,
+    onPress: () => {},
   },
 ];
 
@@ -48,8 +51,9 @@ const EditProfileSection = (
   notificationCount: number
 ) => {
   const [fontsLoaded] = Font.useFonts({
-    "Inter-Regular": require("../../assets/fonts/Inter/static/Inter-Regular.ttf"),
+    "Inter-Regular": require("../../../assets/fonts/Inter/static/Inter-Regular.ttf"),
   });
+  const navigation = useNavigation();
 
   return fontsLoaded ? (
     <View
@@ -67,11 +71,14 @@ const EditProfileSection = (
           <Text style={styles.editText}>Edit</Text>
         </Pressable>
       ) : section.notificationCount ? (
-        <View style={styles.notificationContainer}>
+        <Pressable
+          style={styles.notificationContainer}
+          onPress={() => navigation.navigate("Notifications" as never)}
+        >
           <Text style={styles.notificationText}>
             {section.notificationCount}
           </Text>
-        </View>
+        </Pressable>
       ) : null}
     </View>
   ) : null;
@@ -80,7 +87,7 @@ const EditProfileSection = (
 const SettingsPage = () => {
   const [notificationCount, setNotificationCount] = useState(1);
   const [fontsLoaded] = Font.useFonts({
-    "Inter-Regular": require("../../assets/fonts/Inter/static/Inter-Regular.ttf"),
+    "Inter-Regular": require("../../../assets/fonts/Inter/static/Inter-Regular.ttf"),
   });
   const [coinBalance, setCoinBalance] = useState(200);
 
