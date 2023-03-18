@@ -5,23 +5,21 @@ import SignUpMail from "../screens/signup/SignUpMail";
 import SignUpCompletedScreen from "../screens/signup/SignUpCompletedScreen";
 import SignUpPassword from "../screens/signup/SignUpPassword";
 import SignUpUsername from "../screens/signup/SignupUsername";
-import EnterPhoneNumber from "../components/2fa/EnterPhoneNumber";
 import HomePage from "../screens/HomePage";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import EnterPhoneNumberSignUp from "../screens/signup/EnterPhoneNumberSignUp";
 import EnterPhoneNumberLogin from "../screens/login/EnterPhoneNumberLogin";
 import LoginVerification from "../screens/Verification/LoginVerification";
 import SignupVerification from "../screens/Verification/SignupVerification";
-import HomeNotCheckedIn from "../screens/homePages/HomeNotCheckedIn";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaView } from "react-native-safe-area-context";
+// @ts-ignore
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+// @ts-ignore
 import Icon from "react-native-vector-icons/EvilIcons";
-import SettingsPage from "../screens/homePages/Settings";
 import MapPage from "../screens/homePages/Map";
 import HomePageWrapper from "../screens/homePages/HomePageWrapper";
-
-
+import SettingsNavigationWrapper from "../screens/homePages/settings/SettingsNavigationWrapper";
 
 type Route = {
   name: string;
@@ -198,7 +196,7 @@ const loggedInRoutes: Route[] = [
   },
   {
     name: "Settings",
-    component: SettingsPage,
+    component: SettingsNavigationWrapper,
     screenOptions: {
       headerShown: true,
       headerBackTitleVisible: false,
@@ -207,7 +205,7 @@ const loggedInRoutes: Route[] = [
       headerStyle: {
         backgroundColor: "#000",
         shadowColor: "transparent",
-        height: 0,
+        height: 40,
       },
     },
     icon: ({ color, size }: any) => (

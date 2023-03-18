@@ -7,6 +7,7 @@ export const Colors = {
     text: "#9990ff",
     lighter: "#c6c4ff",
     selectedInput: "#6B4EFF",
+    settingsButton: "#5538EE",
   },
   gray: {
     bottomBar: "#090a0a",
