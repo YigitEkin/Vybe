@@ -12,7 +12,7 @@ import GroupItem from '../../components/HomePage/GroupItem';
 import { Colors } from '../../constants/Colors';
 import { Camera, CameraType } from 'expo-camera';
 
-import FriendItem from '../../components/HomePage/FriendItem';
+import ListItem from '../../components/HomePage/ListItem';
 import FAButton from '../../components/HomePage/FAButton';
 import SearchIcon from '../../assets/SearchIcon.png';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -105,7 +105,7 @@ const HomeNotCheckedIn = () => {
         <Text style={[styles.textStyle, { marginBottom: 20 }]}>
           {'Friends currently Vybing'}
         </Text>
-        <FriendItem />
+        <ListItem topText={'Friend name'} subText={'Location'} />
       </View>
 
       <FAButton

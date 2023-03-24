@@ -1,18 +1,18 @@
-import React from "react";
-import { View, Text, StyleSheet, Image, Platform } from "react-native";
-import { DimensionsHelper } from "../hooks/DimensionsHelper";
-import AccountHandlerArea from "../components/HomePage/AccountHandlerArea";
+import React from 'react';
+import { View, Text, StyleSheet, Image, Platform } from 'react-native';
+import { DimensionsHelper } from '../hooks/DimensionsHelper';
+import AccountHandlerArea from '../components/HomePage/AccountHandlerArea';
 //@ts-ignore
-import Icon from "../assets/icon.png";
+import Icon from '../assets/icon.png';
 //@ts-ignore
-import HomeScreenImage from "../assets/homePageImage.png";
-import * as Font from "expo-font";
+import HomeScreenImage from '../assets/homePageImage.png';
+import * as Font from 'expo-font';
 
 const dimensions = DimensionsHelper();
 
 const HomePage = ({ navigation }: any) => {
   const [fontsLoaded] = Font.useFonts({
-    "Inter-ExtraBold": require("../assets/fonts/Inter/static/Inter-ExtraBold.ttf"),
+    'Inter-ExtraBold': require('../assets/fonts/Inter/static/Inter-ExtraBold.ttf'),
   });
 
   return fontsLoaded ? (
@@ -36,36 +36,36 @@ const HomePage = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000",
-    alignItems: "center",
-    width: "100%",
+    backgroundColor: '#000',
+    alignItems: 'center',
+    width: '100%',
   },
   icon: {
-    alignSelf: "center",
+    alignSelf: 'center',
     marginTop: dimensions.isLargerDevice
-      ? Platform.OS === "android"
+      ? Platform.OS === 'android'
         ? 100
         : 75
       : 50,
   },
   AccountHandlerArea: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: "auto",
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 'auto',
     marginBottom: 50,
-    width: "80%",
+    width: '80%',
   },
   justifyAndAlignCenter: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   flowWithTheVybeText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 25,
-    fontFamily: "Inter-ExtraBold",
+    fontFamily: 'Inter-ExtraBold',
   },
   homeScreenImage: {
-    alignSelf: "center",
+    alignSelf: 'center',
     marginTop: dimensions.isLargerDevice ? 25 : 0,
   },
 });
