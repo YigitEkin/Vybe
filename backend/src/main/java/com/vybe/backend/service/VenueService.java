@@ -1,17 +1,11 @@
 package com.vybe.backend.service;
 
-
 import com.vybe.backend.model.dto.SongDTO;
 import com.vybe.backend.model.dto.VenueCreationDTO;
 import com.vybe.backend.model.dto.VenueDTO;
 import com.vybe.backend.exception.VenueNotFoundException;
-import com.vybe.backend.model.entity.Playlist;
-import com.vybe.backend.model.entity.Song;
-import com.vybe.backend.model.entity.SongNode;
-import com.vybe.backend.model.entity.Venue;
-import com.vybe.backend.repository.PlaylistRepository;
-import com.vybe.backend.repository.SongNodeRepository;
-import com.vybe.backend.repository.VenueRepository;
+import com.vybe.backend.model.entity.*;
+import com.vybe.backend.repository.*;
 import com.vybe.backend.util.SoundtrackUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,13 +20,17 @@ public class VenueService {
     VenueRepository venueRepository;
     SongNodeRepository songNodeRepository;
     PlaylistRepository playlistRepository;
+    CustomerRepository customerRepository;
+    CommentRepository commentRepository;
 
 
     @Autowired
-    public VenueService(VenueRepository venueRepository, SongNodeRepository songNodeRepository, PlaylistRepository playlistRepository) {
+    public VenueService(VenueRepository venueRepository, SongNodeRepository songNodeRepository, PlaylistRepository playlistRepository, CustomerRepository customerRepository, CommentRepository commentRepository){
         this.playlistRepository = playlistRepository;
         this.venueRepository = venueRepository;
         this.songNodeRepository = songNodeRepository;
+        this.customerRepository = customerRepository;
+        this.commentRepository = commentRepository;
     }
 
     // add venue
