@@ -72,7 +72,7 @@ public class UserService {
         if (!customerRepository.existsByUsername(username)) {
             throw new CustomerNotFoundException("Customer with username: " + username + " not found");
         }
-        return customerRepository.deleteByUsername(username);
+        return customerRepository.deleteByUsername(username) > 0;
     }
 
 

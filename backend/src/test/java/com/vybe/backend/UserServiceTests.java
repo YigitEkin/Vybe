@@ -99,7 +99,7 @@ public class UserServiceTests {
     void should_delete_one_customer(){
         // Arrange
         when(customerRepository.existsByUsername("testname1")).thenReturn(true);
-        when(customerRepository.deleteByUsername("testname1")).thenReturn(true);
+        when(customerRepository.deleteByUsername("testname1")).thenReturn(1);
 
         // Act & Assert
         Assertions.assertDoesNotThrow(() -> userService.deleteCustomer("testname1"));
