@@ -35,7 +35,9 @@ public class VenueService {
 
     // add venue
     public VenueDTO addVenue(VenueCreationDTO venueCreationDTO) {
-        return new VenueDTO(venueRepository.save(venueCreationDTO.toVenue()));
+        Venue venue = venueCreationDTO.toVenue();
+        venue.setComments(Collections.emptySet());
+        return new VenueDTO(venueRepository.save(venue));
     }
 
     // get venue
@@ -63,11 +65,15 @@ public class VenueService {
         if(!venueRepository.existsById(id)) {
             throw new VenueNotFoundException("Venue with id: " + id + " not found");
         }
+        Venue venue = venueRepository.findById(id).get();
         VenueDTO venueDTO = new VenueDTO(venueRepository.findById(id).get());
         venueDTO.setName(venueCreationDTO.getName());
         venueDTO.setDescription(venueCreationDTO.getDescription());
         venueDTO.setLocation(venueCreationDTO.getLocation());
-        return new VenueDTO(venueRepository.save(venueDTO.toVenue()));
+
+        Venue updatedVenue = venueDTO.toVenue();
+        updatedVenue.setComments(venue.getComments());
+        return new VenueDTO(venueRepository.save(updatedVenue));
     }
 
     // delete venue

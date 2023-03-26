@@ -1,5 +1,6 @@
 package com.vybe.backend.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vybe.backend.model.entity.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,11 +8,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
+@JsonIgnoreProperties(value = { "playlist" })
 public class VenueDTO {
     private int id;
     private String name;
@@ -20,8 +23,8 @@ public class VenueDTO {
     private Analytics analytics;
     private List<Object> photos;
     private Playlist playlist;
-    private List<Rating> ratings;
-    private List<Comment> comments;
+    private Set<Rating> ratings;
+    private Set<CommentDTO> comments;
     private String qrCode;
     private String soundzoneId;
     private String token;
@@ -35,13 +38,13 @@ public class VenueDTO {
         this.photos = venue.getPhotos();
         this.playlist = venue.getPlaylist();
         this.ratings = venue.getRatings();
-        this.comments = venue.getComments();
+        this.comments = CommentDTO.toCommentDTOSet(venue.getComments());
         this.qrCode = venue.getQrCode();
         this.soundzoneId = venue.getSoundzoneId();
         this.token = venue.getToken();
     }
 
     public Venue toVenue() {
-        return new Venue(id, name, description, location, analytics, photos, playlist, null, ratings, comments, qrCode, token, soundzoneId);
+        return new Venue(id, name, description, location, analytics, photos, playlist, null, ratings, null, qrCode, token, soundzoneId);
     }
 }

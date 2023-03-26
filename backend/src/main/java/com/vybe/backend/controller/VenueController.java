@@ -1,7 +1,7 @@
 package com.vybe.backend.controller;
 
-import com.vybe.backend.model.dto.SongDTO;
-import com.vybe.backend.model.dto.SongNodeDTO;
+import com.vybe.backend.model.dto.*;
+import com.vybe.backend.service.CommentService;
 import com.vybe.backend.service.PlaylistService;
 import com.vybe.backend.service.SongService;
 import com.vybe.backend.service.VenueService;
@@ -22,7 +22,47 @@ public class VenueController {
     private PlaylistService playlistService;
 
     @Resource
+    private CommentService commentService;
+
+    @Resource
     private SongService songService;
+
+
+    // ************* Venue Endpoints ************* //
+    @GetMapping("/{venueId}")
+    public VenueDTO getVenue(@PathVariable Integer venueId) {
+        return venueService.getVenue(venueId);
+    }
+
+    // get all venues
+    @GetMapping()
+    public List<VenueDTO> getAllVenues() {
+        return venueService.getAllVenues();
+    }
+
+    // create a venue
+    @PostMapping()
+    public VenueDTO createVenue(@RequestBody VenueCreationDTO venueCreationDTO) {
+        return venueService.addVenue(venueCreationDTO);
+    }
+
+    // update a venue
+    @PutMapping("/{venueId}")
+    public VenueDTO updateVenue(@PathVariable Integer venueId, @RequestBody VenueCreationDTO venueCreationDTO) {
+        return venueService.updateVenue(venueId, venueCreationDTO);
+    }
+
+    // delete a venue
+    @DeleteMapping("/{venueId}")
+    public void deleteVenue(@PathVariable Integer venueId) {
+        venueService.deleteVenue(venueId);
+    }
+
+    // ************* Comment Endpoints ************* //
+    @GetMapping("/{venueId}/comments")
+    public List<CommentDTO> getComments(@PathVariable Integer venueId) {
+        return commentService.getAllCommentsForVenue(venueId);
+    }
 
     @GetMapping("/{venueId}/nextSong")
     public SongDTO playNextSong(@PathVariable Integer venueId) {

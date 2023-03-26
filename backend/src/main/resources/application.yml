@@ -17,3 +17,7 @@ two-factor-auth:
 soundtrackyourbrand:
   api:
     url: https://api.soundtrackyourbrand.com/v2
+
+server:
+  error:
+    include-message: always

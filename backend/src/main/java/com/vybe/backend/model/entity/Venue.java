@@ -1,5 +1,7 @@
 package com.vybe.backend.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +9,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Venue class, representation of physical venues in the database
@@ -72,17 +75,19 @@ public class Venue {
      */
     @OneToMany(
             mappedBy = "venue",
+            fetch = FetchType.EAGER,
             cascade = CascadeType.ALL)
-    private List<Rating> ratings;
+    private Set<Rating> ratings;
 
     /**
      * List of comments left to the venue
      */
     @OneToMany(
             mappedBy = "venue",
-            cascade = CascadeType.ALL
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
     )
-    private List<Comment> comments;
+    private Set<Comment> comments;
 
     /**
      * QR code of the venue
