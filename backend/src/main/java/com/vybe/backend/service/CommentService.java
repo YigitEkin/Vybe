@@ -37,7 +37,7 @@ public class CommentService {
             throw new VenueNotFoundException("Venue with id: " + commentCreationDTO.getVenueId() + " not found");
         }
         if(!customerRepository.existsById(commentCreationDTO.getCustomerUsername())) {
-            throw new CustomerNotFoundException("Customer with id: " + commentCreationDTO.getCustomerUsername() + " not found");
+            throw new CustomerNotFoundException("Customer with username: " + commentCreationDTO.getCustomerUsername() + " not found");
         }
         Venue venue = venueRepository.findById(commentCreationDTO.getVenueId()).get();
         Customer customer = customerRepository.findById(commentCreationDTO.getCustomerUsername()).get();
@@ -92,4 +92,27 @@ public class CommentService {
         return commentRepository.deleteAllByCommentedBy_Username(customerUsername);
     }
 
+    public CommentDTO getComment(Integer id) {
+        if(!commentRepository.existsById(id)) {
+            throw new CustomerNotFoundException("Comment with id: " + id + " not found");
+        }
+
+        return new CommentDTO(commentRepository.findById(id).get());
+    }
+
+    // update a comment
+    public CommentDTO updateComment(Integer id, CommentDTO commentDTO) {
+        if(!commentRepository.existsById(id)) {
+            throw new CustomerNotFoundException("Comment with id: " + commentDTO.getId() + " not found");
+        }
+
+        Comment originalComment = commentRepository.findById(id).get();
+        Comment comment = commentDTO.toComment();
+        comment.setVenue(originalComment.getVenue());
+        comment.setCommentedBy(originalComment.getCommentedBy());
+        comment.setId(originalComment.getId());
+        return new CommentDTO(commentRepository.save(comment));
+    }
+
+    // TODO: update comment
 }

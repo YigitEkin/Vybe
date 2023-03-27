@@ -35,11 +35,10 @@ public class Comment {
      * The customer that the comment belongs to
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_username")
     private Customer commentedBy;
 
     /**
-     * The venue that was commented on
+     * The venue that was commen ted on
      */
     @ManyToOne(fetch = FetchType.LAZY)
     private Venue venue;

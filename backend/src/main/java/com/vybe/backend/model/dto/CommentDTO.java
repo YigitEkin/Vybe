@@ -42,10 +42,11 @@ public class CommentDTO {
         this.date = comment.getDate();
         this.customerUsername = comment.getCommentedBy().getUsername();
         this.venueId = comment.getVenue().getId();
+        this.id = comment.getId();
     }
 
     public static Set<CommentDTO> toCommentDTOSet(Set<Comment> comments) {
-        Set<CommentDTO> commentDTOS = Set.of();
+        Set<CommentDTO> commentDTOS = new java.util.HashSet<>(Set.of());
         for (Comment comment : comments) {
             commentDTOS.add(new CommentDTO(comment));
         }
