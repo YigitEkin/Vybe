@@ -1,8 +1,6 @@
 package com.vybe.backend.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -11,7 +9,8 @@ import javax.persistence.*;
  * @author Oğuz Ata Çal
  */
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Comment {
@@ -36,7 +35,6 @@ public class Comment {
      * The customer that the comment belongs to
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_username")
     private Customer commentedBy;
 
     /**

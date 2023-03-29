@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/api/request")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+// TODO: restrict origins
 public class RequestController {
     @Resource
     private SongService songService;

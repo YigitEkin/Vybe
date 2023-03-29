@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -36,14 +37,14 @@ public class Customer extends User {
     /**
      * Analytics object that holds statistics of the customer
      */
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "analytics_id")
     private Analytics analytics;
 
     /**
      * Wallet object that holds financial information of the customer
      */
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "wallet_id")
     private Wallet wallet;
 
@@ -65,6 +66,16 @@ public class Customer extends User {
      * date of creation of the customer account
      */
     private String dateOfCreation;
+
+    /**
+     * List of comments of customer
+     */
+    @OneToMany(
+            mappedBy = "commentedBy",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
+    private Set<Comment> comments;
 
     /**
      * Checking the customer in to a venue (entering a venue)

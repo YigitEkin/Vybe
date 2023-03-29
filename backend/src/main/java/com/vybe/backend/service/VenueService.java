@@ -1,17 +1,11 @@
 package com.vybe.backend.service;
 
-
 import com.vybe.backend.model.dto.SongDTO;
 import com.vybe.backend.model.dto.VenueCreationDTO;
 import com.vybe.backend.model.dto.VenueDTO;
 import com.vybe.backend.exception.VenueNotFoundException;
-import com.vybe.backend.model.entity.Playlist;
-import com.vybe.backend.model.entity.Song;
-import com.vybe.backend.model.entity.SongNode;
-import com.vybe.backend.model.entity.Venue;
-import com.vybe.backend.repository.PlaylistRepository;
-import com.vybe.backend.repository.SongNodeRepository;
-import com.vybe.backend.repository.VenueRepository;
+import com.vybe.backend.model.entity.*;
+import com.vybe.backend.repository.*;
 import com.vybe.backend.util.SoundtrackUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,18 +20,24 @@ public class VenueService {
     VenueRepository venueRepository;
     SongNodeRepository songNodeRepository;
     PlaylistRepository playlistRepository;
+    CustomerRepository customerRepository;
+    CommentRepository commentRepository;
 
 
     @Autowired
-    public VenueService(VenueRepository venueRepository, SongNodeRepository songNodeRepository, PlaylistRepository playlistRepository) {
+    public VenueService(VenueRepository venueRepository, SongNodeRepository songNodeRepository, PlaylistRepository playlistRepository, CustomerRepository customerRepository, CommentRepository commentRepository){
         this.playlistRepository = playlistRepository;
         this.venueRepository = venueRepository;
         this.songNodeRepository = songNodeRepository;
+        this.customerRepository = customerRepository;
+        this.commentRepository = commentRepository;
     }
 
     // add venue
     public VenueDTO addVenue(VenueCreationDTO venueCreationDTO) {
-        return new VenueDTO(venueRepository.save(venueCreationDTO.toVenue()));
+        Venue venue = venueCreationDTO.toVenue();
+        venue.setComments(Collections.emptySet());
+        return new VenueDTO(venueRepository.save(venue));
     }
 
     // get venue
@@ -65,11 +65,15 @@ public class VenueService {
         if(!venueRepository.existsById(id)) {
             throw new VenueNotFoundException("Venue with id: " + id + " not found");
         }
+        Venue venue = venueRepository.findById(id).get();
         VenueDTO venueDTO = new VenueDTO(venueRepository.findById(id).get());
         venueDTO.setName(venueCreationDTO.getName());
         venueDTO.setDescription(venueCreationDTO.getDescription());
         venueDTO.setLocation(venueCreationDTO.getLocation());
-        return new VenueDTO(venueRepository.save(venueDTO.toVenue()));
+
+        Venue updatedVenue = venueDTO.toVenue();
+        updatedVenue.setComments(venue.getComments());
+        return new VenueDTO(venueRepository.save(updatedVenue));
     }
 
     // delete venue
