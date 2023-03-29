@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+// TODO: restrict origins
 public class AuthorizationController {
 
     @Resource

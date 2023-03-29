@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/api/song")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+// TODO: restrict origins
 public class SongController {
 
     @Resource

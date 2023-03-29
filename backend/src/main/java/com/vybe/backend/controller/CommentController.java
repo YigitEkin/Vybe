@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/api/comment")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+// TODO: restrict origins
 public class CommentController {
     @Resource
     private CommentService commentService;

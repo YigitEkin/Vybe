@@ -38,7 +38,7 @@ public class Comment {
     private Customer commentedBy;
 
     /**
-     * The venue that was commen ted on
+     * The venue that was commented on
      */
     @ManyToOne(fetch = FetchType.LAZY)
     private Venue venue;

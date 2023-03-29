@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/customer")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+// TODO: restrict origins
 public class CustomerController {
     @Resource
     private UserService userService;

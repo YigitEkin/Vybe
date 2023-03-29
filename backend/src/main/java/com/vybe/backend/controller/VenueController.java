@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/venue")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+// TODO: restrict origins
 public class VenueController {
 
     @Resource

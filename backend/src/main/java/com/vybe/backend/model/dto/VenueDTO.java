@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Setter
 @Getter
-@JsonIgnoreProperties(value = { "playlist" })
+@JsonIgnoreProperties(value = { "playlist", "analytics" })
 public class VenueDTO {
     private int id;
     private String name;
