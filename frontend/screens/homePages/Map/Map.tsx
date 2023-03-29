@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -16,13 +16,13 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
+import Ionicons from "react-native-vector-icons/Ionicons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Fontisto from "react-native-vector-icons/Fontisto";
 
-import StarRating from '../components/StarRating';
+import StarRating from "../components/StarRating";
 
-import { useTheme } from '@react-navigation/native';
+import { useTheme } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 220;
@@ -36,7 +36,21 @@ const Images = [
   { image: require("../../../assets/icon.png") },
 ];
 
-const markers = [
+type MapItem = {
+  coordinate: {
+    latitude: number;
+    longitude: number;
+    latitudeDelta: number;
+    longitudeDelta: number;
+  };
+  title: string;
+  description: string;
+  image: any;
+  rating: number;
+  reviews: number;
+};
+
+const markers: MapItem[] = [
   {
     coordinate: {
       latitude: 39.87816801608047,
@@ -66,7 +80,7 @@ const markers = [
   {
     coordinate: {
       latitude: 39.79,
-      longitude: 32.70,
+      longitude: 32.7,
       latitudeDelta: 0.001,
       longitudeDelta: 0.001,
     },
@@ -79,7 +93,7 @@ const markers = [
   {
     coordinate: {
       latitude: 39.5,
-      longitude: 32.80,
+      longitude: 32.8,
       latitudeDelta: 0.001,
       longitudeDelta: 0.001,
     },
@@ -93,206 +107,208 @@ const markers = [
 
 export const mapDarkStyle = [
   {
-    "elementType": "geometry",
-    "stylers": [
+    elementType: "geometry",
+    stylers: [
       {
-        "color": "#212121"
-      }
-    ]
+        color: "#212121",
+      },
+    ],
   },
   {
-    "elementType": "labels.icon",
-    "stylers": [
+    elementType: "labels.icon",
+    stylers: [
       {
-        "visibility": "off"
-      }
-    ]
+        visibility: "off",
+      },
+    ],
   },
   {
-    "elementType": "labels.text.fill",
-    "stylers": [
+    elementType: "labels.text.fill",
+    stylers: [
       {
-        "color": "#757575"
-      }
-    ]
+        color: "#757575",
+      },
+    ],
   },
   {
-    "elementType": "labels.text.stroke",
-    "stylers": [
+    elementType: "labels.text.stroke",
+    stylers: [
       {
-        "color": "#212121"
-      }
-    ]
+        color: "#212121",
+      },
+    ],
   },
   {
-    "featureType": "administrative",
-    "elementType": "geometry",
-    "stylers": [
+    featureType: "administrative",
+    elementType: "geometry",
+    stylers: [
       {
-        "color": "#757575"
-      }
-    ]
+        color: "#757575",
+      },
+    ],
   },
   {
-    "featureType": "administrative.country",
-    "elementType": "labels.text.fill",
-    "stylers": [
+    featureType: "administrative.country",
+    elementType: "labels.text.fill",
+    stylers: [
       {
-        "color": "#9e9e9e"
-      }
-    ]
+        color: "#9e9e9e",
+      },
+    ],
   },
   {
-    "featureType": "administrative.land_parcel",
-    "stylers": [
+    featureType: "administrative.land_parcel",
+    stylers: [
       {
-        "visibility": "off"
-      }
-    ]
+        visibility: "off",
+      },
+    ],
   },
   {
-    "featureType": "administrative.locality",
-    "elementType": "labels.text.fill",
-    "stylers": [
+    featureType: "administrative.locality",
+    elementType: "labels.text.fill",
+    stylers: [
       {
-        "color": "#bdbdbd"
-      }
-    ]
+        color: "#bdbdbd",
+      },
+    ],
   },
   {
-    "featureType": "poi",
-    "elementType": "labels.text.fill",
-    "stylers": [
+    featureType: "poi",
+    elementType: "labels.text.fill",
+    stylers: [
       {
-        "color": "#757575"
-      }
-    ]
+        color: "#757575",
+      },
+    ],
   },
   {
-    "featureType": "poi.park",
-    "elementType": "geometry",
-    "stylers": [
+    featureType: "poi.park",
+    elementType: "geometry",
+    stylers: [
       {
-        "color": "#181818"
-      }
-    ]
+        color: "#181818",
+      },
+    ],
   },
   {
-    "featureType": "poi.park",
-    "elementType": "labels.text.fill",
-    "stylers": [
+    featureType: "poi.park",
+    elementType: "labels.text.fill",
+    stylers: [
       {
-        "color": "#616161"
-      }
-    ]
+        color: "#616161",
+      },
+    ],
   },
   {
-    "featureType": "poi.park",
-    "elementType": "labels.text.stroke",
-    "stylers": [
+    featureType: "poi.park",
+    elementType: "labels.text.stroke",
+    stylers: [
       {
-        "color": "#1b1b1b"
-      }
-    ]
+        color: "#1b1b1b",
+      },
+    ],
   },
   {
-    "featureType": "road",
-    "elementType": "geometry.fill",
-    "stylers": [
+    featureType: "road",
+    elementType: "geometry.fill",
+    stylers: [
       {
-        "color": "#2c2c2c"
-      }
-    ]
+        color: "#2c2c2c",
+      },
+    ],
   },
   {
-    "featureType": "road",
-    "elementType": "labels.text.fill",
-    "stylers": [
+    featureType: "road",
+    elementType: "labels.text.fill",
+    stylers: [
       {
-        "color": "#8a8a8a"
-      }
-    ]
+        color: "#8a8a8a",
+      },
+    ],
   },
   {
-    "featureType": "road.arterial",
-    "elementType": "geometry",
-    "stylers": [
+    featureType: "road.arterial",
+    elementType: "geometry",
+    stylers: [
       {
-        "color": "#373737"
-      }
-    ]
+        color: "#373737",
+      },
+    ],
   },
   {
-    "featureType": "road.highway",
-    "elementType": "geometry",
-    "stylers": [
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [
       {
-        "color": "#3c3c3c"
-      }
-    ]
+        color: "#3c3c3c",
+      },
+    ],
   },
   {
-    "featureType": "road.highway.controlled_access",
-    "elementType": "geometry",
-    "stylers": [
+    featureType: "road.highway.controlled_access",
+    elementType: "geometry",
+    stylers: [
       {
-        "color": "#4e4e4e"
-      }
-    ]
+        color: "#4e4e4e",
+      },
+    ],
   },
   {
-    "featureType": "road.local",
-    "elementType": "labels.text.fill",
-    "stylers": [
+    featureType: "road.local",
+    elementType: "labels.text.fill",
+    stylers: [
       {
-        "color": "#616161"
-      }
-    ]
+        color: "#616161",
+      },
+    ],
   },
   {
-    "featureType": "transit",
-    "elementType": "labels.text.fill",
-    "stylers": [
+    featureType: "transit",
+    elementType: "labels.text.fill",
+    stylers: [
       {
-        "color": "#757575"
-      }
-    ]
+        color: "#757575",
+      },
+    ],
   },
   {
-    "featureType": "water",
-    "elementType": "geometry",
-    "stylers": [
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [
       {
-        "color": "#000000"
-      }
-    ]
+        color: "#000000",
+      },
+    ],
   },
   {
-    "featureType": "water",
-    "elementType": "labels.text.fill",
-    "stylers": [
+    featureType: "water",
+    elementType: "labels.text.fill",
+    stylers: [
       {
-        "color": "#3d3d3d"
-      }
-    ]
-  }
+        color: "#3d3d3d",
+      },
+    ],
+  },
 ];
 
 export const mapStandardStyle = [
   {
-    "elementType": "labels.icon",
-    "stylers": [
+    elementType: "labels.icon",
+    stylers: [
       {
-        "visibility": "off"
-      }
-    ]
+        visibility: "off",
+      },
+    ],
   },
 ];
 
 const MapPage = () => {
   const theme = useTheme();
 
-  const [location, setLocation] = useState<any>(null);
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null
+  );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
 
@@ -311,9 +327,8 @@ const MapPage = () => {
     })();
   }, []);
 
-
   const initialMapState = {
-    markers
+    markers,
   };
 
   const [state, setState] = React.useState(initialMapState);
@@ -335,32 +350,32 @@ const MapPage = () => {
         if (mapIndex !== index) {
           mapIndex = index;
           const { coordinate } = state.markers[index];
-          _map.current.animateToRegion(
-            {
-              ...coordinate,
-              latitudeDelta: 0.001,
-              longitudeDelta: 0.001,
-            },
-            350
-          );
+          _map.current &&
+            _map.current.animateToRegion(
+              {
+                ...coordinate,
+                latitudeDelta: 0.001,
+                longitudeDelta: 0.001,
+              },
+              350
+            );
         }
       }, 10);
       clearTimeout(regionTimeout);
     });
-
   });
 
   const interpolations = state.markers.map((marker: any, index: number) => {
     const inputRange = [
       (index - 1) * CARD_WIDTH,
       index * CARD_WIDTH,
-      ((index + 1) * CARD_WIDTH),
+      (index + 1) * CARD_WIDTH,
     ];
 
     const scale = mapAnimation.interpolate({
       inputRange,
       outputRange: [1, 1.5, 1],
-      extrapolate: "clamp"
+      extrapolate: "clamp",
     });
 
     return { scale };
@@ -370,134 +385,156 @@ const MapPage = () => {
     const coordinate = mapEventData._targetInst.memoizedProps.coordinate;
     const markerID = mapEventData._targetInst.return;
 
-    let x = (markerID * CARD_WIDTH) + (markerID * 20);
-    if (Platform.OS === 'ios') {
+    let x = markerID * CARD_WIDTH + markerID * 20;
+    if (Platform.OS === "ios") {
       x = x - SPACING_FOR_CARD_INSET;
     }
 
-    _scrollView.current.scrollTo({ x: x, y: 0, animated: true });
-    _map.current.animateToRegion(coordinate, 1.5 * 1000);
-  }
+    _scrollView.current &&
+      _scrollView.current.scrollTo({ x: x, y: 0, animated: true });
+    _map.current && _map.current.animateToRegion(coordinate, 1.5 * 1000);
+  };
 
   const _map = React.useRef(null);
   const _scrollView = React.useRef(null);
 
-  return success && (
-    <View style={styles.container}>
-      <MapView
-        ref={_map}
-        initialRegion={{
-          latitude: location?.coords?.latitude,
-          longitude: location?.coords?.longitude,
-          latitudeDelta: location?.coords?.accuracy * 10 - 3,
-          longitudeDelta: location?.coords?.accuracy * 10 - 3,
-        }}
-        style={styles.container}
-        provider={PROVIDER_GOOGLE}
-        customMapStyle={theme.dark ? mapDarkStyle : mapStandardStyle}
-      >
-        {
-          // @ts-ignore
-          state.markers.map((marker: any, index: number) => {
-            const scaleStyle = {
-              transform: [
-                {
-                  scale: interpolations[index].scale,
-                },
-              ],
-            };
-            return (
-              // @ts-ignore
-              <Marker key={index} coordinate={marker.coordinate} onPress={(e) => onMarkerPress(e)}>
-                <Animated.View style={[styles.markerWrap]}>
-                  <Animated.Image
-                    source={require('../../../assets/icon.png')}
-                    // @ts-ignore
-                    style={[styles.marker, scaleStyle]}
-                    resizeMode="cover"
-                  />
-                </Animated.View>
-              </Marker>
-            );
-          })}
-      </MapView>
-      <View style={styles.searchBox}>
-        <TextInput
-          placeholder="Search here"
-          placeholderTextColor="#000"
-          autoCapitalize="none"
-          style={{ flex: 1, padding: 0 }}
-        />
-        <Ionicons name="ios-search" size={20} />
-      </View>
-      <Animated.ScrollView
-        ref={_scrollView}
-        horizontal
-        pagingEnabled
-        scrollEventThrottle={1}
-        showsHorizontalScrollIndicator={false}
-        snapToInterval={CARD_WIDTH + 20}
-        snapToAlignment="center"
-        style={styles.scrollView}
-        contentInset={{
-          top: 0,
-          left: SPACING_FOR_CARD_INSET,
-          bottom: 0,
-          right: SPACING_FOR_CARD_INSET
-        }}
-        contentContainerStyle={{
-          paddingHorizontal: Platform.OS === 'android' ? SPACING_FOR_CARD_INSET : 0
-        }}
-        onScroll={Animated.event(
-          [
-            {
-              nativeEvent: {
-                contentOffset: {
-                  x: mapAnimation,
-                }
-              },
-            },
-          ],
-          { useNativeDriver: true }
-        )}
-      >
-        {state.markers.map((marker: any, index: number) => (
-          <Pressable
-            style={styles.card}
-            key={index}
-            onPress={
-              () => {
-                _map.current.animateToRegion(marker.coordinate, 1.5 * 1000);
-              }
-            }>
-            <Image
-              source={marker.image}
-              // @ts-ignore
-              style={styles.cardImage}
-              resizeMode="cover"
-            />
-            <View style={styles.textContent}>
-              <Text numberOfLines={1} style={styles.cardtitle}>{marker.title}</Text>
-
-              <Text numberOfLines={1} style={styles.cardDescription}>{marker.description}</Text>
-              <View style={styles.button}>
-                <TouchableOpacity
-                  onPress={() => { }}
-                  style={[styles.signIn, {
-                    borderColor: '#FF6347',
-                    borderWidth: 1
-                  }]}
+  return (
+    success && (
+      <View style={styles.container}>
+        <MapView
+          ref={_map}
+          initialRegion={{
+            latitude: location!.coords!.latitude,
+            longitude: location!.coords!.longitude,
+            latitudeDelta: location!.coords!.accuracy! * 10 - 3,
+            longitudeDelta: location!.coords!.accuracy! * 10 - 3,
+          }}
+          style={styles.container}
+          provider={PROVIDER_GOOGLE}
+          customMapStyle={theme.dark ? mapDarkStyle : mapStandardStyle}
+        >
+          {
+            // @ts-ignore
+            state.markers.map((marker: any, index: number) => {
+              const scaleStyle = {
+                transform: [
+                  {
+                    scale: interpolations[index].scale,
+                  },
+                ],
+              };
+              return (
+                // @ts-ignore
+                <Marker
+                  key={index}
+                  coordinate={marker.coordinate}
+                  onPress={(e) => onMarkerPress(e)}
                 >
-                  <Text style={[styles.textSign, {
-                    color: '#FF6347'
-                  }]}>Order Now</Text>
-                </TouchableOpacity>
+                  <Animated.View style={[styles.markerWrap]}>
+                    <Animated.Image
+                      source={require("../../../assets/icon.png")}
+                      // @ts-ignore
+                      style={[styles.marker, scaleStyle]}
+                      resizeMode="cover"
+                    />
+                  </Animated.View>
+                </Marker>
+              );
+            })
+          }
+        </MapView>
+        <View style={styles.searchBox}>
+          <TextInput
+            placeholder="Search here"
+            placeholderTextColor="#000"
+            autoCapitalize="none"
+            style={{ flex: 1, padding: 0 }}
+          />
+          <Ionicons name="ios-search" size={20} />
+        </View>
+        <Animated.ScrollView
+          ref={_scrollView}
+          horizontal
+          pagingEnabled
+          scrollEventThrottle={1}
+          showsHorizontalScrollIndicator={false}
+          snapToInterval={CARD_WIDTH + 20}
+          snapToAlignment="center"
+          style={styles.scrollView}
+          contentInset={{
+            top: 0,
+            left: SPACING_FOR_CARD_INSET,
+            bottom: 0,
+            right: SPACING_FOR_CARD_INSET,
+          }}
+          contentContainerStyle={{
+            paddingHorizontal:
+              Platform.OS === "android" ? SPACING_FOR_CARD_INSET : 0,
+          }}
+          onScroll={Animated.event(
+            [
+              {
+                nativeEvent: {
+                  contentOffset: {
+                    x: mapAnimation,
+                  },
+                },
+              },
+            ],
+            { useNativeDriver: true }
+          )}
+        >
+          {state.markers.map((marker: any, index: number) => (
+            <Pressable
+              style={styles.card}
+              key={index}
+              onPress={() => {
+                _map.current!.animateToRegion(marker.coordinate, 1.5 * 1000);
+              }}
+            >
+              <Image
+                source={marker.image}
+                // @ts-ignore
+                style={styles.cardImage}
+                resizeMode="cover"
+              />
+              <View style={styles.textContent}>
+                <Text numberOfLines={1} style={styles.cardtitle}>
+                  {marker.title}
+                </Text>
+
+                <Text numberOfLines={1} style={styles.cardDescription}>
+                  {marker.description}
+                </Text>
+                <View style={styles.button}>
+                  <TouchableOpacity
+                    onPress={() => {}}
+                    style={[
+                      styles.signIn,
+                      {
+                        borderColor: "#FF6347",
+                        borderWidth: 1,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.textSign,
+                        {
+                          color: "#FF6347",
+                        },
+                      ]}
+                    >
+                      Order Now
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          </Pressable>
-        ))}
-      </Animated.ScrollView>
-    </View>
+            </Pressable>
+          ))}
+        </Animated.ScrollView>
+      </View>
+    )
   );
 };
 
@@ -506,40 +543,40 @@ export default MapPage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   searchBox: {
-    position: 'absolute',
-    marginTop: Platform.OS === 'ios' ? 40 : 20,
+    position: "absolute",
+    marginTop: Platform.OS === "ios" ? 40 : 20,
     flexDirection: "row",
-    backgroundColor: '#fff',
-    width: '90%',
-    alignSelf: 'center',
+    backgroundColor: "#fff",
+    width: "90%",
+    alignSelf: "center",
     borderRadius: 5,
     padding: 10,
-    shadowColor: '#ccc',
+    shadowColor: "#ccc",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.5,
     shadowRadius: 5,
     elevation: 10,
   },
   chipsScrollView: {
-    position: 'absolute',
-    top: Platform.OS === 'ios' ? 90 : 80,
-    paddingHorizontal: 10
+    position: "absolute",
+    top: Platform.OS === "ios" ? 90 : 80,
+    paddingHorizontal: 10,
   },
   chipsIcon: {
     marginRight: 5,
   },
   chipsItem: {
     flexDirection: "row",
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 20,
     padding: 8,
     paddingHorizontal: 20,
     marginHorizontal: 10,
     height: 35,
-    shadowColor: '#ccc',
+    shadowColor: "#ccc",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.5,
     shadowRadius: 5,
@@ -568,7 +605,7 @@ const styles = StyleSheet.create({
     shadowOffset: {
       // @ts-ignore
       x: 2,
-      y: -2
+      y: -2,
     },
     height: CARD_HEIGHT,
     width: CARD_WIDTH,
@@ -604,18 +641,18 @@ const styles = StyleSheet.create({
     height: 30,
   },
   button: {
-    alignItems: 'center',
-    marginTop: 5
+    alignItems: "center",
+    marginTop: 5,
   },
   signIn: {
-    width: '100%',
+    width: "100%",
     padding: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 3
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 3,
   },
   textSign: {
     fontSize: 14,
-    fontWeight: 'bold'
-  }
+    fontWeight: "bold",
+  },
 });
