@@ -31,6 +31,6 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Integer>
     @Query("DELETE FROM Friendship f WHERE (f.sender = ?1 AND f.receiver = ?2) OR (f.sender = ?2 AND f.receiver = ?1)")
     void deleteBySenderAndReceiverOrReceiverAndSender(Customer sender, Customer receiver);
 
-    @Query("SELECT f FROM Friendship f WHERE (f.sender = ?1 AND f.receiver = ?2) OR (f.sender = ?2 AND f.receiver = ?1)")
-    boolean existsBySenderAndReceiverOrReceiverAndSender(Customer sender, Customer receiver);
+    @Query("SELECT count(f) > 0 FROM Friendship f WHERE (f.sender = ?1 AND f.receiver = ?2) OR (f.sender = ?2 AND f.receiver = ?1)")
+    Boolean existsBySenderAndReceiverOrReceiverAndSender(Customer sender, Customer receiver);
 }

@@ -9,7 +9,6 @@ import com.vybe.backend.model.entity.Customer;
 import com.vybe.backend.model.entity.Friendship;
 import com.vybe.backend.repository.CustomerRepository;
 import com.vybe.backend.repository.FriendshipRepository;
-import com.vybe.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,6 +67,9 @@ public class FriendshipService {
         if(!customerRepository.existsById(receiverUsername)) {
             throw new CustomerNotFoundException("Customer with username: " + receiverUsername + " not found");
         }
+        if (senderUsername.equals(receiverUsername)) {
+            throw new CustomersAlreadyFriendsException("You cannot send a friend request to yourself");
+        }
         Customer sender = customerRepository.findById(senderUsername).get();
         Customer receiver = customerRepository.findById(receiverUsername).get();
         if(friendshipRepository.existsBySenderAndReceiver(sender, receiver)) {
@@ -105,7 +107,7 @@ public class FriendshipService {
         }
         Customer sender = customerRepository.findById(senderUsername).get();
         Customer receiver = customerRepository.findById(receiverUsername).get();
-        if(!friendshipRepository.existsBySenderAndReceiver(sender, receiver)) {
+        if(!friendshipRepository.existsBySenderAndReceiver(sender, receiver) || friendshipRepository.findBySenderAndReceiver(sender, receiver).isAccepted()) {
             throw new FriendshipNotFoundException("Friend request not found");
         }
         Friendship friendship = friendshipRepository.findBySenderAndReceiver(sender, receiver);

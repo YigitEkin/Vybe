@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/venue")
+@RequestMapping("/api/venues")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 // TODO: restrict origins
 public class VenueController {
