@@ -15,11 +15,13 @@ import {
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
-
+// @ts-ignore
 import Ionicons from "react-native-vector-icons/Ionicons";
+// @ts-ignore
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+// @ts-ignore
 import Fontisto from "react-native-vector-icons/Fontisto";
-
+// @ts-ignore
 import StarRating from "../components/StarRating";
 
 import { useTheme } from "@react-navigation/native";
@@ -398,144 +400,142 @@ const MapPage = () => {
   const _map = React.useRef(null);
   const _scrollView = React.useRef(null);
 
-  return (
-    success && (
-      <View style={styles.container}>
-        <MapView
-          ref={_map}
-          initialRegion={{
-            latitude: location!.coords!.latitude,
-            longitude: location!.coords!.longitude,
-            latitudeDelta: location!.coords!.accuracy! * 10 - 3,
-            longitudeDelta: location!.coords!.accuracy! * 10 - 3,
-          }}
-          style={styles.container}
-          provider={PROVIDER_GOOGLE}
-          customMapStyle={theme.dark ? mapDarkStyle : mapStandardStyle}
-        >
-          {
-            // @ts-ignore
-            state.markers.map((marker: any, index: number) => {
-              const scaleStyle = {
-                transform: [
-                  {
-                    scale: interpolations[index].scale,
-                  },
-                ],
-              };
-              return (
-                // @ts-ignore
-                <Marker
-                  key={index}
-                  coordinate={marker.coordinate}
-                  onPress={(e) => onMarkerPress(e)}
-                >
-                  <Animated.View style={[styles.markerWrap]}>
-                    <Animated.Image
-                      source={require("../../../assets/icon.png")}
-                      // @ts-ignore
-                      style={[styles.marker, scaleStyle]}
-                      resizeMode="cover"
-                    />
-                  </Animated.View>
-                </Marker>
-              );
-            })
-          }
-        </MapView>
-        <View style={styles.searchBox}>
-          <TextInput
-            placeholder="Search here"
-            placeholderTextColor="#000"
-            autoCapitalize="none"
-            style={{ flex: 1, padding: 0 }}
-          />
-          <Ionicons name="ios-search" size={20} />
-        </View>
-        <Animated.ScrollView
-          ref={_scrollView}
-          horizontal
-          pagingEnabled
-          scrollEventThrottle={1}
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={CARD_WIDTH + 20}
-          snapToAlignment="center"
-          style={styles.scrollView}
-          contentInset={{
-            top: 0,
-            left: SPACING_FOR_CARD_INSET,
-            bottom: 0,
-            right: SPACING_FOR_CARD_INSET,
-          }}
-          contentContainerStyle={{
-            paddingHorizontal:
-              Platform.OS === "android" ? SPACING_FOR_CARD_INSET : 0,
-          }}
-          onScroll={Animated.event(
-            [
-              {
-                nativeEvent: {
-                  contentOffset: {
-                    x: mapAnimation,
-                  },
+  return success ? (
+    <View style={styles.container}>
+      <MapView
+        ref={_map}
+        initialRegion={{
+          latitude: location!.coords!.latitude,
+          longitude: location!.coords!.longitude,
+          latitudeDelta: location!.coords!.accuracy! * 10 - 3,
+          longitudeDelta: location!.coords!.accuracy! * 10 - 3,
+        }}
+        style={styles.container}
+        provider={PROVIDER_GOOGLE}
+        customMapStyle={theme.dark ? mapDarkStyle : mapStandardStyle}
+      >
+        {
+          // @ts-ignore
+          state.markers.map((marker: any, index: number) => {
+            const scaleStyle = {
+              transform: [
+                {
+                  scale: interpolations[index].scale,
+                },
+              ],
+            };
+            return (
+              // @ts-ignore
+              <Marker
+                key={index}
+                coordinate={marker.coordinate}
+                onPress={(e) => onMarkerPress(e)}
+              >
+                <Animated.View style={[styles.markerWrap]}>
+                  <Animated.Image
+                    source={require("../../../assets/icon.png")}
+                    // @ts-ignore
+                    style={[styles.marker, scaleStyle]}
+                    resizeMode="cover"
+                  />
+                </Animated.View>
+              </Marker>
+            );
+          })
+        }
+      </MapView>
+      <View style={styles.searchBox}>
+        <TextInput
+          placeholder="Search here"
+          placeholderTextColor="#000"
+          autoCapitalize="none"
+          style={{ flex: 1, padding: 0 }}
+        />
+        <Ionicons name="ios-search" size={20} />
+      </View>
+      <Animated.ScrollView
+        ref={_scrollView}
+        horizontal
+        pagingEnabled
+        scrollEventThrottle={1}
+        showsHorizontalScrollIndicator={false}
+        snapToInterval={CARD_WIDTH + 20}
+        snapToAlignment="center"
+        style={styles.scrollView}
+        contentInset={{
+          top: 0,
+          left: SPACING_FOR_CARD_INSET,
+          bottom: 0,
+          right: SPACING_FOR_CARD_INSET,
+        }}
+        contentContainerStyle={{
+          paddingHorizontal:
+            Platform.OS === "android" ? SPACING_FOR_CARD_INSET : 0,
+        }}
+        onScroll={Animated.event(
+          [
+            {
+              nativeEvent: {
+                contentOffset: {
+                  x: mapAnimation,
                 },
               },
-            ],
-            { useNativeDriver: true }
-          )}
-        >
-          {state.markers.map((marker: any, index: number) => (
-            <Pressable
-              style={styles.card}
-              key={index}
-              onPress={() => {
-                _map.current!.animateToRegion(marker.coordinate, 1.5 * 1000);
-              }}
-            >
-              <Image
-                source={marker.image}
-                // @ts-ignore
-                style={styles.cardImage}
-                resizeMode="cover"
-              />
-              <View style={styles.textContent}>
-                <Text numberOfLines={1} style={styles.cardtitle}>
-                  {marker.title}
-                </Text>
+            },
+          ],
+          { useNativeDriver: true }
+        )}
+      >
+        {state.markers.map((marker: any, index: number) => (
+          <Pressable
+            style={styles.card}
+            key={index}
+            onPress={() => {
+              _map.current!.animateToRegion(marker.coordinate, 1.5 * 1000);
+            }}
+          >
+            <Image
+              source={marker.image}
+              // @ts-ignore
+              style={styles.cardImage}
+              resizeMode="cover"
+            />
+            <View style={styles.textContent}>
+              <Text numberOfLines={1} style={styles.cardtitle}>
+                {marker.title}
+              </Text>
 
-                <Text numberOfLines={1} style={styles.cardDescription}>
-                  {marker.description}
-                </Text>
-                <View style={styles.button}>
-                  <TouchableOpacity
-                    onPress={() => {}}
+              <Text numberOfLines={1} style={styles.cardDescription}>
+                {marker.description}
+              </Text>
+              <View style={styles.button}>
+                <TouchableOpacity
+                  onPress={() => {}}
+                  style={[
+                    styles.signIn,
+                    {
+                      borderColor: "#FF6347",
+                      borderWidth: 1,
+                    },
+                  ]}
+                >
+                  <Text
                     style={[
-                      styles.signIn,
+                      styles.textSign,
                       {
-                        borderColor: "#FF6347",
-                        borderWidth: 1,
+                        color: "#FF6347",
                       },
                     ]}
                   >
-                    <Text
-                      style={[
-                        styles.textSign,
-                        {
-                          color: "#FF6347",
-                        },
-                      ]}
-                    >
-                      Order Now
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+                    Order Now
+                  </Text>
+                </TouchableOpacity>
               </View>
-            </Pressable>
-          ))}
-        </Animated.ScrollView>
-      </View>
-    )
-  );
+            </View>
+          </Pressable>
+        ))}
+      </Animated.ScrollView>
+    </View>
+  ) : null;
 };
 
 export default MapPage;
