@@ -30,7 +30,9 @@ const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 220;
 const CARD_WIDTH = width * 0.8;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
-
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
+const ANIMATION_TIMEOUT = 800;
 const Images = [
   { image: require("../../../assets/icon.png") },
   { image: require("../../../assets/icon.png") },
@@ -57,8 +59,8 @@ const markers: MapItem[] = [
     coordinate: {
       latitude: 39.87816801608047,
       longitude: 32.70768330187889,
-      latitudeDelta: 0.001,
-      longitudeDelta: 0.001,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
     },
     title: "Beysu Star",
     description: "Beysu Star",
@@ -68,10 +70,36 @@ const markers: MapItem[] = [
   },
   {
     coordinate: {
+      latitude: 39.88987990516257,
+      longitude: 32.75868199086349,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
+    },
+    title: "Federal Coffee Bilkent",
+    description: "FEDO FEDO FEDO",
+    image: Images[0].image,
+    rating: 4,
+    reviews: 99,
+  },
+  {
+    coordinate: {
+      latitude: 39.88355729305515,
+      longitude: 32.755733248273344,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
+    },
+    title: "Bluejay Coffee House",
+    description: "FEDO FEDO FEDO",
+    image: Images[0].image,
+    rating: 4,
+    reviews: 99,
+  },
+  {
+    coordinate: {
       latitude: 40,
       longitude: 32.75,
-      latitudeDelta: 0.001,
-      longitudeDelta: 0.001,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
     },
     title: "2. mekan",
     description: "2. mekan",
@@ -83,8 +111,8 @@ const markers: MapItem[] = [
     coordinate: {
       latitude: 39.79,
       longitude: 32.7,
-      latitudeDelta: 0.001,
-      longitudeDelta: 0.001,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
     },
     title: "3. mekan",
     description: "3. mekan",
@@ -96,8 +124,8 @@ const markers: MapItem[] = [
     coordinate: {
       latitude: 39.5,
       longitude: 32.8,
-      latitudeDelta: 0.001,
-      longitudeDelta: 0.001,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
     },
     title: "4.mekan",
     description: "4.mekan",
@@ -334,8 +362,7 @@ const MapPage = () => {
   };
 
   const [state, setState] = React.useState(initialMapState);
-
-  let mapIndex = 0;
+  const [mapIndex, setMapIndex] = React.useState(0);
   let mapAnimation = new Animated.Value(0);
 
   useEffect(() => {
@@ -347,23 +374,32 @@ const MapPage = () => {
       if (index <= 0) {
         index = 0;
       }
-
-      const regionTimeout = setTimeout(() => {
+      if (mapIndex !== index) {
+        setMapIndex(index);
+        const { coordinate } = state.markers[index];
+        _map.current &&
+          _map.current.animateToRegion(
+            {
+              ...coordinate,
+            },
+            ANIMATION_TIMEOUT
+          );
+      }
+      // Timeout'lu daha mantıklı aslında da niyeyse çalışmadı
+      /*const regionTimeout = setTimeout(() => {
         if (mapIndex !== index) {
-          mapIndex = index;
+          setMapIndex(index);
           const { coordinate } = state.markers[index];
           _map.current &&
             _map.current.animateToRegion(
               {
                 ...coordinate,
-                latitudeDelta: 0.001,
-                longitudeDelta: 0.001,
               },
-              350
+              ANIMATION_TIMEOUT
             );
         }
       }, 10);
-      clearTimeout(regionTimeout);
+      clearTimeout(regionTimeout);*/
     });
   });
 
@@ -383,18 +419,17 @@ const MapPage = () => {
     return { scale };
   });
 
-  const onMarkerPress = (mapEventData: any) => {
+  const onMarkerPress = (mapEventData: any, markerID: number) => {
     const coordinate = mapEventData._targetInst.memoizedProps.coordinate;
-    const markerID = mapEventData._targetInst.return;
 
     let x = markerID * CARD_WIDTH + markerID * 20;
     if (Platform.OS === "ios") {
       x = x - SPACING_FOR_CARD_INSET;
     }
 
-    _scrollView.current &&
-      _scrollView.current.scrollTo({ x: x, y: 0, animated: true });
-    _map.current && _map.current.animateToRegion(coordinate, 1.5 * 1000);
+    _map.current.animateToRegion(coordinate, ANIMATION_TIMEOUT);
+    _scrollView.current.scrollTo({ x: x, y: 0, animated: true });
+    setMapIndex(markerID);
   };
 
   const _map = React.useRef(null);
@@ -407,12 +442,12 @@ const MapPage = () => {
         initialRegion={{
           latitude: location!.coords!.latitude,
           longitude: location!.coords!.longitude,
-          latitudeDelta: location!.coords!.accuracy! * 10 - 3,
-          longitudeDelta: location!.coords!.accuracy! * 10 - 3,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA,
         }}
         style={styles.container}
         provider={PROVIDER_GOOGLE}
-        customMapStyle={theme.dark ? mapDarkStyle : mapStandardStyle}
+        customMapStyle={mapDarkStyle}
       >
         {
           // @ts-ignore
@@ -429,7 +464,9 @@ const MapPage = () => {
               <Marker
                 key={index}
                 coordinate={marker.coordinate}
-                onPress={(e) => onMarkerPress(e)}
+                onPress={(e) => {
+                  onMarkerPress(e, index);
+                }}
               >
                 <Animated.View style={[styles.markerWrap]}>
                   <Animated.Image
@@ -490,7 +527,8 @@ const MapPage = () => {
             style={styles.card}
             key={index}
             onPress={() => {
-              _map.current!.animateToRegion(marker.coordinate, 1.5 * 1000);
+              _map.current!.animateToRegion(marker.coordinate, ANIMATION_TIMEOUT);
+              setMapIndex(index);
             }}
           >
             <Image
@@ -509,7 +547,7 @@ const MapPage = () => {
               </Text>
               <View style={styles.button}>
                 <TouchableOpacity
-                  onPress={() => {}}
+                  onPress={() => { }}
                   style={[
                     styles.signIn,
                     {
