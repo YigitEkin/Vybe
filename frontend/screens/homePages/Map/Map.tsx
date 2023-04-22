@@ -12,6 +12,7 @@ import {
   Platform,
   Pressable,
 } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
@@ -24,7 +25,8 @@ import Fontisto from "react-native-vector-icons/Fontisto";
 // @ts-ignore
 import StarRating from "../components/StarRating";
 
-import { useTheme } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
+import { Colors } from "../../../constants/Colors";
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 220;
@@ -40,7 +42,7 @@ const Images = [
   { image: require("../../../assets/icon.png") },
 ];
 
-type MapItem = {
+export type MapItem = {
   coordinate: {
     latitude: number;
     longitude: number;
@@ -52,6 +54,7 @@ type MapItem = {
   image: any;
   rating: number;
   reviews: number;
+  id: number;
 };
 
 const markers: MapItem[] = [
@@ -67,6 +70,7 @@ const markers: MapItem[] = [
     image: Images[0].image,
     rating: 4,
     reviews: 99,
+    id: 1,
   },
   {
     coordinate: {
@@ -80,6 +84,7 @@ const markers: MapItem[] = [
     image: Images[0].image,
     rating: 4,
     reviews: 99,
+    id: 2,
   },
   {
     coordinate: {
@@ -93,6 +98,7 @@ const markers: MapItem[] = [
     image: Images[0].image,
     rating: 4,
     reviews: 99,
+    id: 3,
   },
   {
     coordinate: {
@@ -106,6 +112,7 @@ const markers: MapItem[] = [
     image: Images[0].image,
     rating: 4,
     reviews: 99,
+    id: 4,
   },
   {
     coordinate: {
@@ -119,6 +126,7 @@ const markers: MapItem[] = [
     image: Images[0].image,
     rating: 4,
     reviews: 99,
+    id: 5,
   },
   {
     coordinate: {
@@ -132,6 +140,7 @@ const markers: MapItem[] = [
     image: Images[0].image,
     rating: 4,
     reviews: 99,
+    id: 6,
   },
 ];
 
@@ -364,6 +373,7 @@ const MapPage = () => {
   const [state, setState] = React.useState(initialMapState);
   const [mapIndex, setMapIndex] = React.useState(0);
   let mapAnimation = new Animated.Value(0);
+  const navigation = useNavigation();
 
   useEffect(() => {
     mapAnimation.addListener(({ value }) => {
@@ -527,8 +537,20 @@ const MapPage = () => {
             style={styles.card}
             key={index}
             onPress={() => {
-              _map.current!.animateToRegion(marker.coordinate, ANIMATION_TIMEOUT);
+              /**
+                _map.current!.animateToRegion(
+                marker.coordinate,
+                ANIMATION_TIMEOUT
+              );
               setMapIndex(index);
+               */
+              navigation.navigate(
+                // @ts-ignore
+                "VenueDetail",
+                {
+                  id: marker.id,
+                }
+              );
             }}
           >
             <Image
@@ -542,31 +564,36 @@ const MapPage = () => {
                 {marker.title}
               </Text>
 
-              <Text numberOfLines={1} style={styles.cardDescription}>
-                {marker.description}
-              </Text>
-              <View style={styles.button}>
-                <TouchableOpacity
-                  onPress={() => { }}
-                  style={[
-                    styles.signIn,
-                    {
-                      borderColor: "#FF6347",
-                      borderWidth: 1,
-                    },
-                  ]}
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginTop: "auto",
+                  marginBottom: 20,
+                }}
+              >
+                <Text style={styles.cardDescription}>{marker.description}</Text>
+                <FontAwesome
+                  style={{ marginLeft: "auto" }}
+                  name={
+                    marker.rating >= 1
+                      ? "star"
+                      : marker.rating >= 0.5
+                      ? "star-half-o"
+                      : "star-o"
+                  }
+                  size={20}
+                  color={"#f1c40f"}
+                />
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: "#fff",
+                    marginLeft: 5,
+                    fontWeight: "bold",
+                  }}
                 >
-                  <Text
-                    style={[
-                      styles.textSign,
-                      {
-                        color: "#FF6347",
-                      },
-                    ]}
-                  >
-                    Order Now
-                  </Text>
-                </TouchableOpacity>
+                  4.65
+                </Text>
               </View>
             </View>
           </Pressable>
@@ -658,15 +685,17 @@ const styles = StyleSheet.create({
   textContent: {
     flex: 2,
     padding: 10,
+    backgroundColor: "#000",
   },
   cardtitle: {
-    fontSize: 12,
-    // marginTop: 5,
-    fontWeight: "bold",
+    fontSize: 16,
+    color: "#fff",
   },
   cardDescription: {
     fontSize: 12,
-    color: "#444",
+    color: Colors.gray.muted,
+    textAlign: "center",
+    paddingTop: 5,
   },
   markerWrap: {
     alignItems: "center",

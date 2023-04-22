@@ -5,7 +5,7 @@ import { View, Text, StyleSheet, Pressable, FlatList } from "react-native";
 import * as Font from "expo-font";
 import { Colors } from "../../../constants/Colors";
 
-interface NotificationCardProps {
+export interface NotificationCardProps {
   id: number;
   user: string;
   description: string;

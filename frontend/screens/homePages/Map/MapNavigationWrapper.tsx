@@ -31,7 +31,29 @@ const MapNavigationWrapper = () => {
         name="MapView"
         component={MapPage}
       />
-      <Stack.Screen name="VenueDetail" component={VenueDetails} />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerBackTitleVisible: true,
+          headerBackTitle: "Back",
+          headerTitle: "Venue Details",
+
+          headerTitleStyle: {
+            color: "#fff",
+            fontSize: 20,
+          },
+          headerTintColor: "#fff",
+          headerStyle: {
+            // @ts-ignore
+            shadowColor: "transparent",
+            height: 100,
+          },
+          headerTransparent: true,
+          headerTitleAlign: "center",
+        }}
+        name="VenueDetail"
+        component={VenueDetails}
+      />
       <Stack.Screen name="AddVenueReview" component={AddVenueReview} />
     </Stack.Navigator>
   );

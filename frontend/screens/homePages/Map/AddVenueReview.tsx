@@ -11,6 +11,7 @@ import * as Font from "expo-font";
 import StyledButton from "../../../components/HomePage/StyledButton";
 
 import { FontAwesome } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 interface StarRatingProps {
   onRatingPress: (rating: number) => void;
@@ -54,7 +55,10 @@ const StarRating = ({ onRatingPress }: StarRatingProps) => {
 };
 
 const AddVenueReview = () => {
-  const [rating, setRating] = React.useState(0);
+  const [rating, setRating] = React.useState<null | number>(null);
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { id } = route.params;
 
   const [fontsLoaded] = Font.useFonts({
     "Inter-Regular": require("../../../assets/fonts/Inter/static/Inter-Regular.ttf"),
@@ -74,7 +78,9 @@ const AddVenueReview = () => {
         <StyledButton
           style={styles.submitButton}
           onPress={() => {
-            console.log(rating);
+            //TODO: Add review to database
+            //TODO: Add review to venue details page
+            rating !== null ? navigation.navigate("MapView") : null;
           }}
           buttonText="Submit"
         />
