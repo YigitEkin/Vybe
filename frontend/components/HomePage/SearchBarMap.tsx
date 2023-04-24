@@ -2,14 +2,15 @@ import React from 'react';
 import { StyleSheet, TextInput, View, Keyboard, Button } from 'react-native';
 import { Feather, Entypo } from '@expo/vector-icons';
 
-const SearchBar = ({ clicked, searchPhrase, setSearchPhrase, setClicked }) => {
+const SearchBarMap = ({
+  clicked,
+  searchPhrase,
+  setSearchPhrase,
+  setClicked,
+}) => {
   return (
     <View style={styles.container}>
-      <View
-        style={
-          clicked ? styles.searchBar__clicked : styles.searchBar__unclicked
-        }
-      >
+      <View style={styles.searchBar__unclicked}>
         {/* search Icon */}
         <Feather
           name='search'
@@ -41,22 +42,10 @@ const SearchBar = ({ clicked, searchPhrase, setSearchPhrase, setClicked }) => {
         )}
       </View>
       {/* cancel button, depending on whether the search bar is clicked or not */}
-      {clicked && (
-        <View>
-          <Button
-            color={'white'}
-            title='Cancel'
-            onPress={() => {
-              Keyboard.dismiss();
-              setClicked(false);
-            }}
-          ></Button>
-        </View>
-      )}
     </View>
   );
 };
-export default SearchBar;
+export default SearchBarMap;
 
 // styles
 const styles = StyleSheet.create({
@@ -69,8 +58,9 @@ const styles = StyleSheet.create({
   },
   searchBar__unclicked: {
     padding: 10,
+    paddingRight: 20,
     flexDirection: 'row',
-    width: '95%',
+    width: '100%',
     backgroundColor: '#d9dbda',
     borderRadius: 15,
     alignItems: 'center',
@@ -85,8 +75,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   input: {
-    fontSize: 20,
-    marginLeft: 10,
+    fontSize: 17,
+    paddingLeft: 10,
+    //marginLeft: 0,
     width: '90%',
+    fontWeight: '300',
   },
 });

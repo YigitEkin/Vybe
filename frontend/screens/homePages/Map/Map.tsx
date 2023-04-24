@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,24 +11,27 @@ import {
   Dimensions,
   Platform,
   Pressable,
-} from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import * as Location from "expo-location";
-import * as Permissions from "expo-permissions";
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import SearchBarMap from '../../../components/HomePage/SearchBarMap';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
 // @ts-ignore
-import Ionicons from "react-native-vector-icons/Ionicons";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 // @ts-ignore
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 // @ts-ignore
-import Fontisto from "react-native-vector-icons/Fontisto";
+import Fontisto from 'react-native-vector-icons/Fontisto';
 // @ts-ignore
-import StarRating from "../components/StarRating";
+import StarRating from '../components/StarRating';
 
-import { useNavigation, useTheme } from "@react-navigation/native";
-import { Colors } from "../../../constants/Colors";
+import { useNavigation, useTheme } from '@react-navigation/native';
+import { Colors } from '../../../constants/Colors';
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get('window');
 const CARD_HEIGHT = 220;
 const CARD_WIDTH = width * 0.8;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
@@ -36,10 +39,10 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
 const ANIMATION_TIMEOUT = 800;
 const Images = [
-  { image: require("../../../assets/icon.png") },
-  { image: require("../../../assets/icon.png") },
-  { image: require("../../../assets/icon.png") },
-  { image: require("../../../assets/icon.png") },
+  { image: require('../../../assets/icon.png') },
+  { image: require('../../../assets/mapPin.png') },
+  { image: require('../../../assets/icon.png') },
+  { image: require('../../../assets/icon.png') },
 ];
 
 export type MapItem = {
@@ -65,8 +68,8 @@ const markers: MapItem[] = [
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA,
     },
-    title: "Beysu Star",
-    description: "Beysu Star",
+    title: 'Beysu Star',
+    description: 'Beysu Star',
     image: Images[0].image,
     rating: 4,
     reviews: 99,
@@ -79,8 +82,8 @@ const markers: MapItem[] = [
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA,
     },
-    title: "Federal Coffee Bilkent",
-    description: "FEDO FEDO FEDO",
+    title: 'Federal Coffee Bilkent',
+    description: 'FEDO FEDO FEDO',
     image: Images[0].image,
     rating: 4,
     reviews: 99,
@@ -93,8 +96,8 @@ const markers: MapItem[] = [
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA,
     },
-    title: "Bluejay Coffee House",
-    description: "FEDO FEDO FEDO",
+    title: 'Bluejay Coffee House',
+    description: 'FEDO FEDO FEDO',
     image: Images[0].image,
     rating: 4,
     reviews: 99,
@@ -107,8 +110,8 @@ const markers: MapItem[] = [
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA,
     },
-    title: "2. mekan",
-    description: "2. mekan",
+    title: '2. mekan',
+    description: '2. mekan',
     image: Images[0].image,
     rating: 4,
     reviews: 99,
@@ -121,8 +124,8 @@ const markers: MapItem[] = [
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA,
     },
-    title: "3. mekan",
-    description: "3. mekan",
+    title: '3. mekan',
+    description: '3. mekan',
     image: Images[0].image,
     rating: 4,
     reviews: 99,
@@ -135,8 +138,8 @@ const markers: MapItem[] = [
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA,
     },
-    title: "4.mekan",
-    description: "4.mekan",
+    title: '4.mekan',
+    description: '4.mekan',
     image: Images[0].image,
     rating: 4,
     reviews: 99,
@@ -146,186 +149,186 @@ const markers: MapItem[] = [
 
 export const mapDarkStyle = [
   {
-    elementType: "geometry",
+    elementType: 'geometry',
     stylers: [
       {
-        color: "#212121",
+        color: '#212121',
       },
     ],
   },
   {
-    elementType: "labels.icon",
+    elementType: 'labels.icon',
     stylers: [
       {
-        visibility: "off",
+        visibility: 'off',
       },
     ],
   },
   {
-    elementType: "labels.text.fill",
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#757575",
+        color: '#757575',
       },
     ],
   },
   {
-    elementType: "labels.text.stroke",
+    elementType: 'labels.text.stroke',
     stylers: [
       {
-        color: "#212121",
+        color: '#212121',
       },
     ],
   },
   {
-    featureType: "administrative",
-    elementType: "geometry",
+    featureType: 'administrative',
+    elementType: 'geometry',
     stylers: [
       {
-        color: "#757575",
+        color: '#757575',
       },
     ],
   },
   {
-    featureType: "administrative.country",
-    elementType: "labels.text.fill",
+    featureType: 'administrative.country',
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#9e9e9e",
+        color: '#9e9e9e',
       },
     ],
   },
   {
-    featureType: "administrative.land_parcel",
+    featureType: 'administrative.land_parcel',
     stylers: [
       {
-        visibility: "off",
+        visibility: 'off',
       },
     ],
   },
   {
-    featureType: "administrative.locality",
-    elementType: "labels.text.fill",
+    featureType: 'administrative.locality',
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#bdbdbd",
+        color: '#bdbdbd',
       },
     ],
   },
   {
-    featureType: "poi",
-    elementType: "labels.text.fill",
+    featureType: 'poi',
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#757575",
+        color: '#757575',
       },
     ],
   },
   {
-    featureType: "poi.park",
-    elementType: "geometry",
+    featureType: 'poi.park',
+    elementType: 'geometry',
     stylers: [
       {
-        color: "#181818",
+        color: '#181818',
       },
     ],
   },
   {
-    featureType: "poi.park",
-    elementType: "labels.text.fill",
+    featureType: 'poi.park',
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#616161",
+        color: '#616161',
       },
     ],
   },
   {
-    featureType: "poi.park",
-    elementType: "labels.text.stroke",
+    featureType: 'poi.park',
+    elementType: 'labels.text.stroke',
     stylers: [
       {
-        color: "#1b1b1b",
+        color: '#1b1b1b',
       },
     ],
   },
   {
-    featureType: "road",
-    elementType: "geometry.fill",
+    featureType: 'road',
+    elementType: 'geometry.fill',
     stylers: [
       {
-        color: "#2c2c2c",
+        color: '#2c2c2c',
       },
     ],
   },
   {
-    featureType: "road",
-    elementType: "labels.text.fill",
+    featureType: 'road',
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#8a8a8a",
+        color: '#8a8a8a',
       },
     ],
   },
   {
-    featureType: "road.arterial",
-    elementType: "geometry",
+    featureType: 'road.arterial',
+    elementType: 'geometry',
     stylers: [
       {
-        color: "#373737",
+        color: '#373737',
       },
     ],
   },
   {
-    featureType: "road.highway",
-    elementType: "geometry",
+    featureType: 'road.highway',
+    elementType: 'geometry',
     stylers: [
       {
-        color: "#3c3c3c",
+        color: '#3c3c3c',
       },
     ],
   },
   {
-    featureType: "road.highway.controlled_access",
-    elementType: "geometry",
+    featureType: 'road.highway.controlled_access',
+    elementType: 'geometry',
     stylers: [
       {
-        color: "#4e4e4e",
+        color: '#4e4e4e',
       },
     ],
   },
   {
-    featureType: "road.local",
-    elementType: "labels.text.fill",
+    featureType: 'road.local',
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#616161",
+        color: '#616161',
       },
     ],
   },
   {
-    featureType: "transit",
-    elementType: "labels.text.fill",
+    featureType: 'transit',
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#757575",
+        color: '#757575',
       },
     ],
   },
   {
-    featureType: "water",
-    elementType: "geometry",
+    featureType: 'water',
+    elementType: 'geometry',
     stylers: [
       {
-        color: "#000000",
+        color: '#000000',
       },
     ],
   },
   {
-    featureType: "water",
-    elementType: "labels.text.fill",
+    featureType: 'water',
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#3d3d3d",
+        color: '#3d3d3d',
       },
     ],
   },
@@ -333,15 +336,19 @@ export const mapDarkStyle = [
 
 export const mapStandardStyle = [
   {
-    elementType: "labels.icon",
+    elementType: 'labels.icon',
     stylers: [
       {
-        visibility: "off",
+        visibility: 'off',
       },
     ],
   },
 ];
-
+const DismissKeyboard = ({ children }) => (
+  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    {children}
+  </TouchableWithoutFeedback>
+);
 const MapPage = () => {
   const theme = useTheme();
 
@@ -354,8 +361,8 @@ const MapPage = () => {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
         setSuccess(false);
         return;
       }
@@ -372,6 +379,9 @@ const MapPage = () => {
 
   const [state, setState] = React.useState(initialMapState);
   const [mapIndex, setMapIndex] = React.useState(0);
+  const [searchPhrase, setSearchPhrase] = useState('');
+  const [clicked, setClicked] = useState(false);
+
   let mapAnimation = new Animated.Value(0);
   const navigation = useNavigation();
 
@@ -423,7 +433,7 @@ const MapPage = () => {
     const scale = mapAnimation.interpolate({
       inputRange,
       outputRange: [1, 1.5, 1],
-      extrapolate: "clamp",
+      extrapolate: 'clamp',
     });
 
     return { scale };
@@ -433,7 +443,7 @@ const MapPage = () => {
     const coordinate = mapEventData._targetInst.memoizedProps.coordinate;
 
     let x = markerID * CARD_WIDTH + markerID * 20;
-    if (Platform.OS === "ios") {
+    if (Platform.OS === 'ios') {
       x = x - SPACING_FOR_CARD_INSET;
     }
 
@@ -446,160 +456,171 @@ const MapPage = () => {
   const _scrollView = React.useRef(null);
 
   return success ? (
-    <View style={styles.container}>
-      <MapView
-        ref={_map}
-        initialRegion={{
-          latitude: location!.coords!.latitude,
-          longitude: location!.coords!.longitude,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        }}
-        style={styles.container}
-        provider={PROVIDER_GOOGLE}
-        customMapStyle={mapDarkStyle}
-      >
-        {
-          // @ts-ignore
-          state.markers.map((marker: any, index: number) => {
-            const scaleStyle = {
-              transform: [
-                {
-                  scale: interpolations[index].scale,
-                },
-              ],
-            };
-            return (
-              // @ts-ignore
-              <Marker
-                key={index}
-                coordinate={marker.coordinate}
-                onPress={(e) => {
-                  onMarkerPress(e, index);
-                }}
-              >
-                <Animated.View style={[styles.markerWrap]}>
-                  <Animated.Image
-                    source={require("../../../assets/icon.png")}
-                    // @ts-ignore
-                    style={[styles.marker, scaleStyle]}
-                    resizeMode="cover"
-                  />
-                </Animated.View>
-              </Marker>
-            );
-          })
-        }
-      </MapView>
-      <View style={styles.searchBox}>
-        <TextInput
-          placeholder="Search here"
-          placeholderTextColor="#000"
-          autoCapitalize="none"
+    <DismissKeyboard>
+      <View style={styles.container}>
+        <MapView
+          ref={_map}
+          initialRegion={{
+            latitude: location!.coords!.latitude,
+            longitude: location!.coords!.longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          }}
+          style={styles.container}
+          provider={PROVIDER_GOOGLE}
+          customMapStyle={mapDarkStyle}
+        >
+          {
+            // @ts-ignore
+            state.markers.map((marker: any, index: number) => {
+              const scaleStyle = {
+                transform: [
+                  {
+                    scale: interpolations[index].scale,
+                  },
+                ],
+              };
+              return (
+                // @ts-ignore
+                <Marker
+                  key={index}
+                  coordinate={marker.coordinate}
+                  onPress={(e) => {
+                    onMarkerPress(e, index);
+                  }}
+                >
+                  <Animated.View style={[styles.markerWrap]}>
+                    <Animated.Image
+                      source={require('../../../assets/mapPin.png')}
+                      // @ts-ignore
+                      style={[styles.marker, scaleStyle]}
+                      resizeMode='contain'
+                    />
+                  </Animated.View>
+                </Marker>
+              );
+            })
+          }
+        </MapView>
+        <View style={styles.searchBox}>
+          {/*<TextInput
+          placeholder='Search here'
+          placeholderTextColor='#000'
+          autoCapitalize='none'
           style={{ flex: 1, padding: 0 }}
-        />
-        <Ionicons name="ios-search" size={20} />
-      </View>
-      <Animated.ScrollView
-        ref={_scrollView}
-        horizontal
-        pagingEnabled
-        scrollEventThrottle={1}
-        showsHorizontalScrollIndicator={false}
-        snapToInterval={CARD_WIDTH + 20}
-        snapToAlignment="center"
-        style={styles.scrollView}
-        contentInset={{
-          top: 0,
-          left: SPACING_FOR_CARD_INSET,
-          bottom: 0,
-          right: SPACING_FOR_CARD_INSET,
-        }}
-        contentContainerStyle={{
-          paddingHorizontal:
-            Platform.OS === "android" ? SPACING_FOR_CARD_INSET : 0,
-        }}
-        onScroll={Animated.event(
-          [
-            {
-              nativeEvent: {
-                contentOffset: {
-                  x: mapAnimation,
+        />*/}
+          {/*<Ionicons name='ios-search' size={20} />*/}
+          <SearchBarMap
+            clicked={clicked}
+            setClicked={setClicked}
+            searchPhrase={searchPhrase}
+            setSearchPhrase={setSearchPhrase}
+          />
+        </View>
+
+        <Animated.ScrollView
+          ref={_scrollView}
+          horizontal
+          pagingEnabled
+          scrollEventThrottle={1}
+          showsHorizontalScrollIndicator={false}
+          snapToInterval={CARD_WIDTH + 20}
+          snapToAlignment='center'
+          style={styles.scrollView}
+          contentInset={{
+            top: 0,
+            left: SPACING_FOR_CARD_INSET,
+            bottom: 0,
+            right: SPACING_FOR_CARD_INSET,
+          }}
+          contentContainerStyle={{
+            paddingHorizontal:
+              Platform.OS === 'android' ? SPACING_FOR_CARD_INSET : 0,
+          }}
+          onScroll={Animated.event(
+            [
+              {
+                nativeEvent: {
+                  contentOffset: {
+                    x: mapAnimation,
+                  },
                 },
               },
-            },
-          ],
-          { useNativeDriver: true }
-        )}
-      >
-        {state.markers.map((marker: any, index: number) => (
-          <Pressable
-            style={styles.card}
-            key={index}
-            onPress={() => {
-              /**
+            ],
+            { useNativeDriver: true }
+          )}
+        >
+          {state.markers.map((marker: any, index: number) => (
+            <Pressable
+              style={styles.card}
+              key={index}
+              onPress={() => {
+                /**
                 _map.current!.animateToRegion(
                 marker.coordinate,
                 ANIMATION_TIMEOUT
               );
               setMapIndex(index);
                */
-              navigation.navigate(
-                // @ts-ignore
-                "VenueDetail",
-                {
-                  id: marker.id,
-                }
-              );
-            }}
-          >
-            <Image
-              source={marker.image}
-              // @ts-ignore
-              style={styles.cardImage}
-              resizeMode="cover"
-            />
-            <View style={styles.textContent}>
-              <Text numberOfLines={1} style={styles.cardtitle}>
-                {marker.title}
-              </Text>
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  marginTop: "auto",
-                  marginBottom: 20,
-                }}
-              >
-                <Text style={styles.cardDescription}>{marker.description}</Text>
-                <FontAwesome
-                  style={{ marginLeft: "auto" }}
-                  name={
-                    marker.rating >= 1
-                      ? "star"
-                      : marker.rating >= 0.5
-                      ? "star-half-o"
-                      : "star-o"
+                navigation.navigate(
+                  // @ts-ignore
+                  'VenueDetail',
+                  {
+                    id: marker.id,
                   }
-                  size={20}
-                  color={"#f1c40f"}
-                />
-                <Text
+                );
+              }}
+            >
+              <Image
+                source={marker.image}
+                // @ts-ignore
+                style={styles.cardImage}
+                resizeMode='cover'
+              />
+              <View style={styles.textContent}>
+                <Text numberOfLines={1} style={styles.cardtitle}>
+                  {marker.title}
+                </Text>
+
+                <View
                   style={{
-                    fontSize: 20,
-                    color: "#fff",
-                    marginLeft: 5,
-                    fontWeight: "bold",
+                    flexDirection: 'row',
+                    marginTop: 'auto',
+                    marginBottom: 20,
                   }}
                 >
-                  4.65
-                </Text>
+                  <Text style={styles.cardDescription}>
+                    🎧 {marker.description}
+                  </Text>
+                  <FontAwesome
+                    style={{ marginLeft: 'auto' }}
+                    name={
+                      marker.rating >= 1
+                        ? 'star'
+                        : marker.rating >= 0.5
+                        ? 'star-half-o'
+                        : 'star-o'
+                    }
+                    size={20}
+                    color={'#f1c40f'}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      color: '#fff',
+                      marginLeft: 5,
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    4.65
+                  </Text>
+                </View>
               </View>
-            </View>
-          </Pressable>
-        ))}
-      </Animated.ScrollView>
-    </View>
+            </Pressable>
+          ))}
+        </Animated.ScrollView>
+      </View>
+    </DismissKeyboard>
   ) : null;
 };
 
@@ -608,47 +629,47 @@ export default MapPage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
   searchBox: {
-    position: "absolute",
-    marginTop: Platform.OS === "ios" ? 40 : 20,
-    flexDirection: "row",
-    backgroundColor: "#fff",
-    width: "90%",
-    alignSelf: "center",
+    position: 'absolute',
+    marginTop: 20,
+    flexDirection: 'row',
+    //backgroundColor: '#fff',
+    //width: '90%',
+    alignSelf: 'center',
     borderRadius: 5,
-    padding: 10,
-    shadowColor: "#ccc",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
+    //padding: 10,
+    //shadowColor: '#ccc',
+    //shadowOffset: { width: 0, height: 3 },
+    //shadowOpacity: 0.5,
+    //shadowRadius: 5,
     elevation: 10,
   },
   chipsScrollView: {
-    position: "absolute",
-    top: Platform.OS === "ios" ? 90 : 80,
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 90 : 80,
     paddingHorizontal: 10,
   },
   chipsIcon: {
     marginRight: 5,
   },
   chipsItem: {
-    flexDirection: "row",
-    backgroundColor: "#fff",
+    flexDirection: 'row',
+    backgroundColor: '#fff',
     borderRadius: 20,
     padding: 8,
     paddingHorizontal: 20,
     marginHorizontal: 10,
     height: 35,
-    shadowColor: "#ccc",
+    shadowColor: '#ccc',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.5,
     shadowRadius: 5,
     elevation: 10,
   },
   scrollView: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
@@ -660,11 +681,11 @@ const styles = StyleSheet.create({
   card: {
     // padding: 10,
     elevation: 2,
-    backgroundColor: "#FFF",
+    backgroundColor: '#FFF',
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
     marginHorizontal: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowRadius: 5,
     shadowOpacity: 0.3,
     shadowOffset: {
@@ -674,52 +695,52 @@ const styles = StyleSheet.create({
     },
     height: CARD_HEIGHT,
     width: CARD_WIDTH,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
   cardImage: {
     flex: 3,
-    width: "100%",
-    height: "100%",
-    alignSelf: "center",
+    width: '100%',
+    height: '100%',
+    alignSelf: 'center',
   },
   textContent: {
     flex: 2,
     padding: 10,
-    backgroundColor: "#000",
+    backgroundColor: '#000',
   },
   cardtitle: {
     fontSize: 16,
-    color: "#fff",
+    color: '#fff',
   },
   cardDescription: {
     fontSize: 12,
     color: Colors.gray.muted,
-    textAlign: "center",
+    textAlign: 'center',
     paddingTop: 5,
   },
   markerWrap: {
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     width: 50,
     height: 50,
   },
   marker: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
   },
   button: {
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 5,
   },
   signIn: {
-    width: "100%",
+    width: '100%',
     padding: 5,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 3,
   },
   textSign: {
     fontSize: 14,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });
