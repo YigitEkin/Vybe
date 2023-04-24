@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import HomeCheckedIn from './HomeCheckedIn';
-import HomeNotCheckedIn from './HomeNotCheckedIn';
+import React, { useState } from "react";
+import HomeCheckedIn from "./HomeCheckedIn";
+import HomeNotCheckedIn from "./HomeNotCheckedIn";
+import { useCheckedInStore } from "../../stores/CheckedInStore";
 
 const HomePageWrapper = () => {
-  const [isUserCheckedInVenue, setIsUserCheckedInVenue] = useState(true);
+  const { isCheckIn } = useCheckedInStore();
 
-  return isUserCheckedInVenue ? <HomeCheckedIn /> : <HomeNotCheckedIn />;
+  return isCheckIn ? <HomeCheckedIn /> : <HomeNotCheckedIn />;
 };
 
 export default HomePageWrapper;
