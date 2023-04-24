@@ -17,9 +17,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 // @ts-ignore
 import Icon from "react-native-vector-icons/EvilIcons";
-import MapPage from "../screens/homePages/Map";
+import MapPage from "../screens/homePages/Map/Map";
 import HomePageWrapper from "../screens/homePages/HomePageWrapper";
 import SettingsNavigationWrapper from "../screens/homePages/settings/SettingsNavigationWrapper";
+import MapNavigationWrapper from "../screens/homePages/Map/MapNavigationWrapper";
 
 type Route = {
   name: string;
@@ -178,7 +179,7 @@ const loggedInRoutes: Route[] = [
   },
   {
     name: "Map",
-    component: MapPage,
+    component: MapNavigationWrapper,
     screenOptions: {
       headerShown: true,
       headerBackTitleVisible: false,
