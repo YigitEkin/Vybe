@@ -16,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 // @ts-ignore
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 // @ts-ignore
+
 import Icon from "react-native-vector-icons/EvilIcons";
 import MapPage from "../screens/homePages/Map/Map";
 import HomePageWrapper from "../screens/homePages/HomePageWrapper";

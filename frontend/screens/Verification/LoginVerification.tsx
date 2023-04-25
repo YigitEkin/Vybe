@@ -10,6 +10,7 @@ import * as Font from "expo-font";
 import StyledButton from "../../components/HomePage/StyledButton";
 import OTPTextView from "react-native-otp-textinput";
 import { useLoginStore } from "../../stores/LoginStore";
+import { DismissKeyboard } from "../../components/common/DismissKeyboard";
 
 const LoginVerification = ({ navigation }: any) => {
   const [OTPCode, setOTPCode] = useState(0);
@@ -23,7 +24,7 @@ const LoginVerification = ({ navigation }: any) => {
     "Inter-Regular": require("../../assets/fonts/Inter/static/Inter-Regular.ttf"),
   });
   return fontsLoaded ? (
-    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+    <DismissKeyboard>
       <View style={styles.container}>
         <View style={styles.formAreaContainer}>
           <View style={styles.inputContainer}>
@@ -61,7 +62,7 @@ const LoginVerification = ({ navigation }: any) => {
           </TouchableHighlight>
         </View>
       </View>
-    </KeyboardAvoidingView>
+    </DismissKeyboard>
   ) : null;
 };
 const styles = StyleSheet.create({
