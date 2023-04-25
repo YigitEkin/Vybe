@@ -14,13 +14,14 @@ const SearchBar = ({ clicked, searchPhrase, setSearchPhrase, setClicked }) => {
         <Feather
           name='search'
           size={20}
-          color='black'
+          color='white'
           style={{ marginLeft: 1 }}
         />
         {/* Input field */}
         <TextInput
           style={styles.input}
           placeholder='Search'
+          placeholderTextColor={'white'}
           value={searchPhrase}
           onChangeText={setSearchPhrase}
           onFocus={() => {
@@ -70,23 +71,28 @@ const styles = StyleSheet.create({
   searchBar__unclicked: {
     padding: 10,
     flexDirection: 'row',
+    paddingRight: 20,
     width: '95%',
-    backgroundColor: '#d9dbda',
+    backgroundColor: '#202325',
     borderRadius: 15,
     alignItems: 'center',
   },
   searchBar__clicked: {
     padding: 10,
     flexDirection: 'row',
+    paddingRight: 20,
     width: '80%',
-    backgroundColor: '#d9dbda',
+    backgroundColor: '#202325',
     borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'space-evenly',
   },
   input: {
-    fontSize: 20,
+    fontSize: 17,
     marginLeft: 10,
     width: '90%',
+    color: 'white',
+    //fontWeight: '300',
+    //backgroundColor: '#202325',
   },
 });
