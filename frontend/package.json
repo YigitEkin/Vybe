@@ -34,7 +34,6 @@
     "react-native-show-touches-ios": "^1.0.5",
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.9",
-    "react-native-webview": "11.23.1",
     "styled-components": "^5.3.6",
     "zustand": "^4.1.5"
   },
