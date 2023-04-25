@@ -13,6 +13,7 @@ import {
   Pressable,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
@@ -30,6 +31,7 @@ import StarRating from '../components/StarRating';
 
 import { useNavigation, useTheme } from '@react-navigation/native';
 import { Colors } from '../../../constants/Colors';
+import Splash from '../../Splash';
 
 const { width, height } = Dimensions.get('window');
 const CARD_HEIGHT = 220;
@@ -621,7 +623,18 @@ const MapPage = () => {
         </Animated.ScrollView>
       </View>
     </DismissKeyboard>
-  ) : null;
+  ) : (
+    <View
+      style={{
+        backgroundColor: '#000',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <ActivityIndicator size='large' color='#EA34C9' />
+    </View>
+  );
 };
 
 export default MapPage;
@@ -629,7 +642,7 @@ export default MapPage;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
   },
   searchBox: {
     position: 'absolute',
