@@ -51,7 +51,18 @@ public class Customer extends User {
     /**
      * list that holds the friends of the holder customer
      */
-    @OneToMany( mappedBy = "username")
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.REMOVE)
+    private List<Friendship> sentFriendRequests;
+
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.REMOVE)
+    private List<Friendship> receivedFriendRequests;
+
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    @JoinTable(
+            name = "friendship",
+            joinColumns = @JoinColumn(name = "sender_customer_username"),
+            inverseJoinColumns = @JoinColumn(name = "receiver_customer_username")
+    )
     private List<Customer> friends;
 
     // TODO: map streaks to database

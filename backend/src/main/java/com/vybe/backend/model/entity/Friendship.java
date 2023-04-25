@@ -3,6 +3,8 @@ package com.vybe.backend.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -27,14 +29,16 @@ public class Friendship {
      * sender is the sender of the friend request
      */
     @ManyToOne
-    @JoinColumn(name = "sender_customer_username")
+    @JoinColumn(name = "sender_customer_username", referencedColumnName = "username", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Customer sender;
 
     /*
      * receiver is the receiver of the friend request
      */
     @ManyToOne
-    @JoinColumn(name = "receiver_customer_username")
+    @JoinColumn(name = "receiver_customer_username", referencedColumnName = "username", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Customer receiver;
 
     /*
