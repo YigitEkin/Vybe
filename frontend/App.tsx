@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import HomePage from './screens/HomePage';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import SignUpMail from './screens/signup/SignUpMail';
@@ -10,10 +10,11 @@ import SignUpCompletedScreen from './screens/signup/SignUpCompletedScreen';
 import SignUpPassword from './screens/signup/SignUpPassword';
 import SignUpUsername from './screens/signup/SignupUsername';
 import EnterPhoneNumber from './components/2fa/EnterPhoneNumber';
+import Splash from './screens/Splash';
 
 import Router from './navigation/Router';
 
-SplashScreen.preventAutoHideAsync();
+//SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -28,6 +29,7 @@ export default function App() {
     'Inter-Thin': require('./assets/fonts/Inter/static/Inter-Thin.ttf'),
   });
 
+  const [isLoading, setIsLoading] = useState(true);
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
@@ -38,7 +40,9 @@ export default function App() {
     return null;
   }
 
-  return (
+  return isLoading ? (
+    <Splash setIsLoading={setIsLoading} />
+  ) : (
     <>
       <SafeAreaView style={styles.container} />
       {/*<SafeAreaView style={styles.container2}>*/}
