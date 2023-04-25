@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -6,13 +6,14 @@ import {
   Image,
   Pressable,
   ScrollView,
-} from "react-native";
-import StyledButton from "../../../components/HomePage/StyledButton";
-import { Colors } from "../../../constants/Colors";
-import * as Font from "expo-font";
+  Modal,
+} from 'react-native';
+import StyledButton from '../../../components/HomePage/StyledButton';
+import { Colors } from '../../../constants/Colors';
+import * as Font from 'expo-font';
 // @ts-ignore
-import CoinIcon from "../../../assets/coin.png";
-import { useNavigation } from "@react-navigation/native";
+import CoinIcon from '../../../assets/coin.png';
+import { useNavigation } from '@react-navigation/native';
 
 type editSectionArea = {
   name: string;
@@ -25,20 +26,20 @@ type editSectionArea = {
 
 const editSections: editSectionArea[] = [
   {
-    name: "First Name",
+    name: 'First Name',
     editability: true,
     marginTop: 20,
   },
   {
-    name: "Last Name",
+    name: 'Last Name',
     editability: true,
   },
   {
-    name: "Location",
+    name: 'Location',
     editability: true,
   },
   {
-    name: "Notfications",
+    name: 'Notfications',
     editability: false,
     borderBottomless: true,
     notificationCount: 0,
@@ -51,7 +52,7 @@ const EditProfileSection = (
   notificationCount: number
 ) => {
   const [fontsLoaded] = Font.useFonts({
-    "Inter-Regular": require("../../../assets/fonts/Inter/static/Inter-Regular.ttf"),
+    'Inter-Regular': require('../../../assets/fonts/Inter/static/Inter-Regular.ttf'),
   });
   const navigation = useNavigation();
 
@@ -60,7 +61,7 @@ const EditProfileSection = (
       style={[
         styles.editSectionContainer,
         {
-          borderBottomColor: section.borderBottomless ? undefined : "#202325",
+          borderBottomColor: section.borderBottomless ? undefined : '#202325',
           marginTop: section.marginTop,
         },
       ]}
@@ -73,7 +74,7 @@ const EditProfileSection = (
       ) : section.notificationCount ? (
         <Pressable
           style={styles.notificationContainer}
-          onPress={() => navigation.navigate("Notifications" as never)}
+          onPress={() => navigation.navigate('Notifications' as never)}
         >
           <Text style={styles.notificationText}>
             {section.notificationCount}
@@ -85,149 +86,246 @@ const EditProfileSection = (
 };
 
 const SettingsPage = () => {
+  const openModal = () => {
+    setModalVisible(true);
+  };
   const [notificationCount, setNotificationCount] = useState(1);
+  const [modalVisible, setModalVisible] = useState(false);
   const [fontsLoaded] = Font.useFonts({
-    "Inter-Regular": require("../../../assets/fonts/Inter/static/Inter-Regular.ttf"),
+    'Inter-Regular': require('../../../assets/fonts/Inter/static/Inter-Regular.ttf'),
   });
   const [coinBalance, setCoinBalance] = useState(200);
 
   return fontsLoaded ? (
-    <ScrollView>
-      <View style={styles.container}>
-        {
-          //TODO: this will be converted into a picture component
-        }
-        <View style={styles.profilePicture} />
-        <StyledButton
-          buttonText="Change"
-          onPress={() => {
-            console.log("pressed");
-          }}
-          style={styles.changeButton}
-        />
-        {editSections.map((section) => (
-          <EditProfileSection
-            {...section}
-            key={section.name}
-            notificationCount={notificationCount}
+    <>
+      <Modal
+        animationType='fade'
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Logging Out</Text>
+            <View style={{ flex: 1, justifyContent: 'space-around' }}>
+              <Text style={styles.modalTextStyle}>
+                {'Are you sure you want to logout?'}
+              </Text>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => console.log('logout')}
+              >
+                <Text
+                  style={{
+                    fontFamily: 'Inter-Regular',
+                    color: 'white',
+                    fontSize: 20,
+                  }}
+                >
+                  Yes I'm Sure
+                </Text>
+              </Pressable>
+              <Pressable onPress={() => setModalVisible(false)}>
+                <Text style={styles.modalTextStyle}>{'I changed my mind'}</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <ScrollView>
+        <View style={styles.container}>
+          {
+            //TODO: this will be converted into a picture component
+          }
+          <View style={styles.profilePicture} />
+          <StyledButton
+            buttonText='Change'
+            onPress={() => {
+              console.log('pressed');
+            }}
+            style={styles.changeButton}
           />
-        ))}
-        <View style={styles.bottomSection}>
-          <Text style={styles.coinBalanceText}>Coin Balance</Text>
-          <View style={styles.row_space_between_center}>
-            <Text style={styles.coinAmountText}>{coinBalance}</Text>
-            <Image source={CoinIcon} />
+          {editSections.map((section) => (
+            <EditProfileSection
+              {...section}
+              key={section.name}
+              notificationCount={notificationCount}
+            />
+          ))}
+          <View style={styles.bottomSection}>
+            <Text style={styles.coinBalanceText}>Coin Balance</Text>
+            <View style={styles.row_space_between_center}>
+              <Text style={styles.coinAmountText}>{coinBalance}</Text>
+              <Image source={CoinIcon} />
+            </View>
           </View>
-        </View>
 
-        <View style={styles.paymentMethodsContainer}>
-          <View>
-            <Text style={styles.mutedText}>Payment Methods</Text>
-            <Text style={styles.whiteText}>Content is Here</Text>
+          <View style={styles.paymentMethodsContainer}>
+            <View>
+              <Text style={styles.mutedText}>Payment Methods</Text>
+              <Text style={styles.whiteText}>Content is Here</Text>
+            </View>
+            <Pressable style={styles.rightArrowContainer}>
+              <Text style={styles.rightArrowText}>{'>'}</Text>
+            </Pressable>
           </View>
-          <Pressable style={styles.rightArrowContainer}>
-            <Text style={styles.rightArrowText}>{">"}</Text>
-          </Pressable>
+          <StyledButton
+            buttonText='Logout'
+            style={styles.logoutButton}
+            onPress={openModal}
+          />
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </>
   ) : null;
 };
 
 const styles = StyleSheet.create({
-  sectionName: { color: "white", fontSize: 20 },
+  sectionName: { color: 'white', fontSize: 20 },
   editText: {
     color: Colors.purple.text,
     fontSize: 18,
-    fontFamily: "Inter-Regular",
+    fontFamily: 'Inter-Regular',
   },
   notificationContainer: {
     width: 30,
     height: 30,
-    backgroundColor: "red",
+    backgroundColor: 'red',
     borderRadius: 15,
     marginTop: 0,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 0,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   notificationText: {
-    fontFamily: "Inter-Regular",
+    fontFamily: 'Inter-Regular',
     fontSize: 20,
-    color: "white",
-    marginHorizontal: "auto",
+    color: 'white',
+    marginHorizontal: 'auto',
   },
   editSectionContainer: {
-    flexDirection: "row",
-    borderTopColor: "#202325",
+    flexDirection: 'row',
+    borderTopColor: '#202325',
     borderWidth: 1,
-    justifyContent: "space-between",
-    width: "90%",
+    justifyContent: 'space-between',
+    width: '90%',
     paddingVertical: 15,
   },
-  container: { flex: 1, alignItems: "center" },
+  container: { flex: 1, alignItems: 'center' },
   profilePicture: {
     borderRadius: 40,
     width: 80,
     height: 80,
     marginTop: 25,
-    backgroundColor: "white",
+    backgroundColor: 'white',
+  },
+  logoutButton: {
+    backgroundColor: Colors.red.error,
+    marginBottom: 100,
   },
   changeButton: {
     backgroundColor: Colors.purple.lighter,
     marginTop: 40,
     text: { color: Colors.purple.settingsButton },
-    width: "30%",
+    width: '30%',
   },
   bottomSection: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "90%",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '90%',
     marginTop: 60,
   },
   coinBalanceText: {
-    color: "white",
+    color: 'white',
     fontSize: 20,
-    fontFamily: "Inter-Regular",
+    fontFamily: 'Inter-Regular',
   },
   row_space_between_center: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   coinAmountText: {
-    color: "white",
+    color: 'white',
     fontSize: 20,
-    fontFamily: "Inter-Regular",
+    fontFamily: 'Inter-Regular',
     marginRight: 5,
   },
   paymentMethodsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "90%",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '90%',
     marginTop: 60,
   },
   mutedText: {
     color: Colors.gray.muted,
     fontSize: 15,
-    fontFamily: "Inter-Regular",
+    fontFamily: 'Inter-Regular',
   },
   whiteText: {
-    color: "white",
+    color: 'white',
     fontSize: 20,
-    fontFamily: "Inter-Regular",
+    fontFamily: 'Inter-Regular',
   },
   rightArrowContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "column",
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
     marginRight: 10,
   },
   rightArrowText: {
-    color: "white",
+    color: 'white',
     fontSize: 20,
-    fontFamily: "Inter-Regular",
+    fontFamily: 'Inter-Regular',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    width: 400,
+    height: 300,
+    backgroundColor: '#202325',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalTextStyle: {
+    color: '#979c9e',
+    fontFamily: 'Inter-Regular',
+    fontSize: 17,
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    fontFamily: 'Inter-Bold',
+    fontSize: 24,
+    textAlign: 'center',
+    color: 'white',
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    alignItems: 'center',
+  },
+
+  buttonClose: {
+    backgroundColor: Colors.red.error,
   },
 });
 
