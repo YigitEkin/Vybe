@@ -21,6 +21,7 @@ import MapPage from "../screens/homePages/Map/Map";
 import HomePageWrapper from "../screens/homePages/HomePageWrapper";
 import SettingsNavigationWrapper from "../screens/homePages/settings/SettingsNavigationWrapper";
 import MapNavigationWrapper from "../screens/homePages/Map/MapNavigationWrapper";
+import { useLoginStore } from "../stores/LoginStore";
 
 type Route = {
   name: string;
@@ -219,8 +220,8 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function Router() {
-  const [loggedIn, setLoggedIn] = useState(true);
-  return !loggedIn ? (
+  const { isLogin } = useLoginStore();
+  return !isLogin ? (
     <>
       <SafeAreaView
         style={{ backgroundColor: "#000", flex: 1, marginBottom: 50 }}
