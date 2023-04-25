@@ -1,15 +1,16 @@
-import React from "react";
+import React from 'react';
 import {
   Text,
   StyleSheet,
   Pressable,
   View,
   KeyboardAvoidingView,
-} from "react-native";
-import StyledButton from "../HomePage/StyledButton";
-import * as Font from "expo-font";
-import StatusBar from "./StatusBar";
-import { useNavigation } from "@react-navigation/native";
+} from 'react-native';
+import StyledButton from '../HomePage/StyledButton';
+import * as Font from 'expo-font';
+import StatusBar from './StatusBar';
+import { useNavigation } from '@react-navigation/native';
+import { DismissKeyboard } from '../common/DismissKeyboard';
 
 export type FormItem = {
   label: string;
@@ -58,7 +59,7 @@ const Form = ({
   cb,
 }: FormProps) => {
   const [fontsLoaded] = Font.useFonts({
-    "Inter-Bold": require("../../assets/fonts/Inter/static/Inter-Bold.ttf"),
+    'Inter-Bold': require('../../assets/fonts/Inter/static/Inter-Bold.ttf'),
   });
   const navigation = useNavigation();
   const callback = cb
@@ -68,60 +69,62 @@ const Form = ({
       };
 
   return fontsLoaded ? (
-    <KeyboardAvoidingView behavior="height" style={styles.container}>
+    <>
       <StatusBar currentStep={currentStep} totalSteps={totalSteps} />
-      <View style={styles.container}>
-        <View style={styles.formAreaContainer}>
-          {items.map((item, index) => (
-            <View style={styles.inputContainer} key={index}>
-              <Label
-                label={item.label}
-                wrapperStyle={item.wrapperStyle}
-                labelStyle={item.labelStyle}
-              />
-              {item.component}
-            </View>
-          ))}
+      <DismissKeyboard>
+        <View style={styles.container}>
+          <View style={styles.formAreaContainer}>
+            {items.map((item, index) => (
+              <View style={styles.inputContainer} key={index}>
+                <Label
+                  label={item.label}
+                  wrapperStyle={item.wrapperStyle}
+                  labelStyle={item.labelStyle}
+                />
+                {item.component}
+              </View>
+            ))}
+          </View>
+          <StyledButton
+            style={styles.StyledButton}
+            onPress={() => {
+              validator() && callback();
+            }}
+            buttonText={'Continue'}
+          />
         </View>
-        <StyledButton
-          style={styles.StyledButton}
-          onPress={() => {
-            validator() && callback();
-          }}
-          buttonText={"Continue"}
-        />
-      </View>
-    </KeyboardAvoidingView>
+      </DismissKeyboard>
+    </>
   ) : null;
 };
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "flex-start",
-    alignItems: "center",
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     flex: 1,
-    width: "95%",
+    width: '95%',
     marginTop: 30,
   },
   formAreaContainer: {
-    width: "100%",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
+    width: '100%',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
   inputContainer: {
-    width: "100%",
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
+    width: '100%',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
     marginTop: 20,
   },
   labelText: {
-    fontFamily: "Inter-Bold",
+    fontFamily: 'Inter-Bold',
     fontSize: 23,
-    color: "#fff",
+    color: '#fff',
   },
   StyledButton: {
-    marginTop: "auto",
+    marginTop: 'auto',
     marginBottom: 20,
   },
 });

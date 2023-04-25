@@ -18,7 +18,7 @@ const HomePage = ({ navigation }: any) => {
   return fontsLoaded ? (
     <View style={styles.container}>
       <View style={styles.icon}>
-        <Image source={Icon} />
+        <Image style={{ width: 200, height: 100 }} source={Icon} />
       </View>
       <View style={styles.homeScreenImage}>
         <Image source={HomeScreenImage} />
@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
   },
   homeScreenImage: {
     alignSelf: 'center',
-    marginTop: dimensions.isLargerDevice ? 25 : 0,
   },
 });
 

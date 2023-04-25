@@ -1,6 +1,7 @@
 import React from 'react';
 import EnterPhoneNumber from '../../components/2fa/EnterPhoneNumber';
 import { useSignUpStore } from '../../stores/SignUpStore';
+import { Keyboard, TouchableWithoutFeedback } from 'react-native';
 
 const EnterPhoneNumberSignUp = ({ navigation }: any) => {
   const { phoneNumber, setPhoneNumber } = useSignUpStore((state: any) => {
@@ -10,7 +11,14 @@ const EnterPhoneNumberSignUp = ({ navigation }: any) => {
     };
   });
 
+  const DismissKeyboard = ({ children }) => (
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      {children}
+    </TouchableWithoutFeedback>
+  );
+
   return (
+    //<DismissKeyboard>
     <EnterPhoneNumber
       buttonText='Sign Up'
       headerText='Welcome to Vybe'
@@ -25,6 +33,7 @@ const EnterPhoneNumberSignUp = ({ navigation }: any) => {
       }}
       value={phoneNumber}
     />
+    //</DismissKeyboard>
   );
 };
 

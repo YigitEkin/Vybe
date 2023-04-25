@@ -10,6 +10,7 @@ import * as Font from 'expo-font';
 import StyledButton from '../../components/HomePage/StyledButton';
 import OTPTextView from 'react-native-otp-textinput';
 import { useSignUpStore } from '../../stores/SignUpStore';
+import { DismissKeyboard } from '../../components/common/DismissKeyboard';
 
 const SignupVerification = ({ navigation }: any) => {
   const [OTPCode, setOTPCode] = useState(0);
@@ -28,7 +29,8 @@ const SignupVerification = ({ navigation }: any) => {
     'Inter-Regular': require('../../assets/fonts/Inter/static/Inter-Regular.ttf'),
   });
   return fontsLoaded ? (
-    <KeyboardAvoidingView behavior='padding' style={styles.container}>
+    <DismissKeyboard>
+      {/*<KeyboardAvoidingView behavior='padding' style={styles.container}>*/}
       <View style={styles.container}>
         <View style={styles.formAreaContainer}>
           <View style={styles.inputContainer}>
@@ -65,7 +67,8 @@ const SignupVerification = ({ navigation }: any) => {
           </TouchableHighlight>
         </View>
       </View>
-    </KeyboardAvoidingView>
+      {/*</KeyboardAvoidingView>*/}
+    </DismissKeyboard>
   ) : null;
 };
 const styles = StyleSheet.create({
