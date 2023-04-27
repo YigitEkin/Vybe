@@ -112,13 +112,7 @@ public class Customer extends User {
     public Boolean acquireBadge(String badgeName) {
         return null;
     }
-
-    public Streak getStreak(Venue venue) {
-        return streaks.stream()
-                .filter(s -> s.getVenue().equals(venue))
-                .findFirst()
-                .orElse(null);
-    }
+    
 
     /**
      * Increases the points of the customer by a variable amount
