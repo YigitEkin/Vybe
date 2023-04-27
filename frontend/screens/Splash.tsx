@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import LottieView from 'lottie-react-native';
 
 export default function Splash({ setIsLoading }) {
+  const lottieRef = React.useRef(null);
   return (
     <View
       style={{
@@ -14,7 +15,11 @@ export default function Splash({ setIsLoading }) {
     >
       <LottieView
         source={require('../assets/splashScreen.json')}
-        autoPlay
+        //autoPlay
+        onLayout={() => {
+          lottieRef.current?.play();
+        }}
+        ref={lottieRef}
         loop={false}
         resizeMode='cover'
         onAnimationFinish={() => setIsLoading(false)}

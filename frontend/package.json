@@ -12,6 +12,7 @@
     "@react-navigation/bottom-tabs": "^6.5.1",
     "@react-navigation/native": "^6.1.0",
     "@react-navigation/native-stack": "^6.9.5",
+    "@stripe/stripe-react-native": "0.19.0",
     "axios": "^1.2.1",
     "expo": "~47.0.6",
     "expo-barcode-scanner": "~12.1.0",
