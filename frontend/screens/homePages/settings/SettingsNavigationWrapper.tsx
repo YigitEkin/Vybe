@@ -1,37 +1,41 @@
-import React from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import SettingsPage from "./Settings";
-import Notifications from "./Notifications";
-import { NavigationContainer } from "@react-navigation/native";
+import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import SettingsPage from './Settings';
+import Notifications from './Notifications';
+import { NavigationContainer } from '@react-navigation/native';
+import CoinDetails from './CoinDetails';
+import PaymentByCard from './PaymentByCard';
 
 const screenOptions = {
   contentStyle: {
-    backgroundColor: "#000",
-    width: "100%",
+    backgroundColor: '#000',
+    width: '100%',
   },
   headerStyle: {
-    backgroundColor: "#000",
-    shadowColor: "transparent",
+    backgroundColor: '#000',
+    shadowColor: 'transparent',
     height: 10,
   },
-  headerTintColor: "#fff",
-  headerTitle: "",
+  headerTintColor: '#fff',
+  headerTitle: '',
 };
 
 const SettingsNavigationWrapper = () => {
   const Stack = createNativeStackNavigator();
 
   return (
-    <Stack.Navigator screenOptions={screenOptions} initialRouteName="Profile">
+    <Stack.Navigator screenOptions={screenOptions} initialRouteName='Profile'>
       <Stack.Screen
         options={{
           headerShown: false,
           headerBackTitleVisible: false,
         }}
-        name="Profile"
+        name='Profile'
         component={SettingsPage}
       />
-      <Stack.Screen name="Notifications" component={Notifications} />
+      <Stack.Screen name='Notifications' component={Notifications} />
+      <Stack.Screen name='CoinDetails' component={CoinDetails} />
+      <Stack.Screen name='PayByCard' component={PaymentByCard} />
     </Stack.Navigator>
   );
 };
