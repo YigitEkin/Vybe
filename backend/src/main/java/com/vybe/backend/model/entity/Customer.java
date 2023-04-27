@@ -1,21 +1,17 @@
 package com.vybe.backend.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Customer class that is the representation of each customer
  * @author Oğuz Ata Çal
  */
-@Data
 @Entity
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Customer extends User {
@@ -25,7 +21,7 @@ public class Customer extends User {
         this.friends = friendships;
         this.dateOfBirth = dateOfBirth;
         this.dateOfCreation = dateOfCreation;
-
+        this.streaks =  new ArrayList<>();
     }
 
 
@@ -65,13 +61,8 @@ public class Customer extends User {
     )
     private List<Customer> friends;
 
-    // TODO: map streaks to database
-    /**
-     * hashmap to holds the streak information of the user to venues
-     * (key, value) pair is (venue.id, streak_count)
-     */
-    @Transient
-    private HashMap<Integer, Integer> streaks;
+    @OneToMany(mappedBy = "customer")
+    private List<Streak> streaks;
 
     /**
      * date of creation of the customer account
@@ -122,22 +113,53 @@ public class Customer extends User {
         return null;
     }
 
-    /**
-     * Increases the streak of this customer with venue with venueId by 1
-     * @param venueId id of the venue that the streak will be increased with
-     * @return streak of the customer for that venue after the increase
-     */
-    public Integer increaseStreak(Integer venueId) {
-        return null;
-    }
+    public int getAndUpdateStreak(Venue venue) {
+        int currentStreak = 1;
 
-    /**
-     * Resets the streak of this customer with venue with venueId to 0
-     * @param venueId id of the venue that the streak will be reset
-     * @return streak of the customer for that venue after the reset
-     */
-    public Integer resetStreak(Integer venueId) {
-        return null;
+        // Find the streak for the given venue
+        Streak streak = streaks.stream()
+                .filter(s -> s.getVenue().equals(venue))
+                .findFirst()
+                .orElse(null);
+
+        if (streak == null) {
+            // The customer hasn't visited this venue before
+            streak = new Streak();
+            streak.setCustomer(this);
+            streak.setVenue(venue);
+            streak.setLastVisitDate(null);
+            streak.setStreak(1);
+            streaks.add(streak);
+        } else {
+            // Calculate the current streak
+            Date today = new Date();
+            boolean isTodayOrYesterday = false;
+            while (streak != null && !isTodayOrYesterday) {
+                if (streak.getLastVisitDate() != null && Streak.isSameDay(streak.getLastVisitDate(), today)) {
+                    // The customer visited today
+                    currentStreak = streak.getStreak();
+                    isTodayOrYesterday = true;
+                } else if (streak.getLastVisitDate() != null && Streak.isYesterday(streak.getLastVisitDate(), today)) {
+                    // The customer visited yesterday
+                    currentStreak = streak.getStreak() + 1;
+                    isTodayOrYesterday = true;
+                } else {
+                    // The streak is broken
+                    currentStreak = 1;
+                    streak = streaks.stream()
+                            .filter(s -> s.getVenue().equals(venue))
+                            .filter(s -> s.getLastVisitDate() != null)
+                            .max(Comparator.comparing(Streak::getLastVisitDate))
+                            .orElse(null);
+                }
+            }
+        }
+
+        // Update the streak for the given venue
+        streak.setLastVisitDate(new Date());
+        streak.setStreak(currentStreak);
+
+        return currentStreak;
     }
     
     /**

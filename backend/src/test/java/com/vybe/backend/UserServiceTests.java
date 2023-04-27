@@ -5,14 +5,11 @@ import com.vybe.backend.exception.CustomersAlreadyFriendsException;
 import com.vybe.backend.exception.FriendshipNotFoundException;
 import com.vybe.backend.exception.UsernameTakenException;
 import com.vybe.backend.model.dto.*;
-import com.vybe.backend.model.entity.Admin;
-import com.vybe.backend.model.entity.Customer;
-import com.vybe.backend.model.entity.Friendship;
-import com.vybe.backend.model.entity.VenueAdmin;
+import com.vybe.backend.model.entity.*;
 import com.vybe.backend.repository.*;
 import com.vybe.backend.service.FriendshipService;
 import com.vybe.backend.service.UserService;
-import org.assertj.core.api.Assert;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -22,10 +19,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.time.*;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,7 +41,9 @@ public class UserServiceTests {
     @Mock private UserRepository userRepository;
     @Mock private AdminRepository adminRepository;
     @Mock private VenueAdminRepository venueAdminRepository;
+    @Mock private StreakRepository streakRepository;
     @Mock private FriendshipRepository friendshipRepository;
+    @Mock private VenueRepository venueRepository;
 
 
     // ********** CUSTOMER TESTS **********
@@ -128,6 +125,68 @@ public class UserServiceTests {
         Assertions.assertThrows(CustomerNotFoundException.class, () -> userService.deleteCustomer("testname1"));
         verify(customerRepository, times(0)).deleteByUsername("testname1");
         verifyNoMoreInteractions(customerRepository);
+    }
+
+    @Test
+    public void testGetStreakWithNoPreviousVisits() {
+        // Arrange
+        Venue venue = new Venue();
+        venue.setId(1);
+
+        Customer customer = new Customer();
+        customer.setUsername("username1");
+        customer.setStreaks(new ArrayList<>());
+
+        // Act
+        int streak = customer.getAndUpdateStreak(venue);
+
+        // Assert
+        assertEquals(1, streak);
+    }
+
+    @Test
+    public void testGetStreakWithPreviousVisitYesterday() {
+        // Arrange
+        Venue venue = new Venue();
+        venue.setId(1);
+
+        Customer customer = new Customer();
+        customer.setUsername("username1");
+        customer.setStreaks(new ArrayList<>());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        Date yesterday = calendar.getTime();
+        Streak streakYesterday = new Streak(1, customer, venue, yesterday, 2);
+
+        customer.getStreaks().add(streakYesterday);
+        // Act
+        int streak = customer.getAndUpdateStreak(venue);
+
+        // Assert
+        assertEquals(3, streak);
+    }
+
+    @Test
+    public void testGetStreakWithPreviousVisitTwoDaysAgo() {
+        // Arrange
+        Venue venue = new Venue();
+        venue.setId(1);
+
+        Customer customer = new Customer();
+        customer.setUsername("username1");
+        customer.setStreaks(new ArrayList<>());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -2);
+        Date twoDaysAgo = calendar.getTime();
+        Streak streakTwoDaysAgo = new Streak(1, customer, venue, twoDaysAgo, 4);
+
+        // Act
+        int streak = customer.getAndUpdateStreak(venue);
+
+        // Assert
+        assertEquals(1, streak);
     }
 
 
