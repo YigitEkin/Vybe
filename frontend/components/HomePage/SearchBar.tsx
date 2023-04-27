@@ -23,6 +23,7 @@ const SearchBar = ({ clicked, searchPhrase, setSearchPhrase, setClicked }) => {
           placeholder='Search'
           value={searchPhrase}
           onChangeText={setSearchPhrase}
+          autoFocus={clicked}
           onFocus={() => {
             setClicked(true);
           }}

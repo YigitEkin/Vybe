@@ -15,7 +15,7 @@ import { Colors } from '../../constants/Colors';
 import { Camera, CameraType } from 'expo-camera';
 import FAAddSongToQueue from '../../components/HomePage/FAAddSongToQueue';
 import SearchBar from '../../components/HomePage/SearchBar';
-
+import { useNavigation, useTheme } from '@react-navigation/native';
 import ListItem from '../../components/HomePage/ListItem';
 import FAButton from '../../components/HomePage/FAButton';
 import SearchIcon from '../../assets/SearchIcon.png';
@@ -37,8 +37,47 @@ const HomeCheckedIn = () => {
   const [clickedHome, setClickedHome] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const { isCheckIn, setIsCheckIn } = useCheckedInStore();
-
-  useEffect(() => {}, []);
+  const [userList, setUserList] = useState([
+    {
+      id: 1,
+      name: 'John Doe',
+      status: 'At Federal Coffee Shop',
+    },
+    {
+      id: 2,
+      name: 'Jane Doe',
+      status: 'At Bluejay Coffee Shop',
+    },
+    {
+      id: 3,
+      name: 'John Doe',
+      status: 'At Federal Coffee Shop',
+    },
+    {
+      id: 4,
+      name: 'Jane Doe',
+      status: 'At Bluejay Coffee Shop',
+    },
+    {
+      id: 5,
+      name: 'John Doe',
+      status: 'At Federal Coffee Shop',
+    },
+    {
+      id: 6,
+      name: 'Jane Doe',
+      status: 'At Bluejay Coffee Shop',
+    },
+  ]);
+  const handleUserPress = (id: Number) => {
+    navigation.navigate(
+      // @ts-ignore
+      'ProfileDetails',
+      { id: id }
+    );
+  }
+  const navigation = useNavigation();
+  useEffect(() => { }, []);
   const __addSongToQueue = async () => {
     setAddSong(true);
   };
@@ -116,7 +155,7 @@ const HomeCheckedIn = () => {
             <View>
               <View style={styles.textContainer}>
                 <Text style={styles.textStyle}>{'You are Now Vybing!'}</Text>
-                <View style={{ marginLeft: 120 }}>
+                <View style={{ marginLeft: 90 }}>
                   <Pressable
                     style={({ pressed }) =>
                       pressed ? [styles.pressed] : [styles.buttonContainer]
@@ -146,32 +185,52 @@ const HomeCheckedIn = () => {
             />
           )}
         </View>
-
-        <Text style={[styles.textStyle, { marginBottom: 20, fontSize: 23 }]}>
-          {'Current Song Queue'}
-        </Text>
-        <ScrollView style={{ height: '100%', marginBottom: 100 }}>
-          <ListItem topText={'Song Name'} subText={'Artist Name'} />
-          <ListItem topText={'Song Name'} subText={'Artist Name'} />
-          <ListItem topText={'Song Name'} subText={'Artist Name'} />
-          <ListItem topText={'Song Name'} subText={'Artist Name'} />
-          <ListItem topText={'Song Name'} subText={'Artist Name'} />
-          <ListItem topText={'Song Name'} subText={'Artist Name'} />
-          <ListItem topText={'Song Name'} subText={'Artist Name'} />
-          <ListItem topText={'Song Name'} subText={'Artist Name'} />
-        </ScrollView>
+        {!clickedHome ? (
+          <>
+            <Text style={[styles.textStyle, { marginBottom: 20, fontSize: 23 }]}>
+              {'Current Song Queue'}
+            </Text>
+            <ScrollView style={{ height: '100%', marginBottom: 100 }}>
+              <ListItem topText={'Song Name'} subText={'Artist Name'} />
+              <ListItem topText={'Song Name'} subText={'Artist Name'} />
+              <ListItem topText={'Song Name'} subText={'Artist Name'} />
+              <ListItem topText={'Song Name'} subText={'Artist Name'} />
+              <ListItem topText={'Song Name'} subText={'Artist Name'} />
+              <ListItem topText={'Song Name'} subText={'Artist Name'} />
+              <ListItem topText={'Song Name'} subText={'Artist Name'} />
+              <ListItem topText={'Song Name'} subText={'Artist Name'} />
+            </ScrollView>
+          </>
+        ) : (
+          <ScrollView style={{ height: '100%', marginBottom: 100 }}>
+            {userList.map((user) => (
+              <Pressable
+                key={user.id}
+                onPress={() => handleUserPress(user.id)}>
+                <ListItem
+                  key={user.id}
+                  topText={user.name}
+                  subText={user.status}
+                />
+              </Pressable>
+            ))}
+          </ScrollView>
+        )}
       </View>
-
-      <FAAddSongToQueue
-        buttonText={'Add Song To Queue'}
-        style={{ zIndex: 100, bottom: 180, position: 'absolute' }}
-        onPress={__addSongToQueue}
-      />
-      <FABCheckout
-        buttonText={'Checkout'}
-        style={{ zIndex: 100, bottom: 100, position: 'absolute' }}
-        onPress={__checkout}
-      />
+      {!clickedHome && (
+        <>
+          <FAAddSongToQueue
+            buttonText={'Add Song To Queue'}
+            style={{ zIndex: 100, bottom: 180, position: 'absolute' }}
+            onPress={__addSongToQueue}
+          />
+          <FABCheckout
+            buttonText={'Checkout'}
+            style={{ zIndex: 100, bottom: 100, position: 'absolute' }}
+            onPress={__checkout}
+          />
+        </>
+      )}
     </View>
   ) : (
     <View

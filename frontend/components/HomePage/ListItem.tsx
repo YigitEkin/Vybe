@@ -57,14 +57,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     backgroundColor: '#000',
-    height: 75,
+    height: 60,
     marginBottom: 10,
     marginTop: 10,
   },
   profilePicture: {
     borderRadius: 40,
-    width: 60,
-    height: 60,
+    width: 55,
+    height: 55,
     backgroundColor: '#fff',
   },
 });
