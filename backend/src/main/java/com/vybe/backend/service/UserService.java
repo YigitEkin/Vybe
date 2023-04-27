@@ -2,16 +2,18 @@ package com.vybe.backend.service;
 
 import com.vybe.backend.exception.*;
 import com.vybe.backend.model.dto.*;
+import com.vybe.backend.model.entity.Customer;
+import com.vybe.backend.model.entity.Streak;
 import com.vybe.backend.model.entity.User;
-import com.vybe.backend.repository.AdminRepository;
-import com.vybe.backend.repository.CustomerRepository;
-import com.vybe.backend.repository.UserRepository;
-import com.vybe.backend.repository.VenueAdminRepository;
+import com.vybe.backend.model.entity.Venue;
+import com.vybe.backend.repository.*;
 import org.apache.http.auth.InvalidCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,13 +24,17 @@ public class UserService {
     CustomerRepository customerRepository;
     VenueAdminRepository venueAdminRepository;
     AdminRepository adminRepository;
+    VenueRepository venueRepository;
+    StreakRepository streakRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, CustomerRepository customerRepository, VenueAdminRepository venueAdminRepository, AdminRepository adminRepository) {
+    public UserService(UserRepository userRepository, CustomerRepository customerRepository, VenueAdminRepository venueAdminRepository, AdminRepository adminRepository, VenueRepository venueRepository, StreakRepository streakRepository) {
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
         this.venueAdminRepository = venueAdminRepository;
         this.adminRepository = adminRepository;
+        this.venueRepository = venueRepository;
+        this.streakRepository = streakRepository;
     }
 
     // ********** CUSTOMER **********
@@ -48,6 +54,8 @@ public class UserService {
         return userRepository.getUserByUsernameAndPassword(username, password)
                 .orElseThrow(() -> new InvalidCredentialsException("Invalid credentials"));
     }
+
+
 
     // get all customers
     public Iterable<CustomerDTO> getAllCustomers() {
@@ -75,6 +83,67 @@ public class UserService {
         return customerRepository.deleteByUsername(username) > 0;
     }
 
+    // get specific streak
+    public StreakDTO getStreak(String customer_username, Integer venue_id) {
+        if (!customerRepository.existsByUsername(customer_username)) {
+            throw new CustomerNotFoundException("Customer with username: " + customer_username + " not found");
+        }
+        if (!venueRepository.existsById(venue_id)) {
+            throw new VenueNotFoundException("Venue with id: " + venue_id + " not found");
+        }
+        Streak streak = streakRepository.findByCustomerUsernameAndVenueId(customer_username, venue_id)
+                .orElseThrow(() -> new StreakNotFoundException("Streak of customer with username: " + customer_username + " at venue with id: " + venue_id + " not found"));
+        return new StreakDTO(streak);
+
+    }
+
+    // get all streaks
+    public Iterable<StreakDTO> getAllStreaks() {
+        return streakRepository.findAll().stream().map(StreakDTO::new).collect(Collectors.toList());
+    }
+
+    // Calculate/update streak
+    public StreakDTO updateStreak(String customer_username, Integer venue_id) {
+        if (!customerRepository.existsByUsername(customer_username)) {
+            throw new CustomerNotFoundException("Customer with username: " + customer_username + " not found");
+        }
+        if (!venueRepository.existsById(venue_id)) {
+            throw new VenueNotFoundException("Venue with id: " + venue_id + " not found");
+        }
+        Streak streak = streakRepository.findByCustomerUsernameAndVenueId(customer_username, venue_id).orElse(null);
+
+        if(streak == null){
+            streak = new Streak();
+            streak.setId(0);
+            streak.setCustomer(customerRepository.findByUsername(customer_username));
+            streak.setVenue(venueRepository.findById(venue_id).get());
+            streak.setLastVisitDate(new Date());
+            streak.setStreak(1);
+        } else {
+            Date today = new Date();
+            Date lastStreak = streak.getLastVisitDate();
+            // if last visit was between 24 and 48 hours ago (inclusive) then increment streak
+            if (today.getTime() - lastStreak.getTime() <= 172800000 && today.getTime() - lastStreak.getTime() >= 86400000) {
+                streak.setStreak(streak.getStreak() + 1);
+                streak.setLastVisitDate(today);
+            }
+            // if last visit was more than 48 hours ago then reset streak
+            else if (today.getTime() - lastStreak.getTime() > 172800000) {
+                streak.setStreak(1);
+                streak.setLastVisitDate(today);
+            }
+
+        }
+        return new StreakDTO(streakRepository.save((streak)));
+    }
+
+    public List<StreakDTO> getAllStreaks(String customer_username) {
+        if (!customerRepository.existsByUsername(customer_username)) {
+            throw new CustomerNotFoundException("Customer with username: " + customer_username + " not found");
+        }
+        Customer customer = customerRepository.findByUsername(customer_username);
+        return customer.getStreaks().stream().map(StreakDTO::new).collect(Collectors.toList());
+    }
 
     // ********** VENUE ADMIN **********
     public VenueAdminDTO addVenueAdmin(VenueAdminCreationDTO venueAdminCreationDTO) {

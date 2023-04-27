@@ -127,69 +127,6 @@ public class UserServiceTests {
         verifyNoMoreInteractions(customerRepository);
     }
 
-    @Test
-    public void testGetStreakWithNoPreviousVisits() {
-        // Arrange
-        Venue venue = new Venue();
-        venue.setId(1);
-
-        Customer customer = new Customer();
-        customer.setUsername("username1");
-        customer.setStreaks(new ArrayList<>());
-
-        // Act
-        int streak = customer.getAndUpdateStreak(venue);
-
-        // Assert
-        assertEquals(1, streak);
-    }
-
-    @Test
-    public void testGetStreakWithPreviousVisitYesterday() {
-        // Arrange
-        Venue venue = new Venue();
-        venue.setId(1);
-
-        Customer customer = new Customer();
-        customer.setUsername("username1");
-        customer.setStreaks(new ArrayList<>());
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, -1);
-        Date yesterday = calendar.getTime();
-        Streak streakYesterday = new Streak(1, customer, venue, yesterday, 2);
-
-        customer.getStreaks().add(streakYesterday);
-        // Act
-        int streak = customer.getAndUpdateStreak(venue);
-
-        // Assert
-        assertEquals(3, streak);
-    }
-
-    @Test
-    public void testGetStreakWithPreviousVisitTwoDaysAgo() {
-        // Arrange
-        Venue venue = new Venue();
-        venue.setId(1);
-
-        Customer customer = new Customer();
-        customer.setUsername("username1");
-        customer.setStreaks(new ArrayList<>());
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, -2);
-        Date twoDaysAgo = calendar.getTime();
-        Streak streakTwoDaysAgo = new Streak(1, customer, venue, twoDaysAgo, 4);
-
-        // Act
-        int streak = customer.getAndUpdateStreak(venue);
-
-        // Assert
-        assertEquals(1, streak);
-    }
-
-
     // ********** ADMIN TESTS **********
     @Test
     void should_save_one_admin() {

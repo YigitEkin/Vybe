@@ -61,7 +61,7 @@ public class Customer extends User {
     )
     private List<Customer> friends;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Streak> streaks;
 
     /**
@@ -113,55 +113,13 @@ public class Customer extends User {
         return null;
     }
 
-    public int getAndUpdateStreak(Venue venue) {
-        int currentStreak = 1;
-
-        // Find the streak for the given venue
-        Streak streak = streaks.stream()
+    public Streak getStreak(Venue venue) {
+        return streaks.stream()
                 .filter(s -> s.getVenue().equals(venue))
                 .findFirst()
                 .orElse(null);
-
-        if (streak == null) {
-            // The customer hasn't visited this venue before
-            streak = new Streak();
-            streak.setCustomer(this);
-            streak.setVenue(venue);
-            streak.setLastVisitDate(null);
-            streak.setStreak(1);
-            streaks.add(streak);
-        } else {
-            // Calculate the current streak
-            Date today = new Date();
-            boolean isTodayOrYesterday = false;
-            while (streak != null && !isTodayOrYesterday) {
-                if (streak.getLastVisitDate() != null && Streak.isSameDay(streak.getLastVisitDate(), today)) {
-                    // The customer visited today
-                    currentStreak = streak.getStreak();
-                    isTodayOrYesterday = true;
-                } else if (streak.getLastVisitDate() != null && Streak.isYesterday(streak.getLastVisitDate(), today)) {
-                    // The customer visited yesterday
-                    currentStreak = streak.getStreak() + 1;
-                    isTodayOrYesterday = true;
-                } else {
-                    // The streak is broken
-                    currentStreak = 1;
-                    streak = streaks.stream()
-                            .filter(s -> s.getVenue().equals(venue))
-                            .filter(s -> s.getLastVisitDate() != null)
-                            .max(Comparator.comparing(Streak::getLastVisitDate))
-                            .orElse(null);
-                }
-            }
-        }
-
-        // Update the streak for the given venue
-        streak.setLastVisitDate(new Date());
-        streak.setStreak(currentStreak);
-
-        return currentStreak;
     }
-    
+
     /**
      * Increases the points of the customer by a variable amount
      * @param points amount that the points will be increased

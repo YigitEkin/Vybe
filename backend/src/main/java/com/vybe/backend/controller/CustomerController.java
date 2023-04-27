@@ -1,9 +1,6 @@
 package com.vybe.backend.controller;
 
-import com.vybe.backend.model.dto.CommentDTO;
-import com.vybe.backend.model.dto.CustomerCreationDTO;
-import com.vybe.backend.model.dto.CustomerDTO;
-import com.vybe.backend.model.dto.FriendshipDTO;
+import com.vybe.backend.model.dto.*;
 import com.vybe.backend.service.CommentService;
 import com.vybe.backend.service.FriendshipService;
 import com.vybe.backend.service.UserService;
@@ -11,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -106,5 +104,25 @@ public class CustomerController {
     public ResponseEntity<String> unfriendCustomer(@PathVariable String username, @PathVariable String friendUsername) {
         friendshipService.removeFriend(username, friendUsername);
         return ResponseEntity.ok("Customer: " + username + " unfriended Customer: " + friendUsername);
+    }
+
+    // ************** Streak Endpoints ************** //
+
+    // get all streaks for a customer
+    @GetMapping("/{username}/streaks")
+    public List<StreakDTO> getAllStreaksForCustomer(@PathVariable String username) {
+        return userService.getAllStreaks(username);
+    }
+
+    // update streak for a customer at a venue
+    @PostMapping("/{username}/streaks/{venueId}")
+    public StreakDTO updateStreak(@PathVariable String username, @PathVariable Integer venueId) {
+        return userService.updateStreak(username, venueId);
+    }
+
+    // get streak for a customer at a venue
+    @GetMapping("/{username}/streaks/{venueId}")
+    public StreakDTO getStreak(@PathVariable String username, @PathVariable Integer venueId) {
+        return userService.getStreak(username, venueId);
     }
 }
