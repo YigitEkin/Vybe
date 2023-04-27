@@ -11,86 +11,86 @@ import {
 import StyledButton from "../../components/HomePage/StyledButton";
 import { Colors } from "../../constants/Colors";
 import * as Font from "expo-font";
+import RemoveFriendIcon from '../../assets/removeFriend.png';
+import AddFriendIcon from '../../assets/addFriend.png';
 // @ts-ignore
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useLoginStore } from "../../stores/LoginStore";
 
 const ProfileDetails = () => {
-  const openModal = () => {
-    setModalVisible(true);
+  const [friendStatus, setFriendStatus] = useState("Friend");
+  const route = useRoute();
+  const [user, setUser] = useState({
+    id: 1,
+    name: "John Doe",
+    city: "Ankara",
+    country: "Turkey"
+  });
+  const handleFriendRequest = () => {
+    if (friendStatus === "NotFriend") {
+      setFriendStatus("Requested");
+    } else if (friendStatus === "Friend") {
+      setFriendStatus("NotFriend");
+    } else if (friendStatus === "Requested") {
+      setFriendStatus("NotFriend");
+    }
   };
-  const [notificationCount, setNotificationCount] = useState(1);
-  const [modalVisible, setModalVisible] = useState(false);
+  // @ts-ignore
+  const { id } = route.params;
   const [fontsLoaded] = Font.useFonts({
     "Inter-Regular": require("../../assets/fonts/Inter/static/Inter-Regular.ttf"),
   });
-  const { isLogin, setIsLogin } = useLoginStore();
-  const [coinBalance, setCoinBalance] = useState(200);
 
   return fontsLoaded ? (
     <>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Logging Out</Text>
-            <View style={{ flex: 1, justifyContent: "space-around" }}>
-              <Text style={styles.modalTextStyle}>
-                {"Are you sure you want to logout?"}
-              </Text>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setIsLogin(false)}
-              >
-                <Text
-                  style={{
-                    fontFamily: "Inter-Regular",
-                    color: "white",
-                    fontSize: 20,
-                  }}
-                >
-                  Yes I'm Sure
-                </Text>
-              </Pressable>
-              <Pressable onPress={() => setModalVisible(false)}>
-                <Text style={styles.modalTextStyle}>{"I changed my mind"}</Text>
-              </Pressable>
-            </View>
-          </View>
-        </View>
-      </Modal>
       <ScrollView>
         <View style={styles.container}>
           {
             //TODO: this will be converted into a picture component
           }
           <View style={styles.profilePicture} />
-          <StyledButton
-            buttonText="Change"
-            onPress={() => {
-              console.log("pressed");
-            }}
-            style={styles.changeButton}
-          />
-          <View style={styles.paymentMethodsContainer}>
-            <View>
-              <Text style={styles.mutedText}>Payment Methods</Text>
-              <Text style={styles.whiteText}>Content is Here</Text>
-            </View>
-            <Pressable style={styles.rightArrowContainer}>
-              <Text style={styles.rightArrowText}>{">"}</Text>
-            </Pressable>
+          <View style={styles.container}>
+            <Text style={styles.whiteText}>{user.name} {id}</Text>
+            <Text style={styles.mutedText}>{user.city}, {user.country}</Text>
+            <Text style={styles.friendStatusText}>
+              {(friendStatus === "Friend") ? (
+                "Friends since 21 May 2021"
+              ) : (
+                "You are not friends with this user"
+              )}
+            </Text>
           </View>
           <StyledButton
-            buttonText="Logout"
-            style={styles.logoutButton}
-            onPress={openModal}
+            buttonText={
+              friendStatus === "Friend" ? (
+                "Remove Friend"
+              ) : (
+                friendStatus === "NotFriend" ? (
+                  "Send Friend Request"
+                ) : (
+                  "Cancel Friend Request"
+                )
+              )
+            }
+            style={
+              friendStatus === "Friend" ? (
+                styles.buttonClose
+              ) : (
+                friendStatus === "NotFriend" ? (
+                  "Send Friend Request"
+                ) : (
+                  styles.sentRequestButton
+                )
+              )
+            }
+            onPress={() => handleFriendRequest()}
+            imgSource={
+              friendStatus === "NotFriend" ? (
+                AddFriendIcon
+              ) : (
+                RemoveFriendIcon
+              )
+            }
           />
         </View>
       </ScrollView>
@@ -99,37 +99,6 @@ const ProfileDetails = () => {
 };
 
 const styles = StyleSheet.create({
-  sectionName: { color: "white", fontSize: 20 },
-  editText: {
-    color: Colors.purple.text,
-    fontSize: 18,
-    fontFamily: "Inter-Regular",
-  },
-  notificationContainer: {
-    width: 30,
-    height: 30,
-    backgroundColor: "red",
-    borderRadius: 15,
-    marginTop: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 0,
-    flexDirection: "row",
-  },
-  notificationText: {
-    fontFamily: "Inter-Regular",
-    fontSize: 20,
-    color: "white",
-    marginHorizontal: "auto",
-  },
-  editSectionContainer: {
-    flexDirection: "row",
-    borderTopColor: "#202325",
-    borderWidth: 1,
-    justifyContent: "space-between",
-    width: "90%",
-    paddingVertical: 15,
-  },
   container: { flex: 1, alignItems: "center" },
   profilePicture: {
     borderRadius: 40,
@@ -140,98 +109,34 @@ const styles = StyleSheet.create({
   },
   logoutButton: {
     backgroundColor: Colors.red.error,
-    marginBottom: 100,
+    marginBottom: 10,
+  },
+  sentRequestButton: {
+    backgroundColor: Colors.purple.lighter,
+    text: { color: Colors.purple.settingsButton },
   },
   changeButton: {
     backgroundColor: Colors.purple.lighter,
-    marginTop: 40,
     text: { color: Colors.purple.settingsButton },
-    width: "30%",
-  },
-  bottomSection: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "90%",
-    marginTop: 60,
-  },
-  coinBalanceText: {
-    color: "white",
-    fontSize: 20,
-    fontFamily: "Inter-Regular",
-  },
-  row_space_between_center: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  coinAmountText: {
-    color: "white",
-    fontSize: 20,
-    fontFamily: "Inter-Regular",
-    marginRight: 5,
-  },
-  paymentMethodsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "90%",
-    marginTop: 60,
   },
   mutedText: {
     color: Colors.gray.muted,
     fontSize: 15,
     fontFamily: "Inter-Regular",
   },
+  friendStatusText: {
+    color: Colors.gray.muted,
+    fontSize: 16,
+    fontFamily: "Inter-Regular",
+    marginVertical: 10
+  },
   whiteText: {
     color: "white",
     fontSize: 20,
-    fontFamily: "Inter-Regular",
-  },
-  rightArrowContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "column",
-    marginRight: 10,
-  },
-  rightArrowText: {
-    color: "white",
-    fontSize: 20,
-    fontFamily: "Inter-Regular",
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    width: 400,
-    height: 300,
-    backgroundColor: "#202325",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalTextStyle: {
-    color: "#979c9e",
-    fontFamily: "Inter-Regular",
-    fontSize: 17,
-    textAlign: "center",
-  },
-  modalText: {
-    marginBottom: 15,
     fontFamily: "Inter-Bold",
-    fontSize: 24,
-    textAlign: "center",
-    color: "white",
+    marginTop: 15,
+    marginBottom: 5,
+    fontWeight: 'bold',
   },
   button: {
     borderRadius: 20,
@@ -239,7 +144,6 @@ const styles = StyleSheet.create({
     elevation: 2,
     alignItems: "center",
   },
-
   buttonClose: {
     backgroundColor: Colors.red.error,
   },

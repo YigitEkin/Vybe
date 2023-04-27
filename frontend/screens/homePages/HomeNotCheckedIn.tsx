@@ -108,10 +108,10 @@ const HomeNotCheckedIn = () => {
   ];
 
   const handleUserPress = (id: Number) => {
-    console.log(id)
     navigation.navigate(
       // @ts-ignore
       'ProfileDetails',
+      { id: id }
     );
   }
 
@@ -141,7 +141,9 @@ const HomeNotCheckedIn = () => {
                     pressed ? [styles.pressed] : [styles.buttonContainer]
                   }
                   android_ripple={{ color: '#000' }}
-                  onPress={() => setClicked(true)}
+                  onPress={() => {
+                    setClicked(true)
+                  }}
                 >
                   <Image source={SearchIcon} />
                 </Pressable>
