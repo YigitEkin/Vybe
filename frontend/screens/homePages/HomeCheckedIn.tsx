@@ -38,7 +38,7 @@ const HomeCheckedIn = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const { isCheckIn, setIsCheckIn } = useCheckedInStore();
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
   const __addSongToQueue = async () => {
     setAddSong(true);
   };
@@ -161,17 +161,20 @@ const HomeCheckedIn = () => {
           <ListItem topText={'Song Name'} subText={'Artist Name'} />
         </ScrollView>
       </View>
-
-      <FAAddSongToQueue
-        buttonText={'Add Song To Queue'}
-        style={{ zIndex: 100, bottom: 180, position: 'absolute' }}
-        onPress={__addSongToQueue}
-      />
-      <FABCheckout
-        buttonText={'Checkout'}
-        style={{ zIndex: 100, bottom: 100, position: 'absolute' }}
-        onPress={__checkout}
-      />
+      {(clicked && (
+        <>
+          <FAAddSongToQueue
+            buttonText={'Add Song To Queue'}
+            style={{ zIndex: 100, bottom: 180, position: 'absolute' }}
+            onPress={__addSongToQueue}
+          />
+          <FABCheckout
+            buttonText={'Checkout'}
+            style={{ zIndex: 100, bottom: 100, position: 'absolute' }}
+            onPress={__checkout}
+          />
+        </>
+      ))}
     </View>
   ) : (
     <View
