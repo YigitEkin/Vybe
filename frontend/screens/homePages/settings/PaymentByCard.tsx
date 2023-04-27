@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { StripeProvider, usePaymentSheet } from '@stripe/stripe-react-native';
+import InputSpinner from 'react-native-input-spinner';
+import { Colors } from '../../../constants/Colors';
+
 import {
   View,
   Text,
@@ -11,34 +13,47 @@ import {
   Alert,
 } from 'react-native';
 import StyledButton from '../../../components/HomePage/StyledButton';
+import { useNavigation } from '@react-navigation/native';
+
+const COIN_PRIZE = 0.05;
 
 const PaymentByCard = () => {
-  const { initPaymentSheet, presentPaymentSheet, loading } = usePaymentSheet();
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    initialisePaymentSheet();
-  }, []);
-
-  const initialisePaymentSheet = async () => {
-    const;
-  };
-
-  async function buy() {
-    const { error } = await presentPaymentSheet();
-
-    if (error) {
-      Alert.alert(`Error code: ${error.code}`, error.message);
-    } else {
-      Alert.alert('Success', 'The payment was confirmed successfully');
-      setReady(false);
-    }
-  }
+  const navigation = useNavigation();
+  const [amount, setAmount] = useState(50);
   return (
-    <View style={{ flex: 1 }}>
-      <StripeProvider publishableKey='pk_test_51N19G4Fn58HWM8DI9CdqhEL84LSRM5xjkKdKdxgxmrQLDFpLBGAw113LmN6tzbv2RdZimMJnb4ZcrWblQt9MvKdb00hto3rLCu'>
-        <StyledButton buttonText={'buy'}>Buy</StyledButton>
-      </StripeProvider>
+    <View style={{ flex: 1, alignItems: 'center' }}>
+      {/*<StyledButton buttonText={'buy'}>Buy</StyledButton>
+       */}
+      <View style={{ marginBottom: 15 }}>
+        <Text style={{ color: 'white', fontSize: 18 }}>
+          {'How many coins would you like to purchase?'}
+        </Text>
+      </View>
+
+      <View style={{ width: '65%', alignItems: 'center' }}>
+        <InputSpinner
+          max={10000}
+          min={50}
+          step={50}
+          selectionColor='#ffffff'
+          inputStyle={{ fontSize: 24 }}
+          placeholder='5'
+          color={Colors.purple.primary}
+          background={Colors.purple.lighter}
+          onChange={(val) => setAmount(val)}
+        />
+      </View>
+      <View style={{ marginTop: 15 }}>
+        <Text style={{ color: 'white', fontSize: 20 }}>
+          Total price: {amount * COIN_PRIZE}₺
+        </Text>
+      </View>
+      <View style={{ width: '70%', alignItems: 'center' }}>
+        <StyledButton
+          buttonText='Checkout'
+          onPress={() => navigation.navigate('CreditCardForm')}
+        ></StyledButton>
+      </View>
     </View>
   );
 };
