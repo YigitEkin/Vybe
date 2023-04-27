@@ -6,12 +6,13 @@ import {
   Pressable,
   Image,
   Alert,
+  ScrollView
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import GroupItem from '../../components/HomePage/GroupItem';
 import { Colors } from '../../constants/Colors';
 import { Camera, CameraType } from 'expo-camera';
-
+import { useNavigation, useTheme } from '@react-navigation/native';
 import ListItem from '../../components/HomePage/ListItem';
 import FAButton from '../../components/HomePage/FAButton';
 import SearchBar from '../../components/HomePage/SearchBar';
@@ -28,10 +29,42 @@ const HomeNotCheckedIn = () => {
   const [startCamera, setStartCamera] = React.useState(false);
   const [searchPhrase, setSearchPhrase] = useState('');
   const [clicked, setClicked] = useState(false);
-
+  const navigation = useNavigation();
+  const [userList, setUserList] = useState([
+    {
+      id: 1,
+      name: 'John Doe',
+      status: 'At Federal Coffee Shop',
+    },
+    {
+      id: 2,
+      name: 'Jane Doe',
+      status: 'At Bluejay Coffee Shop',
+    },
+    {
+      id: 3,
+      name: 'John Doe',
+      status: 'At Federal Coffee Shop',
+    },
+    {
+      id: 4,
+      name: 'Jane Doe',
+      status: 'At Bluejay Coffee Shop',
+    },
+    {
+      id: 5,
+      name: 'John Doe',
+      status: 'At Federal Coffee Shop',
+    },
+    {
+      id: 6,
+      name: 'Jane Doe',
+      status: 'At Bluejay Coffee Shop',
+    },
+  ]);
   const { setIsCheckIn } = useCheckedInStore();
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
   const __startCamera = async () => {
     const { status } = await Camera.requestCameraPermissionsAsync();
 
@@ -73,6 +106,15 @@ const HomeNotCheckedIn = () => {
       text: 'Deneme 8',
     },
   ];
+
+  const handleUserPress = (id: Number) => {
+    console.log(id)
+    navigation.navigate(
+      // @ts-ignore
+      'ProfileDetails',
+    );
+  }
+
   return !startCamera ? (
     <View style={styles.container}>
       <View
@@ -114,22 +156,43 @@ const HomeNotCheckedIn = () => {
             />
           )}
         </View>
-        <FlatList
-          data={data}
-          renderItem={({ item }) => <GroupItem text={item.text} />}
-          horizontal={true}
-          style={{ flexGrow: 0, marginBottom: 100 }}
-        />
-        <Text style={[styles.textStyle, { marginBottom: 20 }]}>
-          {'Friends currently Vybing'}
-        </Text>
-        <ListItem topText={'Friend name'} subText={'Location'} />
+
+        {clicked ? (
+          <ScrollView style={{ height: '100%', marginBottom: 100 }}>
+            {userList.map((user) => (
+              <Pressable
+                key={user.id}
+                onPress={() => handleUserPress(user.id)}>
+                <ListItem
+                  key={user.id}
+                  topText={user.name}
+                  subText={user.status}
+                />
+              </Pressable>
+            ))}
+          </ScrollView>
+        ) : (
+          <>
+            <FlatList
+              data={data}
+              renderItem={({ item }) => <GroupItem text={item.text} />}
+              horizontal={true}
+              style={{ flexGrow: 0, marginBottom: 100 }}
+            />
+            <Text style={[styles.textStyle, { marginBottom: 20 }]}>
+              {'Friends currently Vybing'}
+            </Text>
+            <ListItem topText={'Friend name'} subText={'Location'} />
+          </>
+        )}
       </View>
 
-      <FAButton
-        style={{ zIndex: 100, bottom: 100, position: 'absolute' }}
-        onPress={__startCamera}
-      />
+      {(!clicked) &&
+        <FAButton
+          style={{ zIndex: 100, bottom: 100, position: 'absolute' }}
+          onPress={__startCamera}
+        />
+      }
     </View>
   ) : (
     <View
