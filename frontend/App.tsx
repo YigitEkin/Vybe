@@ -11,11 +11,32 @@ import SignUpPassword from './screens/signup/SignUpPassword';
 import SignUpUsername from './screens/signup/SignupUsername';
 import EnterPhoneNumber from './components/2fa/EnterPhoneNumber';
 import Splash from './screens/Splash';
+import Toast, { BaseToast } from 'react-native-toast-message';
 
 import Router from './navigation/Router';
 
 //SplashScreen.preventAutoHideAsync();
-
+const toastConfig = {
+  /*
+    Overwrite 'success' type,
+    by modifying the existing `BaseToast` component
+  */
+  success: (props) => (
+    <BaseToast
+      {...props}
+      style={{ borderLeftColor: 'green' }}
+      //contentContainerStyle={{ paddingHorizontal: 15 }}
+      text1Style={{
+        fontSize: 15,
+        fontWeight: '400',
+      }}
+      text2Style={{
+        fontSize: 15,
+        fontWeight: '400',
+      }}
+    />
+  ),
+};
 export default function App() {
   const [fontsLoaded] = useFonts({
     'Inter-Black': require('./assets/fonts/Inter/static/Inter-Black.ttf'),
@@ -54,6 +75,7 @@ export default function App() {
         <Router />
       </View>
       {/*</SafeAreaView>*/}
+      <Toast config={toastConfig} />
     </>
   );
 }

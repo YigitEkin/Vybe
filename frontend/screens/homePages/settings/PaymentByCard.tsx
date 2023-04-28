@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import InputSpinner from 'react-native-input-spinner';
 import { Colors } from '../../../constants/Colors';
 
-
 import {
   View,
   Text,
@@ -16,7 +15,6 @@ import {
 } from 'react-native';
 import StyledButton from '../../../components/HomePage/StyledButton';
 import { useNavigation } from '@react-navigation/native';
-
 
 const COIN_PRIZE = 0.05;
 
@@ -54,7 +52,12 @@ const PaymentByCard = () => {
       <View style={{ width: '70%', alignItems: 'center' }}>
         <StyledButton
           buttonText='Checkout'
-          onPress={() => navigation.navigate('CreditCardForm')}
+          onPress={() =>
+            navigation.navigate('CreditCardForm', {
+              price: amount * COIN_PRIZE,
+              amount: amount,
+            })
+          }
         ></StyledButton>
       </View>
     </View>

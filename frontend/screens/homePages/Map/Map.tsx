@@ -16,7 +16,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import MapView, {
+  PROVIDER_GOOGLE,
+  Marker,
+  PROVIDER_DEFAULT,
+} from 'react-native-maps';
 import SearchBarMap from '../../../components/HomePage/SearchBarMap';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
@@ -469,7 +473,7 @@ const MapPage = () => {
             longitudeDelta: LONGITUDE_DELTA,
           }}
           style={styles.container}
-          provider={PROVIDER_GOOGLE}
+          //provider={PROVIDER_GOOGLE}
           customMapStyle={mapDarkStyle}
         >
           {
@@ -493,7 +497,7 @@ const MapPage = () => {
                 >
                   <Animated.View style={[styles.markerWrap]}>
                     <Animated.Image
-                      source={require('../../../assets/mapPin.png')}
+                      source={require('../../../assets/mapPinPurple.png')}
                       // @ts-ignore
                       style={[styles.marker, scaleStyle]}
                       resizeMode='contain'

@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import CoinDetails from './CoinDetails';
 import PaymentByCard from './PaymentByCard';
 import CreditCardForm from './CreditCardForm';
+import CoinAds from './CoinAds';
 
 const screenOptions = {
   contentStyle: {
@@ -38,6 +39,7 @@ const SettingsNavigationWrapper = () => {
       <Stack.Screen name='CoinDetails' component={CoinDetails} />
       <Stack.Screen name='PayByCard' component={PaymentByCard} />
       <Stack.Screen name='CreditCardForm' component={CreditCardForm} />
+      <Stack.Screen name='CoinAds' component={CoinAds} />
     </Stack.Navigator>
   );
 };
