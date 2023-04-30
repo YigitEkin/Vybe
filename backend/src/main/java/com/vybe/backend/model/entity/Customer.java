@@ -22,6 +22,7 @@ public class Customer extends User {
     public Customer(String username, String password, String phoneNumber, Object profilePicture, Venue currentVenue, Stack<SongRequest> requests, List<Customer> friendships,
                     String dateOfBirth, String dateOfCreation) {
         super(username, password, phoneNumber, profilePicture, currentVenue, requests);
+        this.wallet = new Wallet(0.0,0.0);
         this.friends = friendships;
         this.dateOfBirth = dateOfBirth;
         this.dateOfCreation = dateOfCreation;
