@@ -11,10 +11,19 @@ import StyledButton from "../../components/HomePage/StyledButton";
 import OTPTextView from "react-native-otp-textinput";
 import { useLoginStore } from "../../stores/LoginStore";
 import { DismissKeyboard } from "../../components/common/DismissKeyboard";
+import { deFormatPhoneNumber } from "../../components/phoneCodePicker/utils/helpers";
 
 const LoginVerification = ({ navigation }: any) => {
   const [OTPCode, setOTPCode] = useState(0);
-  const { phoneNumber, setIsLogin, setPhoneNumber } = useLoginStore();
+  const { phoneNumber, setIsLogin, selectedCode, setPhoneNumber } =
+    useLoginStore((state: any) => {
+      return {
+        phoneNumber: state.phoneNumber,
+        setIsLogin: state.setIsLogin,
+        selectedCode: state.selectedCode,
+        setPhoneNumber: state.setPhoneNumber,
+      };
+    });
   const handleChange = (e) => {
     setOTPCode(e);
   };
@@ -53,8 +62,10 @@ const LoginVerification = ({ navigation }: any) => {
             buttonText="Continue"
             onPress={() => {
               //TODO: check if the code is correct
-              setIsLogin(true);
+              console.log("phone number: ", deFormatPhoneNumber(phoneNumber));
+              console.log("selected code: ", selectedCode.dial_code);
               setPhoneNumber(null);
+              setIsLogin(true);
             }}
           />
           <TouchableHighlight onPress={() => console.log("Pressed")}>
