@@ -1,21 +1,17 @@
 package com.vybe.backend.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Customer class that is the representation of each customer
  * @author Oğuz Ata Çal
  */
-@Data
 @Entity
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Customer extends User {
@@ -26,7 +22,7 @@ public class Customer extends User {
         this.friends = friendships;
         this.dateOfBirth = dateOfBirth;
         this.dateOfCreation = dateOfCreation;
-
+        this.streaks =  new ArrayList<>();
     }
 
 
@@ -66,13 +62,8 @@ public class Customer extends User {
     )
     private List<Customer> friends;
 
-    // TODO: map streaks to database
-    /**
-     * hashmap to holds the streak information of the user to venues
-     * (key, value) pair is (venue.id, streak_count)
-     */
-    @Transient
-    private HashMap<Integer, Integer> streaks;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Streak> streaks;
 
     /**
      * date of creation of the customer account
@@ -122,25 +113,8 @@ public class Customer extends User {
     public Boolean acquireBadge(String badgeName) {
         return null;
     }
-
-    /**
-     * Increases the streak of this customer with venue with venueId by 1
-     * @param venueId id of the venue that the streak will be increased with
-     * @return streak of the customer for that venue after the increase
-     */
-    public Integer increaseStreak(Integer venueId) {
-        return null;
-    }
-
-    /**
-     * Resets the streak of this customer with venue with venueId to 0
-     * @param venueId id of the venue that the streak will be reset
-     * @return streak of the customer for that venue after the reset
-     */
-    public Integer resetStreak(Integer venueId) {
-        return null;
-    }
     
+
     /**
      * Increases the points of the customer by a variable amount
      * @param points amount that the points will be increased

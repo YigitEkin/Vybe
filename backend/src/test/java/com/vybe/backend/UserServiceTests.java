@@ -5,14 +5,11 @@ import com.vybe.backend.exception.CustomersAlreadyFriendsException;
 import com.vybe.backend.exception.FriendshipNotFoundException;
 import com.vybe.backend.exception.UsernameTakenException;
 import com.vybe.backend.model.dto.*;
-import com.vybe.backend.model.entity.Admin;
-import com.vybe.backend.model.entity.Customer;
-import com.vybe.backend.model.entity.Friendship;
-import com.vybe.backend.model.entity.VenueAdmin;
+import com.vybe.backend.model.entity.*;
 import com.vybe.backend.repository.*;
 import com.vybe.backend.service.FriendshipService;
 import com.vybe.backend.service.UserService;
-import org.assertj.core.api.Assert;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -22,10 +19,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.time.*;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,7 +41,9 @@ public class UserServiceTests {
     @Mock private UserRepository userRepository;
     @Mock private AdminRepository adminRepository;
     @Mock private VenueAdminRepository venueAdminRepository;
+    @Mock private StreakRepository streakRepository;
     @Mock private FriendshipRepository friendshipRepository;
+    @Mock private VenueRepository venueRepository;
 
 
     // ********** CUSTOMER TESTS **********
@@ -129,7 +126,6 @@ public class UserServiceTests {
         verify(customerRepository, times(0)).deleteByUsername("testname1");
         verifyNoMoreInteractions(customerRepository);
     }
-
 
     // ********** ADMIN TESTS **********
     @Test
