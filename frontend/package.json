@@ -39,6 +39,8 @@
     "react-native-screens": "~3.18.0",
     "react-native-show-touches-ios": "^1.0.5",
     "react-native-toast-message": "^2.1.6",
+    "react-native-switch-selector": "^2.3.0",
+    "react-native-switch-selector-fix": "^2.0.4",
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.7",
     "styled-components": "^5.3.6",

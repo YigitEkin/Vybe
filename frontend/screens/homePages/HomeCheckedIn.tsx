@@ -25,6 +25,10 @@ import * as Font from 'expo-font';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import FABCheckout from '../../components/HomePage/FABCheckout';
 import { useCheckedInStore } from '../../stores/CheckedInStore';
+import SwitchSelector from "react-native-switch-selector-fix";
+import StyledButton from '../../components/HomePage/StyledButton';
+import CoinIcon from '../../assets/coin.png';
+import InputSpinner from 'react-native-input-spinner';
 
 const HomeCheckedIn = () => {
   const [isCamOpen, setIsCamOpen] = useState(false);
@@ -37,6 +41,8 @@ const HomeCheckedIn = () => {
   const [clickedHome, setClickedHome] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const { isCheckIn, setIsCheckIn } = useCheckedInStore();
+  const [requestType, setRequestType] = useState("default");
+  const [coinBalance, setCoinBalance] = useState(1000);
   const [userList, setUserList] = useState([
     {
       id: 1,
@@ -69,12 +75,55 @@ const HomeCheckedIn = () => {
       status: 'At Bluejay Coffee Shop',
     },
   ]);
+  const [songList, setSongList] = useState([
+    {
+      id: 1,
+      name: 'Song 1',
+      artist: 'Artist 1',
+    },
+    {
+      id: 2,
+      name: 'Song 2',
+      artist: 'Artist 2',
+    },
+    {
+      id: 3,
+      name: 'Song 3',
+      artist: 'Artist 3',
+    },
+    {
+      id: 4,
+      name: 'Song 4',
+      artist: 'Artist 4',
+    },
+    {
+      id: 5,
+      name: 'Song 5',
+      artist: 'Artist 5',
+    },
+    {
+      id: 6,
+      name: 'Song 6',
+      artist: 'Artist 6',
+    },
+  ]);
+  const [selectedSong, setSelectedSong] = useState("");
+  const options = [
+    { label: "Default Request", value: "default", testID: "switch-one", accessibilityLabel: "switch-one" },
+    { label: "Enhanced Request", value: "enhanced", testID: "switch-two", accessibilityLabel: "switch-two" },
+  ];
+  const [amount, setAmount] = useState(200);
+  const [addingSongToQueue, setAddingSongToQueue] = useState(false);
   const handleUserPress = (id: Number) => {
     navigation.navigate(
-      // @ts-ignore
+      // @ts-ignore 
       'ProfileDetails',
       { id: id }
     );
+  }
+  const handleSongPress = (id: Number, name: string) => {
+    setAddingSongToQueue(true);
+    setSelectedSong(name);
   }
   const navigation = useNavigation();
   useEffect(() => { }, []);
@@ -90,6 +139,20 @@ const HomeCheckedIn = () => {
     setIsCheckIn(false);
     setModalVisible(false);
   };
+
+  const handleAddSongToQueue = () => {
+    console.log("Adding song to queue");
+  }
+
+  const handleDefaultSongRequest = () => {
+    console.log("Default song request");
+    setAddingSongToQueue(false);
+  }
+
+  const handleEnhancedSongRequest = () => {
+    console.log("Enhanced song request");
+    setAddingSongToQueue(false);
+  }
 
   const [fontsLoaded] = Font.useFonts({
     'Inter-Bold': require('../../assets/fonts/Inter/static/Inter-Bold.ttf'),
@@ -276,6 +339,152 @@ const HomeCheckedIn = () => {
           </View>
         </View>
       </Modal>
+      <Modal
+        animationType='fade'
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Checking Out</Text>
+            <View style={{ flex: 1, justifyContent: 'space-around' }}>
+              <Text style={styles.modalTextStyle}>
+                {'Are you sure you want to checkout from this location?'}
+              </Text>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text
+                  style={{
+                    fontFamily: 'Inter-Regular',
+                    color: 'white',
+                    fontSize: 20,
+                  }}
+                >
+                  Yes I'm Sure
+                </Text>
+              </Pressable>
+              <Pressable onPress={() => setModalVisible(!modalVisible)}>
+                <Text style={styles.modalTextStyle}>{'I changed my mind'}</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        animationType='fade'
+        transparent={true}
+        visible={addingSongToQueue}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setAddingSongToQueue(!addingSongToQueue);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={requestType === 'default' ? (
+            styles.modalAddToQueueView
+          ) : (
+            styles.modalAddToQueueView
+          )}>
+            <Text style={{
+              fontFamily: 'Inter-Bold',
+              fontSize: 24,
+              textAlign: 'center',
+              color: 'white',
+            }}>Add {selectedSong} to Queue</Text>
+            <View style={{ flex: 1, justifyContent: 'space-between', alignItems: 'center' }}>
+              <View style={{ marginVertical: 10, width: 275 }}>
+                <SwitchSelector
+                  initial={
+                    requestType === 'default' ? (
+                      0
+                    ) : (
+                      1
+                    )
+                  }
+                  //@ts-ignore
+                  onPress={value => setRequestType(value)}
+                  buttonColor={Colors.purple.dark}
+                  borderColor={Colors.purple.dark}
+                  options={options}
+                  textStyle={{ fontFamily: 'Inter-Regular' }}
+                />
+              </View>
+              {
+                requestType === 'default' ? (
+                  <>
+                    <Text style={styles.modalTextStylePrimary}>
+                      {'You may wait for a while to listen it... But you can always choose Enhanced Request!'}
+                    </Text>
+                    <Pressable
+                      style={[styles.button, styles.buttonPrimary]}
+                      onPress={handleDefaultSongRequest}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: 'Inter-Regular',
+                          color: 'white',
+                          fontSize: 20,
+                        }}
+                      >
+                        Default Request (100 Coins)
+                      </Text>
+                    </Pressable>
+                  </>
+                ) : (
+                  <>
+                    <Text style={styles.modalTextStylePrimary}>
+                      {'Best way to listen it sooner! The more you tip, the quicker you listen!'}
+                    </Text>
+
+                    <View style={{ width: '65%', alignItems: 'center' }}>
+                      <InputSpinner
+                        max={10000}
+                        min={200}
+                        step={50}
+                        selectionColor='#ffffff'
+                        inputStyle={{ fontSize: 20 }}
+                        placeholder='5'
+                        color={Colors.purple.primary}
+                        background={Colors.purple.lighter}
+                        onChange={(val) => setAmount(val)}
+                        editable={false}
+                      />
+                    </View>
+                    <Pressable
+                      style={[styles.button, styles.buttonPrimary]}
+                      onPress={handleEnhancedSongRequest}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: 'Inter-Regular',
+                          color: 'white',
+                          fontSize: 20,
+                        }}
+                      >
+                        Enhanced Request
+                      </Text>
+                    </Pressable>
+                  </>
+                )
+              }
+              <Text style={styles.modalTextStylePrimary}>
+                {'Coin Balance: ' + coinBalance}
+              </Text>
+              <Pressable onPress={() => setAddingSongToQueue(false)}>
+                <Text style={styles.modalTextStyle}>
+                  {'I changed my mind'}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <View style={{ alignItems: 'center', flexDirection: 'row' }}>
         <Pressable
           onPress={() => setAddSong(false)}
@@ -298,14 +507,17 @@ const HomeCheckedIn = () => {
         setSearchPhrase={setSearchPhrase}
       />
       <ScrollView style={{ height: '100%', marginBottom: 100 }}>
-        <ListItem topText={'Song Name'} subText={'Artist Name'} />
-        <ListItem topText={'Song Name'} subText={'Artist Name'} />
-        <ListItem topText={'Song Name'} subText={'Artist Name'} />
-        <ListItem topText={'Song Name'} subText={'Artist Name'} />
-        <ListItem topText={'Song Name'} subText={'Artist Name'} />
-        <ListItem topText={'Song Name'} subText={'Artist Name'} />
-        <ListItem topText={'Song Name'} subText={'Artist Name'} />
-        <ListItem topText={'Song Name'} subText={'Artist Name'} />
+        {songList.map((song) => (
+          <Pressable
+            key={song.id}
+            onPress={() => handleSongPress(song.id, song.name)}>
+            <ListItem
+              key={song.id}
+              topText={song.name}
+              subText={song.artist}
+            />
+          </Pressable>
+        ))}
       </ScrollView>
       <View style={{ alignItems: 'center' }}>
         <FABCheckout
@@ -396,8 +608,25 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    width: 400,
+    width: '98%',
     height: 300,
+    backgroundColor: '#202325',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalAddToQueueView: {
+    margin: 20,
+    width: '98%',
+    height: 400,
     backgroundColor: '#202325',
     borderRadius: 20,
     padding: 35,
@@ -421,8 +650,17 @@ const styles = StyleSheet.create({
   buttonClose: {
     backgroundColor: Colors.red.error,
   },
+  buttonPrimary: {
+    backgroundColor: Colors.purple.primary,
+  },
   modalTextStyle: {
     color: '#979c9e',
+    fontFamily: 'Inter-Regular',
+    fontSize: 17,
+    textAlign: 'center',
+  },
+  modalTextStylePrimary: {
+    color: '#ffff',
     fontFamily: 'Inter-Regular',
     fontSize: 17,
     textAlign: 'center',
