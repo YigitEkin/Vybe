@@ -16,6 +16,19 @@
     "re-build": "rm -rf build node_modules && yarn install && yarn build"
   },
   "eslintConfig": {
+    "rules": {
+      "no-unused-vars": "warn"
+    },
+    "overrides": [
+      {
+        "files": [
+          "**/*.js?(x)"
+        ],
+        "rules": {
+          "max-len": "warn"
+        }
+      }
+    ],
     "extends": [
       "react-app"
     ]
