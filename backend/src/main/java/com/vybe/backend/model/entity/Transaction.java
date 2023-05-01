@@ -40,5 +40,5 @@ public class Transaction {
     /**
      * The transaction date
      */
-    private String date;
+    private String transactionDate;
 }

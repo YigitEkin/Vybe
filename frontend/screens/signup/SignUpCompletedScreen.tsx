@@ -4,18 +4,32 @@ import Form, { FormItem } from "../../components/Form/Form";
 // @ts-ignore
 import Logo from "../../assets/Tick.png";
 import { useSignUpStore } from "../../stores/SignUpStore";
+import { deFormatPhoneNumber } from "../../components/phoneCodePicker/utils/helpers";
 
 const SignUpCompletedScreen = ({ navigation }: any) => {
-  const { setEmail, setPassword, setUsername, setPhoneNumber } = useSignUpStore(
-    (state: any) => {
-      return {
-        setEmail: state.setEmail,
-        setPassword: state.setPassword,
-        setUsername: state.setUsername,
-        setPhoneNumber: state.setPhoneNumber,
-      };
-    }
-  );
+  const {
+    setEmail,
+    setPassword,
+    setUsername,
+    setPhoneNumber,
+    email,
+    password,
+    phoneNumber,
+    username,
+    selectedCode,
+  } = useSignUpStore((state: any) => {
+    return {
+      setEmail: state.setEmail,
+      setPassword: state.setPassword,
+      setUsername: state.setUsername,
+      setPhoneNumber: state.setPhoneNumber,
+      email: state.email,
+      password: state.password,
+      username: state.username,
+      phoneNumber: state.phoneNumber,
+      selectedCode: state.selectedCode,
+    };
+  });
   const formItems: FormItem[] = useMemo(
     () => [
       {
@@ -42,6 +56,11 @@ const SignUpCompletedScreen = ({ navigation }: any) => {
       navigateRoute={navigateRoute}
       validator={() => true}
       cb={() => {
+        console.log("email: ", email);
+        console.log("password: ", password);
+        console.log("username: ", username);
+        console.log("phoneNumber: ", deFormatPhoneNumber(phoneNumber));
+        console.log("selectedCode: ", selectedCode.dial_code);
         setEmail(null);
         setPassword(null);
         setUsername(null);

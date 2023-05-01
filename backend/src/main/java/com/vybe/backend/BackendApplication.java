@@ -9,6 +9,7 @@ import com.vybe.backend.service.PlaylistService;
 import com.vybe.backend.service.SongService;
 import com.vybe.backend.service.UserService;
 import com.vybe.backend.service.VenueService;
+import com.vybe.backend.util.IyzicoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -52,9 +53,7 @@ public class BackendApplication {
 			CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO( "testpass1", "testname1", "testphone1", "testdate1", "testdate1", "000000");
 			VenueAdminCreationDTO venueAdminCreationDTO = new VenueAdminCreationDTO("testname3", "testpass3", "testmail3", "testphone3");
 			AdminCreationDTO adminCreationDTO = new AdminCreationDTO("testname5", "testpass5");
-
 			System.out.println("Testing");
-
 
 			// test create customer
 			CustomerDTO customerDTO = userService.addCustomer(customerCreationDTO);
