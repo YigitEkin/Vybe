@@ -5854,6 +5854,18 @@ react-native-show-touches-ios@^1.0.5:
   resolved "https://registry.npmjs.org/react-native-show-touches-ios/-/react-native-show-touches-ios-1.0.5.tgz"
   integrity sha512-DsU4Obi+poTBNvL2Ezjo20PfOpPFkR+JIyfoCTeFdjLQnrKD6fFB2gefnlnNr0agaGakwo0OBYYMp1CrQafjvQ==
 
+react-native-switch-selector-fix@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-switch-selector-fix/-/react-native-switch-selector-fix-2.0.4.tgz#0b88ae42421ef274f73f5431dddb8ff8196f1eac"
+  integrity sha512-j9gAZ/Xvj2EoMaaf9kTUO43mC/JZvAvTbbA2Ax2oaq/ohBoT/fWOTCIlqVB1jkRxIct3lk08amkH4aXmvxLiVQ==
+
+react-native-switch-selector@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-switch-selector/-/react-native-switch-selector-2.3.0.tgz#1f87758cf973da947cae8c8a8062fa7a8f701992"
+  integrity sha512-BnhbC7vRu5HIanANszNS5rbrXqYwDggJGg/Xik2NXDA1FSzId/WrxU5hicmmZzTrQSh9N5TS76YsnG1swNzBpA==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-native-vector-icons@^9.2.0:
   version "9.2.0"
   resolved "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-9.2.0.tgz"
