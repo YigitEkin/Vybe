@@ -140,10 +140,6 @@ const HomeCheckedIn = () => {
     setModalVisible(false);
   };
 
-  const handleAddSongToQueue = () => {
-    console.log("Adding song to queue");
-  }
-
   const handleDefaultSongRequest = () => {
     console.log("Default song request");
     setAddingSongToQueue(false);
@@ -172,10 +168,6 @@ const HomeCheckedIn = () => {
           animationType='fade'
           transparent={true}
           visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-            setModalVisible(!modalVisible);
-          }}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
@@ -305,85 +297,7 @@ const HomeCheckedIn = () => {
       <Modal
         animationType='fade'
         transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Checking Out</Text>
-            <View style={{ flex: 1, justifyContent: 'space-around' }}>
-              <Text style={styles.modalTextStyle}>
-                {'Are you sure you want to checkout from this location?'}
-              </Text>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text
-                  style={{
-                    fontFamily: 'Inter-Regular',
-                    color: 'white',
-                    fontSize: 20,
-                  }}
-                >
-                  Yes I'm Sure
-                </Text>
-              </Pressable>
-              <Pressable onPress={() => setModalVisible(!modalVisible)}>
-                <Text style={styles.modalTextStyle}>{'I changed my mind'}</Text>
-              </Pressable>
-            </View>
-          </View>
-        </View>
-      </Modal>
-      <Modal
-        animationType='fade'
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Checking Out</Text>
-            <View style={{ flex: 1, justifyContent: 'space-around' }}>
-              <Text style={styles.modalTextStyle}>
-                {'Are you sure you want to checkout from this location?'}
-              </Text>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text
-                  style={{
-                    fontFamily: 'Inter-Regular',
-                    color: 'white',
-                    fontSize: 20,
-                  }}
-                >
-                  Yes I'm Sure
-                </Text>
-              </Pressable>
-              <Pressable onPress={() => setModalVisible(!modalVisible)}>
-                <Text style={styles.modalTextStyle}>{'I changed my mind'}</Text>
-              </Pressable>
-            </View>
-          </View>
-        </View>
-      </Modal>
-      <Modal
-        animationType='fade'
-        transparent={true}
         visible={addingSongToQueue}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setAddingSongToQueue(!addingSongToQueue);
-        }}
       >
         <View style={styles.centeredView}>
           <View style={requestType === 'default' ? (
@@ -519,13 +433,6 @@ const HomeCheckedIn = () => {
           </Pressable>
         ))}
       </ScrollView>
-      <View style={{ alignItems: 'center' }}>
-        <FABCheckout
-          buttonText={'Checkout'}
-          style={{ zIndex: 100, bottom: 100, position: 'absolute' }}
-          onPress={__checkout}
-        />
-      </View>
     </View>
   );
 };
