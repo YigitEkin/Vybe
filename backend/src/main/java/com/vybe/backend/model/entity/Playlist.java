@@ -44,7 +44,6 @@ public class Playlist {
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "playlistId")
-    // TODO: supposed to be priority queue
     private Set<SongNode> requestedSongs;
 
     /**
@@ -56,7 +55,6 @@ public class Playlist {
             joinColumns = @JoinColumn(name = "playlist_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "id")
     )
-    // TODO: supposed to be queue
     private Set<Song> defaultPlaylist;
 
     /**
@@ -115,15 +113,8 @@ public class Playlist {
     public Song playNextSong(SongNodeRepository songNodeRepository) {
         if(requestedSongs.size() > 0) {
             currentMode = "request";
-            // find the max weight song from the requested songs
-            SongNode maxWeightSong = requestedSongs.stream().toList().get(0);
-            for(SongNode songNode : requestedSongs) {
-                if(songNode.getWeight() > maxWeightSong.getWeight()) {
-                    maxWeightSong = songNode;
-                }
-            }
-            // remove the song from the requested songs
-            //songNodeRepository.deleteById(maxWeightSong.getId());
+            // find the max song from the requested songs using the compareTo method
+            SongNode maxWeightSong = requestedSongs.stream().max(SongNode::compareTo).get();
             requestedSongs.remove(maxWeightSong);
             currentlyPlayingSong = maxWeightSong.getSong();
             return maxWeightSong.getSong();

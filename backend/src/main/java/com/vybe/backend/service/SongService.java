@@ -1,16 +1,15 @@
 package com.vybe.backend.service;
 
 
+import com.vybe.backend.exception.CustomerNotFoundException;
 import com.vybe.backend.exception.PlaylistNotFoundException;
+import com.vybe.backend.exception.VenueNotFoundException;
 import com.vybe.backend.model.dto.SongDTO;
 import com.vybe.backend.exception.SongNotFoundException;
 import com.vybe.backend.model.dto.SongNodeDTO;
-import com.vybe.backend.model.entity.Playlist;
-import com.vybe.backend.model.entity.Song;
-import com.vybe.backend.model.entity.SongNode;
-import com.vybe.backend.repository.PlaylistRepository;
-import com.vybe.backend.repository.SongNodeRepository;
-import com.vybe.backend.repository.SongRepository;
+import com.vybe.backend.model.dto.SongRequestDTO;
+import com.vybe.backend.model.entity.*;
+import com.vybe.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +22,16 @@ public class SongService {
     SongRepository songRepository;
     PlaylistRepository playlistRepository;
     SongNodeRepository songNodeRepository;
+    SongRequestRepository songRequestRepository;
+    CustomerRepository customerRepository;
+    VenueRepository venueRepository;
 
     @Autowired
-    public SongService(SongRepository songRepository, PlaylistRepository playlistRepository, SongNodeRepository songNodeRepository) {
+    public SongService(SongRepository songRepository, PlaylistRepository playlistRepository, SongNodeRepository songNodeRepository, SongRequestRepository songRequestRepository) {
         this.songNodeRepository = songNodeRepository;
         this.songRepository = songRepository;
         this.playlistRepository = playlistRepository;
+        this.songRequestRepository = songRequestRepository;
     }
 
     // get all songs
@@ -117,7 +120,29 @@ public class SongService {
     }
 
     // add request
-    public SongNodeDTO addSongRequest(SongNodeDTO songNodeDTO){
+    public SongNodeDTO addSongRequest(SongRequestDTO songRequestDTO){
+        // save the song request
+        if(customerRepository.existsById(songRequestDTO.getRequestedByUsername()))
+            throw new CustomerNotFoundException("Customer with username: " + songRequestDTO.getRequestedByUsername() + " not found");
+
+        if(venueRepository.existsById(songRequestDTO.getRequestedInVenueId()))
+            throw new VenueNotFoundException("Venue with id: " + songRequestDTO.getRequestedInVenueId() + " not found");
+
+        if(songRepository.existsById(songRequestDTO.getSongId()))
+            throw new SongNotFoundException("Song with id: " + songRequestDTO.getSongId() + " not found");
+
+        Customer customer = customerRepository.findById(songRequestDTO.getRequestedByUsername()).get();
+        Venue venue = venueRepository.findById(songRequestDTO.getRequestedInVenueId()).get();
+        Song song = songRepository.findById(songRequestDTO.getSongId()).get();
+        SongRequest songRequest = new SongRequest(0, song, customer, venue, songRequestDTO.getRequestDate());
+        songRequestRepository.save(songRequest);
+
+        // create song node according to song request
+        SongNodeDTO songNodeDTO = new SongNodeDTO(songRequestDTO);
+        return addSongNode(songNodeDTO);
+    }
+
+    public SongNodeDTO addSongNode(SongNodeDTO songNodeDTO){
         // if songNode with song id and playlist id exists, update weight
         if (songNodeRepository.existsBySong_IdAndPlaylistId(songNodeDTO.getSongId(), songNodeDTO.getPlaylistId())) {
             SongNode songNode = songNodeRepository.findBySong_IdAndPlaylistId(songNodeDTO.getSongId(), songNodeDTO.getPlaylistId());

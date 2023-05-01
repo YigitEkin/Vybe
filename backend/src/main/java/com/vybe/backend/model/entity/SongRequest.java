@@ -36,7 +36,11 @@ public class SongRequest {
      */
     @OneToOne
     @JoinColumn(name = "requested_by_username")
-    private User requestedBy;
+    private Customer requestedBy;
+
+    @OneToOne
+    @JoinColumn(name = "requested_in_venue_id")
+    private Venue requestedInVenue;
 
     /**
      * The song's request time

@@ -108,8 +108,6 @@ public class VenueService {
     }
 
     public Song startSong(Integer venueId) {
-        // delete null song nodes
-
         if (!venueRepository.existsById(venueId))
             throw new VenueNotFoundException("Venue with id: " + venueId + " not found");
 
@@ -117,9 +115,8 @@ public class VenueService {
         Venue venue = venueRepository.findById(venueId).get();
         String playlistId;
 
-        if (venue.getPlaylist().getCurrentMode().equals("request")) {
+        if (venue.getPlaylist().getCurrentMode().equals("request"))
             playlistId = venue.getPlaylist().getRequestPlaylistId();
-        }
         else
             playlistId = venue.getPlaylist().getDefaultPlaylistId();
 
@@ -127,7 +124,7 @@ public class VenueService {
         String token = venue.getToken();
         String name = nextSong.getName();
         int index = SoundtrackUtil.findIndexOfSongInPlaylist(playlistId, name, token);
-        System.out.println("playing song in index: " + index);
+        System.out.println("playing song: " + name + " in index: " + index);
         SoundtrackUtil.playSong(playlistId, index, Collections.singletonList(soundzoneId), token);
 
         return nextSong.toSong();

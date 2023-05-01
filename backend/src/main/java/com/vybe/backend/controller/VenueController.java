@@ -65,6 +65,9 @@ public class VenueController {
         return commentService.getAllCommentsForVenue(venueId);
     }
 
+
+    // ************* Song Endpoints ************* //
+
     @GetMapping("/{venueId}/nextSong")
     public SongDTO playNextSong(@PathVariable Integer venueId) {
 
