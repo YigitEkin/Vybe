@@ -1,31 +1,36 @@
-import React from 'react';
-import EnterPhoneNumber from '../../components/2fa/EnterPhoneNumber';
-import { useLoginStore } from '../../stores/LoginStore';
+import React, { useCallback } from "react";
+import { useLoginStore } from "../../stores/LoginStore";
+import EnterPhoneNumber from "../../components/phoneCodePicker/PhoneCodePicker";
 
 const EnterPhoneNumberLogin = ({ navigation }: any) => {
-  const { phoneNumber, setPhoneNumber } = useLoginStore((state: any) => {
-    return {
-      phoneNumber: state.phoneNumber,
-      setPhoneNumber: state.setPhoneNumber,
-    };
-  });
+  const { phoneNumber, setPhoneNumber, selectedCode, setSelectedCode } =
+    useLoginStore((state: any) => {
+      return {
+        phoneNumber: state.phoneNumber,
+        setPhoneNumber: state.setPhoneNumber,
+        selectedCode: state.selectedCode,
+        setSelectedCode: state.setSelectedCode,
+      };
+    });
+
+  const onPress = useCallback(() => {
+    phoneNumber && phoneNumber.trim() !== ""
+      ? navigation.navigate("LoginVerification")
+      : null;
+  }, [phoneNumber, setPhoneNumber, navigation]);
+
 
   return (
     <EnterPhoneNumber
-      buttonText='Login'
-      headerText='Welcome Back.'
-      subHeaderText='Log in to your account'
-      onChangeText={(text: string) => {
-        setPhoneNumber(text);
-      }}
-      value={phoneNumber}
-      onPress={() => {
-        phoneNumber &&
-          phoneNumber.trim() !== '' &&
-          navigation.navigate('LoginVerification');
-        //TODO: when implemented, navigate to the next screen
-        // phoneNumber && navigation.navigate("EnterVerificationCode");
-      }}
+      buttonText="Login"
+      headerText="Welcome back."
+      subHeaderText="Log in to your account"
+      mutedText="You will receive an SMS verification that may apply message and data rates."
+      onPress={onPress}
+      setSelectedCallingCode={setSelectedCode}
+      selectedCallingCode={selectedCode}
+      phoneNumber={phoneNumber}
+      setPhoneNumber={setPhoneNumber}
     />
   );
 };
