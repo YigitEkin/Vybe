@@ -80,4 +80,20 @@ public class VenueController {
     }
 
 
+    @GetMapping("/{venueId}/defaultPlaylist/songs")
+    public List<SongDTO> getDefaultPlaylistSongs(@PathVariable Integer venueId) {
+        return playlistService.getSongsOfDefaultPlaylist(venueId);
+    }
+
+    @GetMapping("/{venueId}/requestsQueue/songs")
+    public List<SongNodeDTO> getRequestsQueueSongs(@PathVariable Integer venueId) {
+        return songService.getAllSongNodesByVenueId(venueId);
+    }
+
+    // ************* Song Request Endpoints ************* //
+    @GetMapping("/{venueId}/songRequests")
+    public List<SongRequestDTO> getSongRequests(@PathVariable Integer venueId) {
+        return songService.getSongRequestsByVenueId(venueId);
+    }
+
 }

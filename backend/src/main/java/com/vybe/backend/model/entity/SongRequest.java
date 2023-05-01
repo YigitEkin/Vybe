@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * SongRequest class that will be used as a transfer object for song requests
@@ -45,6 +46,6 @@ public class SongRequest {
     /**
      * The song's request time
      */
-    private String requestDate;
+    private Date requestDate;
 
 }
