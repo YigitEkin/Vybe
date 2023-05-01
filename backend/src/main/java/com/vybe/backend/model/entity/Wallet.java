@@ -1,10 +1,14 @@
 package com.vybe.backend.model.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +36,7 @@ public class Wallet {
     /**
      * Amount of money spent by the customer
      */
+
     private Double totalSpent;
 
     /**
@@ -46,7 +51,15 @@ public class Wallet {
      * @param transaction instance of the transaction
      * @return TRUE if transaction is successful, FALSE otherwise
      */
-    public Boolean executeTransaction(Transaction transaction) {
-        return null;
+    public void executeTransaction(Transaction transaction) {
+        transactions.add(transaction);
+        balance += transaction.getReceivedCoins();
+        totalSpent += transaction.getPaidAmount();
+    }
+
+    public Wallet(Double balance, Double totalSpent) {
+        this.balance = balance;
+        this.totalSpent = totalSpent;
+        this.transactions = new ArrayList<>();
     }
 }
