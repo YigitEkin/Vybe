@@ -187,7 +187,7 @@ const HomeCheckedIn = () => {
   if (!isCheckIn) {
     return null;
   }
-  console.log('render');
+
   return !addSong ? (
     <>
       {/*<Modal
