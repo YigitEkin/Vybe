@@ -90,6 +90,11 @@ public class VenueController {
         return songService.getAllSongNodesByVenueId(venueId);
     }
 
+    @GetMapping("/{venueId}/nextSongs")
+    public List<SongDTO> getNextSongs(@PathVariable Integer venueId) {
+        return songService.getNextXSongs(venueId, 10);
+    }
+
     // ************* Song Request Endpoints ************* //
     @GetMapping("/{venueId}/songRequests")
     public List<SongRequestDTO> getSongRequests(@PathVariable Integer venueId) {

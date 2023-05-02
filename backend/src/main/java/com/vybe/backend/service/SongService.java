@@ -13,6 +13,7 @@ import com.vybe.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,20 +21,13 @@ import java.util.stream.Collectors;
 @Service
 public class SongService {
 
-    SongRepository songRepository;
-    PlaylistRepository playlistRepository;
-    SongNodeRepository songNodeRepository;
-    SongRequestRepository songRequestRepository;
-    CustomerRepository customerRepository;
-    VenueRepository venueRepository;
+    @Resource SongRepository songRepository;
+    @Resource PlaylistRepository playlistRepository;
+    @Resource SongNodeRepository songNodeRepository;
+    @Resource SongRequestRepository songRequestRepository;
+    @Resource CustomerRepository customerRepository;
+    @Resource VenueRepository venueRepository;
 
-    @Autowired
-    public SongService(SongRepository songRepository, PlaylistRepository playlistRepository, SongNodeRepository songNodeRepository, SongRequestRepository songRequestRepository) {
-        this.songNodeRepository = songNodeRepository;
-        this.songRepository = songRepository;
-        this.playlistRepository = playlistRepository;
-        this.songRequestRepository = songRequestRepository;
-    }
 
     // ************** Song Methods ************** //
     // get all songs
@@ -91,6 +85,15 @@ public class SongService {
         return songRepository.saveAll(songDTOs.stream().map(SongDTO::toSong).collect(Collectors.toList())).stream().map(SongDTO::new).collect(Collectors.toList());
     }
 
+    // get next x songs in queue
+    public List<SongDTO> getNextXSongs(Integer venueId, Integer x) {
+        if (!venueRepository.existsById(venueId)) {
+            throw new VenueNotFoundException("Venue with id: " + venueId + " not found");
+        }
+        Venue venue = venueRepository.findById(venueId).get();
+        return venue.getPlaylist().getCurrentQueue(x).stream().map(SongDTO::new).collect(Collectors.toList());
+    }
+
     // ************** Song Node Methods ************** //
     // create song node
     public SongNodeDTO createSongNode(SongNodeDTO songNodeDTO) {
@@ -124,13 +127,13 @@ public class SongService {
     // add request
     public SongNodeDTO addSongRequest(SongRequestDTO songRequestDTO){
         // save the song request
-        if(customerRepository.existsById(songRequestDTO.getRequestedByUsername()))
+        if(!customerRepository.existsById(songRequestDTO.getRequestedByUsername()))
             throw new CustomerNotFoundException("Customer with username: " + songRequestDTO.getRequestedByUsername() + " not found");
 
-        if(venueRepository.existsById(songRequestDTO.getRequestedInVenueId()))
+        if(!venueRepository.existsById(songRequestDTO.getRequestedInVenueId()))
             throw new VenueNotFoundException("Venue with id: " + songRequestDTO.getRequestedInVenueId() + " not found");
 
-        if(songRepository.existsById(songRequestDTO.getSongId()))
+        if(!songRepository.existsById(songRequestDTO.getSongId()))
             throw new SongNotFoundException("Song with id: " + songRequestDTO.getSongId() + " not found");
 
         Customer customer = customerRepository.findById(songRequestDTO.getRequestedByUsername()).get();

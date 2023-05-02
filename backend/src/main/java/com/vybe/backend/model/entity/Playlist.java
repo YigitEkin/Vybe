@@ -35,7 +35,6 @@ public class Playlist {
     @OneToOne( mappedBy = "playlist")
     private Venue venue;
 
-    @Transient
     private Integer defaultPlaylistIndex;
 
     /**
