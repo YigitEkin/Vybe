@@ -7,31 +7,34 @@ import { LoadingButton } from '@mui/lab';
 import account from 'src/_mock/account';
 // components
 import Iconify from '../../../components/iconify';
+import useAuthStore from 'src/stores/auth';
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const navigate = useNavigate();
+  const { email, setEmail, password, setPassword, isLoggedIn, setIsLoggedIn } = useAuthStore((state) => state);
 
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
+  console.log('email: ', email);
+  console.log('password: ', password);
   const handleClick = () => {
-    if (account.filter((user) => user.email === email && user.password === password)) {
-      navigate('/dashboard', { replace: true });
+    if (email && password) {
+      setIsLoggedIn(true);
+      navigate('/dashboard/app', { replace: true });
     }
   };
 
   return (
     <>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" onChange={(val) => setEmail(val)} />
+        <TextField name="email" label="Email address" onChange={(val) => setEmail(val.target.value)} />
 
         <TextField
           name="password"
           label="Password"
-          onChange={(val) => setPassword(val)}
+          onChange={(val) => setPassword(val.target.value)}
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
