@@ -35,6 +35,7 @@ public class SongService {
         this.songRequestRepository = songRequestRepository;
     }
 
+    // ************** Song Methods ************** //
     // get all songs
     public List<SongDTO> getAllSongs() {
         return songRepository.findAll().stream().map(SongDTO::new).collect(Collectors.toList());
@@ -90,7 +91,7 @@ public class SongService {
         return songRepository.saveAll(songDTOs.stream().map(SongDTO::toSong).collect(Collectors.toList())).stream().map(SongDTO::new).collect(Collectors.toList());
     }
 
-    // -----Song Node Methods-----
+    // ************** Song Node Methods ************** //
     // create song node
     public SongNodeDTO createSongNode(SongNodeDTO songNodeDTO) {
         if (!songRepository.existsById(songNodeDTO.getSongId())) {
@@ -164,6 +165,22 @@ public class SongService {
         songNodeRepository.deleteById(id);
     }
 
+    // get all song nodes
+    public List<SongNodeDTO> getAllSongNodes() {
+        return songNodeRepository.findAll().stream().map(SongNodeDTO::new).collect(Collectors.toList());
+    }
+
+    // get all song nodes in requested playlist of a specific venue sorted with compareTo
+    public List<SongNodeDTO> getAllSongNodesByVenueId(Integer id) {
+        if (!venueRepository.existsById(id)) {
+            throw new VenueNotFoundException("Venue with id: " + id + " not found");
+        }
+        Venue venue = venueRepository.findById(id).get();
+        List<SongNode> songNodes = venue.getPlaylist().getRequestedSongs().stream().sorted().toList();
+        return songNodes.stream().map(SongNodeDTO::new).collect(Collectors.toList());
+    }
+
+    // ************** Song Request Methods ************** //
     // get song requests by venue id
     public List<SongRequestDTO> getSongRequestsByVenueId(Integer id) {
         if (!venueRepository.existsById(id)) {
@@ -188,25 +205,8 @@ public class SongService {
         return songRequestRepository.findBySongId(id).stream().map(SongRequestDTO::new).collect(Collectors.toList());
     }
 
-    // get all song nodes
-    public List<SongNodeDTO> getAllSongNodes() {
-        return songNodeRepository.findAll().stream().map(SongNodeDTO::new).collect(Collectors.toList());
-    }
-
-    // get all song nodes in requested playlist of a specific venue sorted with compareTo
-    public List<SongNodeDTO> getAllSongNodesByVenueId(Integer id) {
-        if (!venueRepository.existsById(id)) {
-            throw new VenueNotFoundException("Venue with id: " + id + " not found");
-        }
-        Venue venue = venueRepository.findById(id).get();
-        List<SongNode> songNodes = venue.getPlaylist().getRequestedSongs().stream().sorted().toList();
-        return songNodes.stream().map(SongNodeDTO::new).collect(Collectors.toList());
-    }
-
     // get all song requests
     public List<SongRequestDTO> getAllSongRequests() {
         return songRequestRepository.findAll().stream().map(SongRequestDTO::new).collect(Collectors.toList());
     }
-
-
 }

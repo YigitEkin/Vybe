@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Playlist class that will govern the restrictions and the next song playing
@@ -38,6 +35,8 @@ public class Playlist {
     @OneToOne( mappedBy = "playlist")
     private Venue venue;
 
+    @Transient
+    private Integer defaultPlaylistIndex;
 
     /**
      * Priority queue of requested songs, based on weight of song
@@ -120,10 +119,29 @@ public class Playlist {
             return maxWeightSong.getSong();
         } else {
             currentMode = "default";
-            // get a random song from the default playlist
-            int randomIndex = (int) (Math.random() * defaultPlaylist.size());
-            currentlyPlayingSong = defaultPlaylist.stream().toList().get(randomIndex);
+            currentlyPlayingSong = defaultPlaylist.stream().toList().get(defaultPlaylistIndex);
+            defaultPlaylistIndex = (defaultPlaylistIndex + 1) % defaultPlaylist.size();
             return currentlyPlayingSong;
         }
+    }
+
+    public List<Song> getCurrentQueue(int numSongs){
+        List<Song> nextSongs = new ArrayList<>();
+        List<SongNode> sortedRequestedSongs = new ArrayList<>(requestedSongs);
+        sortedRequestedSongs.sort(Collections.reverseOrder());
+        int requestIndex = 0;
+        int defaultIndex = defaultPlaylistIndex;
+
+        for (int i = 0; i < numSongs; i++){
+            if(requestIndex < requestedSongs.size()){
+                SongNode maxWeightSong = sortedRequestedSongs.get(requestIndex);
+                nextSongs.add(maxWeightSong.getSong());
+                requestIndex++;
+            } else {
+                nextSongs.add(defaultPlaylist.stream().toList().get(defaultIndex));
+                defaultIndex = (defaultIndex + 1) % defaultPlaylist.size();
+            }
+        }
+        return nextSongs;
     }
 }

@@ -91,6 +91,7 @@ public class VenueService {
         }
         Venue venue = venueRepository.findById(venueId).get();
         Song song = venue.getPlaylist().playNextSong(songNodeRepository);
+
         // find the playlist and update the currentMode
         Playlist playlist = playlistRepository.findById(venue.getPlaylist().getId()).get();
         playlist.setCurrentMode(venue.getPlaylist().getCurrentMode());

@@ -22,6 +22,6 @@ public class PlaylistCreationDTO {
 
 
     public Playlist toPlaylist() {
-        return new Playlist(0, defaultPlaylistId, requestPlaylistId, null, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), null, "default");
+        return new Playlist(0, defaultPlaylistId, requestPlaylistId, null,0, null, new HashSet<>(), new HashSet<>(), new HashSet<>(), null, "default");
     }
 }
