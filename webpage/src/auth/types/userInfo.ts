@@ -7,4 +7,5 @@ export interface UserInfo {
   lastName: string;
   progress: number;
   role: string;
+  venueName: string;
 }

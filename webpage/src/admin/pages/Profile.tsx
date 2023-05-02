@@ -15,6 +15,7 @@ import QueryWrapper from '../../core/components/QueryWrapper';
 import { useSnackbar } from '../../core/contexts/SnackbarProvider';
 import AdminAppBar from '../components/AdminAppBar';
 import AdminToolbar from '../components/AdminToolbar';
+import QRCode from 'react-qr-code';
 import CircleProgressWidget from '../widgets/CircleProgressWidget';
 
 const profileMenuItems = [
@@ -77,14 +78,28 @@ const Profile = () => {
             <Typography
               component='div'
               variant='h4'
-            >{`${userInfo?.firstName} ${userInfo?.lastName}`}</Typography>
-            <Typography variant='body2'>{userInfo?.role}</Typography>
+            >{`${userInfo?.venueName} `}</Typography>
+            {/*<Typography variant='body2'>{userInfo?.role}</Typography>*/}
           </Box>
           {/*<CircleProgressWidget
             height={244}
             title={t("profile.completion.title")}
             value={75}
           />*/}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center',
+              mb: 6,
+            }}
+          >
+            <QRCode
+              value={userInfo ? userInfo.venueName : 'QR Failed'}
+              size={256}
+            />
+          </Box>
         </Grid>
         <Grid item xs={12} md={8} marginTop={3}>
           <Box sx={{ mb: 4 }}>

@@ -1,39 +1,39 @@
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
-import { useTheme } from "@material-ui/core/styles";
-import { useTranslation } from "react-i18next";
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import { useTheme } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next';
 import {
   PolarAngleAxis,
   Radar,
   RadarChart,
   ResponsiveContainer,
   Tooltip,
-} from "recharts";
+} from 'recharts';
 
 const data = [
   {
-    subject: "Marketing",
+    subject: '10:00-14:00',
     A: 110,
   },
   {
-    subject: "Research",
+    subject: '14:00-18:00',
     A: 98,
   },
   {
-    subject: "Sales",
+    subject: '18:00-22:00',
     A: 86,
   },
   {
-    subject: "Ops",
+    subject: '22:00-02:00',
     A: 99,
   },
   {
-    subject: "HR",
+    subject: '02:00-06:00',
     A: 85,
   },
   {
-    subject: "Dev",
+    subject: '06:00-10:00',
     A: 65,
   },
 ];
@@ -44,17 +44,17 @@ const BudgetWidget = () => {
 
   return (
     <Card>
-      <CardHeader title={t("dashboard.budget.title")} />
+      <CardHeader title={t('dashboard.budget.title')} />
       <CardContent>
-        <ResponsiveContainer width="99%" height={244}>
-          <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
+        <ResponsiveContainer width='99%' height={244}>
+          <RadarChart cx='50%' cy='50%' outerRadius='80%' data={data}>
             <PolarAngleAxis
-              dataKey="subject"
+              dataKey='subject'
               tick={{ fill: theme.palette.text.secondary, fontSize: 14 }}
             />
             <Radar
-              name={t("dashboard.budget.legend.unit")}
-              dataKey="A"
+              name={t('dashboard.budget.legend.unit')}
+              dataKey='A'
               stroke={theme.palette.primary.main}
               strokeWidth={8}
               fill={theme.palette.primary.main}

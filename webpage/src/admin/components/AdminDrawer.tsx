@@ -111,14 +111,14 @@ const AdminDrawer = ({
           </ListItemAvatar>
           {userInfo && (
             <ListItemText
-              primary={`${userInfo.firstName} ${userInfo.lastName}`}
+              primary={`${userInfo.venueName}`}
               sx={{
                 display: collapsed ? 'none' : 'block',
               }}
             />
           )}
         </ListItem>
-        <ListItem button onClick={onSettingsToggle}>
+        {/*<ListItem button onClick={onSettingsToggle}>
           <ListItemAvatar>
             <Avatar>
               <SettingsIcon />
@@ -130,7 +130,7 @@ const AdminDrawer = ({
               display: collapsed ? 'none' : 'block',
             }}
           />
-        </ListItem>
+        </ListItem>*/}
       </List>
     </Box>
   );

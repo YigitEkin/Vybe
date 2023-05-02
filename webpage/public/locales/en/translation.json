@@ -210,22 +210,21 @@
   },
   "dashboard": {
     "activity": {
-      "title": "Activity"
+      "title": "Checked in Users per Month"
     },
     "budget": {
       "legend": {
-        "unit": "Budget ($K)"
+        "unit": "Check-Ins"
       },
-      "title": "Budget"
+      "title": "Activity per Hour"
     },
     "orderProgress": {
       "title": "Orders"
     },
     "overview": {
-      "orders": "Orders",
-      "sales": "Sales",
-      "users": "Users",
-      "visits": "Visits"
+      "songsPlayed": "Songs Played",
+      "coinsCollected": "Coins Collected",
+      "visits": "Visits Today"
     },
     "progress": {
       "title": "Progress"
@@ -235,11 +234,11 @@
     },
     "salesByCategory": {
       "legend": {
-        "books": "Books",
-        "movies": "Movies & TV",
-        "software": "Software"
+        "pop": "Pop",
+        "rap": "Rap",
+        "rock": "Rock"
       },
-      "title": "Sales by Category"
+      "title": "Genres Played"
     },
     "salesHistory": {
       "title": "Sales History",
@@ -250,14 +249,14 @@
     },
     "teams": {
       "columns": {
-        "progress": "Progress",
-        "team": "Team",
-        "value": "Value"
+        "progress": "Percentage",
+        "team": "Song",
+        "value": "Plays"
       },
-      "title": "Teams Progress"
+      "title": "Top Played Songs"
     },
     "users": {
-      "title": "Recent Users"
+      "title": "Recently Played Songs"
     },
     "visitProgress": {
       "title": "Visits"
@@ -336,6 +335,9 @@
             "m": "Male",
             "n": "NC"
           }
+        },
+        "venue": {
+          "label": "Venue Name"
         },
         "lastName": {
           "label": "Last Name"

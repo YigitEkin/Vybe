@@ -1,9 +1,9 @@
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
-import { useTheme } from "@material-ui/core/styles";
-import { useTranslation } from "react-i18next";
-import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import { useTheme } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next';
+import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
 const SalesByCategoryWidget = () => {
   const { t } = useTranslation();
@@ -11,17 +11,17 @@ const SalesByCategoryWidget = () => {
 
   const data = [
     {
-      name: t("dashboard.salesByCategory.legend.books"),
+      name: t('dashboard.salesByCategory.legend.pop'),
       fill: theme.palette.primary.main,
       value: 400,
     },
     {
-      name: t("dashboard.salesByCategory.legend.movies"),
+      name: t('dashboard.salesByCategory.legend.rock'),
       fill: theme.palette.warning.main,
       value: 300,
     },
     {
-      name: t("dashboard.salesByCategory.legend.software"),
+      name: t('dashboard.salesByCategory.legend.rap'),
       fill: theme.palette.error.main,
       value: 300,
     },
@@ -29,16 +29,16 @@ const SalesByCategoryWidget = () => {
 
   return (
     <Card>
-      <CardHeader title={t("dashboard.salesByCategory.title")} />
+      <CardHeader title={t('dashboard.salesByCategory.title')} />
       <CardContent>
-        <ResponsiveContainer width="99%" height={244}>
+        <ResponsiveContainer width='99%' height={244}>
           <PieChart width={244} height={244}>
             <Pie
-              dataKey="value"
+              dataKey='value'
               isAnimationActive={false}
               data={data}
-              cx="50%"
-              cy="50%"
+              cx='50%'
+              cy='50%'
               outerRadius={80}
               stroke={theme.palette.background.paper}
               strokeWidth={8}

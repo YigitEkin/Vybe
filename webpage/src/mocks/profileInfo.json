@@ -4,5 +4,6 @@
   "email": "john@smith.com",
   "firstName": "John",
   "job": "Founder",
-  "lastName": "Smith"
+  "lastName": "Smith",
+  "venueName": "Federal Coffee"
 }

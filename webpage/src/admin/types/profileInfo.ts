@@ -3,7 +3,8 @@ export interface ProfileInfo {
   avatar?: string;
   email: string;
   firstName: string;
-  gender?: "F" | "M" | "NC";
+  gender?: 'F' | 'M' | 'NC';
   job: string;
   lastName: string;
+  venueName: string;
 }

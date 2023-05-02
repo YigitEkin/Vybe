@@ -38,17 +38,18 @@ const ProfileInformation = () => {
       //gender: data ? data.gender : undefined,
       job: data ? data.job : '',
       lastName: data ? data.lastName : '',
+      venueName: data ? data.venueName : '',
     },
     validationSchema: Yup.object({
       email: Yup.string()
         .email(t('common.validations.email'))
         .required(t('common.validations.required')),
-      firstName: Yup.string()
-        .max(20, t('common.validations.max', { size: 20 }))
+      venueName: Yup.string()
+        .max(20, t('common.validations.max', { size: 100 }))
         .required(t('common.validations.required')),
-      lastName: Yup.string()
-        .max(30, t('common.validations.max', { size: 30 }))
-        .required(t('common.validations.required')),
+      //lastName: Yup.string()
+      //  .max(30, t('common.validations.max', { size: 30 }))
+      //  .required(t('common.validations.required')),
     }),
     onSubmit: (values) => handleSubmit(values),
   });
@@ -68,7 +69,7 @@ const ProfileInformation = () => {
       <Card>
         <CardHeader title={t('profile.info.title')} />
         <CardContent>
-          <TextField
+          {/*<TextField
             margin='normal'
             required
             fullWidth
@@ -82,20 +83,20 @@ const ProfileInformation = () => {
             onChange={formik.handleChange}
             error={formik.touched.lastName && Boolean(formik.errors.lastName)}
             helperText={formik.touched.lastName && formik.errors.lastName}
-          />
+          />*/}
           <TextField
             margin='normal'
             required
             fullWidth
-            id='firstName'
-            label={t('profile.info.form.firstName.label')}
-            name='firstName'
-            autoComplete='given-name'
+            id='venueName'
+            label={t('profile.info.form.venue.label')}
+            name='venueName'
+            autoComplete='venue-name'
             disabled={isUpdating}
-            value={formik.values.firstName}
+            value={formik.values.venueName}
             onChange={formik.handleChange}
-            error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-            helperText={formik.touched.firstName && formik.errors.firstName}
+            error={formik.touched.venueName && Boolean(formik.errors.venueName)}
+            helperText={formik.touched.venueName && formik.errors.venueName}
           />
           {/*<FormControl component="fieldset" margin="normal">
             <FormLabel component="legend">
@@ -108,7 +109,7 @@ const ProfileInformation = () => {
               value={formik.values.gender}
               onChange={formik.handleChange}
             >
-            
+
               {genders.map((gender) => (
                 <FormControlLabel
                   key={gender.value}
