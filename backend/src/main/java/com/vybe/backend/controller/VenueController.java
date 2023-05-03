@@ -65,6 +65,9 @@ public class VenueController {
         return commentService.getAllCommentsForVenue(venueId);
     }
 
+
+    // ************* Song Endpoints ************* //
+
     @GetMapping("/{venueId}/nextSong")
     public SongDTO playNextSong(@PathVariable Integer venueId) {
 
@@ -76,5 +79,26 @@ public class VenueController {
         return playlistService.addAllSongsToDefaultPlaylist(venueId);
     }
 
+
+    @GetMapping("/{venueId}/defaultPlaylist/songs")
+    public List<SongDTO> getDefaultPlaylistSongs(@PathVariable Integer venueId) {
+        return playlistService.getSongsOfDefaultPlaylist(venueId);
+    }
+
+    @GetMapping("/{venueId}/requestsQueue/songs")
+    public List<SongNodeDTO> getRequestsQueueSongs(@PathVariable Integer venueId) {
+        return songService.getAllSongNodesByVenueId(venueId);
+    }
+
+    @GetMapping("/{venueId}/nextSongs")
+    public List<SongDTO> getNextSongs(@PathVariable Integer venueId) {
+        return songService.getNextXSongs(venueId, 10);
+    }
+
+    // ************* Song Request Endpoints ************* //
+    @GetMapping("/{venueId}/songRequests")
+    public List<SongRequestDTO> getSongRequests(@PathVariable Integer venueId) {
+        return songService.getSongRequestsByVenueId(venueId);
+    }
 
 }

@@ -157,6 +157,11 @@ public class PlaylistService {
         return songDTOs;
     }
 
+    public List<SongDTO> getSongsOfDefaultPlaylist(Integer venueId) {
+        Playlist playlist = playlistRepository.findByVenueId(venueId).orElseThrow(() -> new PlaylistNotFoundException("Playlist of venue with id: " + venueId + " not found"));
+        return playlist.getDefaultPlaylist().stream().map(SongDTO::new).collect(Collectors.toList());
+    }
+
 
     // TODO: add get next music method
 

@@ -1,11 +1,11 @@
 package com.vybe.backend.model.entity;
 
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * SongNode class that will be used as a node in the priority queue
@@ -16,6 +16,14 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SongNode implements Comparable<SongNode> {
+    public SongNode(Integer id, Integer playlistId, Song song, Double weight){
+        this.id = id;
+        this.playlistId = playlistId;
+        this.song = song;
+        this.weight = weight;
+        this.requestDate = new Date();
+    }
+
     /**
      * Unique id of the song node
      */
@@ -42,12 +50,22 @@ public class SongNode implements Comparable<SongNode> {
      */
     private Double weight;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date requestDate;
+
     /**
      * compare to method for comparable interface
      * @param songNode the other song node to compare to
      * @return the result of the compare operation
      */
     public int compareTo(SongNode songNode){
-        return Double.compare(this.weight, songNode.weight);
+        // first compares the weight, for equal weights, compares the request date, the one with the earlier date is bigger one
+        if (this.weight > songNode.weight){
+            return 1;
+        } else if (this.weight < songNode.weight){
+            return -1;
+        } else {
+            return songNode.requestDate.compareTo(this.requestDate);
+        }
     }
 }
