@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from "react";
-import { TextInput, StyleSheet } from "react-native";
-import Form from "../../components/Form/Form";
-import { useSignUpStore } from "../../stores/SignUpStore";
+import React, { useMemo, useState } from 'react';
+import { TextInput, StyleSheet } from 'react-native';
+import Form from '../../components/Form/Form';
+import { useSignUpStore } from '../../stores/SignUpStore';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 const SignUpPassword = () => {
   const { password, setPassword } = useSignUpStore((state: any) => {
@@ -16,15 +17,14 @@ const SignUpPassword = () => {
   const formItems = useMemo(
     () => [
       {
-        label: "Enter a Password",
+        label: 'Enter a Password',
         component: (
           <TextInput
             secureTextEntry={true}
             selectTextOnFocus={true}
-            keyboardAppearance="dark"
-            placeholder="Password"
-            placeholderTextColor={"#666"}
-            value={password}
+            keyboardAppearance='dark'
+            placeholder='Password'
+            placeholderTextColor={'#666'}
             onChangeText={(text) => {
               setPassword(text);
             }}
@@ -33,7 +33,7 @@ const SignUpPassword = () => {
         ),
       },
       {
-        label: "Confirm Password",
+        label: 'Confirm Password',
         component: (
           <TextInput
             secureTextEntry={true}
@@ -41,10 +41,10 @@ const SignUpPassword = () => {
             onChangeText={(text) => {
               setConfirmPassword(text);
             }}
-            placeholder="Confirm Password"
-            placeholderTextColor={"#666"}
+            placeholder='Confirm Password'
+            placeholderTextColor={'#666'}
             selectTextOnFocus={true}
-            keyboardAppearance="dark"
+            keyboardAppearance='dark'
             style={styles.textInput}
           />
         ),
@@ -53,7 +53,7 @@ const SignUpPassword = () => {
     []
   );
 
-  const navigateRoute = "SignUpCompletedScreen" as never;
+  const navigateRoute = 'EnterPhoneNumberSignUp' as never;
   return (
     <Form
       items={formItems}
@@ -61,13 +61,22 @@ const SignUpPassword = () => {
       totalSteps={4}
       navigateRoute={navigateRoute}
       validator={() => {
-        return (
+        if (
           password &&
-          password.trim().length > 0 &&
+          password.trim().length >= 8 &&
           confirmPassword &&
-          confirmPassword.trim().length > 0 &&
+          confirmPassword.trim().length >= 8 &&
           password === confirmPassword
-        );
+        ) {
+          return true;
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: 'Error',
+            text2: 'Your password should be at least 8 characters',
+          });
+          return false;
+        }
       }}
     />
   );
@@ -75,12 +84,12 @@ const SignUpPassword = () => {
 
 const styles = StyleSheet.create({
   textInput: {
-    width: "100%",
+    width: '100%',
     height: 50,
     borderWidth: 2,
-    borderColor: "#444",
+    borderColor: '#444',
     borderRadius: 5,
-    color: "#fff",
+    color: '#fff',
     fontSize: 20,
     paddingLeft: 10,
     paddingRight: 10,

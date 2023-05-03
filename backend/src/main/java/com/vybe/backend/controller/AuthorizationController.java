@@ -15,12 +15,12 @@ public class AuthorizationController {
     @Resource
     private AuthService authService;
 
-    @GetMapping("/signIn")
+    @PostMapping("/signIn")
     public Boolean authorizeUser(@RequestBody SignInDTO signInDTO ) {
             return authService.authorizeUsernameAndPassword(signInDTO.getUsername(), signInDTO.getPassword());
     }
 
-    @GetMapping("/customer/2FA")
+    @PostMapping("/customer/2FA")
     public CustomerDTO signInCustomer2FA(@RequestBody SignInDTO signInDTO) {
         return authService.authorizeCustomer2FA(signInDTO.getCode(),signInDTO.getUsername());
     }

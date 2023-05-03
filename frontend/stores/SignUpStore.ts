@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 export type SignUpStore = {
   email: string | null;
@@ -19,10 +19,10 @@ export const useSignUpStore = create((set) => ({
   username: null,
   phoneNumber: null,
   selectedCode: {
-    name: "Afghanistan",
-    flag: "🇦🇫",
-    code: "AF",
-    dial_code: "+93",
+    name: 'Turkey',
+    flag: '🇹🇷',
+    code: 'TR',
+    dial_code: '+90',
   },
   setSelectedCode: (selectedCode: string | null) => set({ selectedCode }),
   setEmail: (email: string | null) => set({ email }),

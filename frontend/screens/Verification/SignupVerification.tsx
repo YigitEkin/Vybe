@@ -11,17 +11,45 @@ import StyledButton from '../../components/HomePage/StyledButton';
 import OTPTextView from 'react-native-otp-textinput';
 import { useSignUpStore } from '../../stores/SignUpStore';
 import { DismissKeyboard } from '../../components/common/DismissKeyboard';
+import moment from 'moment';
+import axios from 'axios';
 
 const SignupVerification = ({ navigation }: any) => {
   const [OTPCode, setOTPCode] = useState(0);
-  const { phoneNumber, setPhoneNumber } = useSignUpStore((state: any) => {
-    return {
-      phoneNumber: state.phoneNumber,
-      setPhoneNumber: state.setPhoneNumber,
-    };
-  });
+  const { phoneNumber, setPhoneNumber, password, email, selectedCode } =
+    useSignUpStore((state: any) => {
+      return {
+        password: state.password,
+        email: state.email,
+        phoneNumber: state.phoneNumber,
+        setPhoneNumber: state.setPhoneNumber,
+        selectedCode: state.selectedCode,
+      };
+    });
   const handleChange = (e) => {
     setOTPCode(e);
+  };
+  const handleSubmit = () => {
+    const data = {
+      username: selectedCode.dial_code.replace('+', '') + phoneNumber,
+      password: password,
+      email: email,
+      phoneNumber: selectedCode.dial_code + phoneNumber,
+      dateOfCreation: moment(Date.now()).format('DD/MM/yyyy HH:mm'),
+      dateOfBirth: moment(Date.now()).format('DD/MM/yyyy HH:mm'),
+      code: OTPCode,
+    };
+    console.log(data);
+    OTPCode.toString().length === 4
+      ? axios
+          .post('http://192.168.1.120:8080/api/auth/customer', data)
+          .then((res) => {
+            if (res.data) {
+              navigation.navigate('SignUpCompletedScreen');
+            }
+          })
+          .catch((e) => console.log(e.message))
+      : null;
   };
   const [fontsLoaded] = Font.useFonts({
     'Inter-Bold': require('../../assets/fonts/Inter/static/Inter-Bold.ttf'),
@@ -57,10 +85,7 @@ const SignupVerification = ({ navigation }: any) => {
           <StyledButton
             style={styles.StyledButton}
             buttonText='Continue'
-            onPress={() =>
-              OTPCode.toString().length == 4 &&
-              navigation.navigate('SignUpMail')
-            }
+            onPress={handleSubmit}
           />
           <TouchableHighlight onPress={() => console.log('Pressed')}>
             <Text style={styles.resendText}>{'Resend Code'}</Text>

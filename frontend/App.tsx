@@ -11,7 +11,7 @@ import SignUpPassword from './screens/signup/SignUpPassword';
 import SignUpUsername from './screens/signup/SignupUsername';
 import EnterPhoneNumber from './components/2fa/EnterPhoneNumber';
 import Splash from './screens/Splash';
-import Toast, { BaseToast } from 'react-native-toast-message';
+import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 
 import Router from './navigation/Router';
 
@@ -26,6 +26,19 @@ const toastConfig = {
       {...props}
       style={{ borderLeftColor: 'green' }}
       //contentContainerStyle={{ paddingHorizontal: 15 }}
+      text1Style={{
+        fontSize: 15,
+        fontWeight: '400',
+      }}
+      text2Style={{
+        fontSize: 15,
+        fontWeight: '400',
+      }}
+    />
+  ),
+  error: (props) => (
+    <ErrorToast
+      {...props}
       text1Style={{
         fontSize: 15,
         fontWeight: '400',

@@ -3,6 +3,7 @@ import { TextInput, StyleSheet } from 'react-native';
 import Form from '../../components/Form/Form';
 import { useSignUpStore } from '../../stores/SignUpStore';
 import { DismissKeyboard } from '../../components/common/DismissKeyboard';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 //write a function that checks if the email is valid
 const validateEmail = (email: string) => {
@@ -30,7 +31,6 @@ const SignUpMail = () => {
             keyboardAppearance='dark'
             keyboardType='email-address'
             style={styles.textInput}
-            value={email}
             onChangeText={(text) => {
               setEmail(text);
             }}
@@ -49,7 +49,16 @@ const SignUpMail = () => {
       totalSteps={4}
       navigateRoute={navigateRoute}
       validator={() => {
-        return email && email.trim().length > 0 && validateEmail(email);
+        if (email && email.trim().length > 0 && validateEmail(email)) {
+          return true;
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: 'Error',
+            text2: 'Please provide a valid email',
+          });
+          return false;
+        }
       }}
     />
   );
