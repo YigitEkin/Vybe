@@ -1,15 +1,14 @@
 package com.vybe.backend.controller;
 
+import com.vybe.backend.model.dto.SongDTO;
+import com.vybe.backend.model.dto.SongRequestDTO;
 import com.vybe.backend.service.SongService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/api/song")
+@RequestMapping("/api/songs")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 // TODO: restrict origins
 public class SongController {
@@ -17,5 +16,19 @@ public class SongController {
     @Resource
     private SongService songService;
 
-    //@PostMapping("/")
+    @GetMapping("/{songId}")
+    public com.vybe.backend.model.dto.SongDTO getSong(@PathVariable Integer songId) {
+        return songService.getSong(songId);
+    }
+
+    @GetMapping()
+    public java.util.List<SongDTO> getAllSongs() {
+        return songService.getAllSongs();
+    }
+
+    // get song requests for a song
+    @GetMapping("/{songId}/songRequests")
+    public java.util.List<SongRequestDTO> getSongRequests(@PathVariable Integer songId) {
+        return songService.getSongRequestsBySongId(songId);
+    }
 }

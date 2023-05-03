@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Playlist class that will govern the restrictions and the next song playing
@@ -38,13 +35,13 @@ public class Playlist {
     @OneToOne( mappedBy = "playlist")
     private Venue venue;
 
+    private Integer defaultPlaylistIndex;
 
     /**
      * Priority queue of requested songs, based on weight of song
      */
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "playlistId")
-    // TODO: supposed to be priority queue
     private Set<SongNode> requestedSongs;
 
     /**
@@ -56,7 +53,6 @@ public class Playlist {
             joinColumns = @JoinColumn(name = "playlist_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "id")
     )
-    // TODO: supposed to be queue
     private Set<Song> defaultPlaylist;
 
     /**
@@ -115,24 +111,36 @@ public class Playlist {
     public Song playNextSong(SongNodeRepository songNodeRepository) {
         if(requestedSongs.size() > 0) {
             currentMode = "request";
-            // find the max weight song from the requested songs
-            SongNode maxWeightSong = requestedSongs.stream().toList().get(0);
-            for(SongNode songNode : requestedSongs) {
-                if(songNode.getWeight() > maxWeightSong.getWeight()) {
-                    maxWeightSong = songNode;
-                }
-            }
-            // remove the song from the requested songs
-            //songNodeRepository.deleteById(maxWeightSong.getId());
+            // find the max song from the requested songs using the compareTo method
+            SongNode maxWeightSong = requestedSongs.stream().max(SongNode::compareTo).get();
             requestedSongs.remove(maxWeightSong);
             currentlyPlayingSong = maxWeightSong.getSong();
             return maxWeightSong.getSong();
         } else {
             currentMode = "default";
-            // get a random song from the default playlist
-            int randomIndex = (int) (Math.random() * defaultPlaylist.size());
-            currentlyPlayingSong = defaultPlaylist.stream().toList().get(randomIndex);
+            currentlyPlayingSong = defaultPlaylist.stream().toList().get(defaultPlaylistIndex);
+            defaultPlaylistIndex = (defaultPlaylistIndex + 1) % defaultPlaylist.size();
             return currentlyPlayingSong;
         }
+    }
+
+    public List<Song> getCurrentQueue(int numSongs){
+        List<Song> nextSongs = new ArrayList<>();
+        List<SongNode> sortedRequestedSongs = new ArrayList<>(requestedSongs);
+        sortedRequestedSongs.sort(Collections.reverseOrder());
+        int requestIndex = 0;
+        int defaultIndex = defaultPlaylistIndex;
+
+        for (int i = 0; i < numSongs; i++){
+            if(requestIndex < requestedSongs.size()){
+                SongNode maxWeightSong = sortedRequestedSongs.get(requestIndex);
+                nextSongs.add(maxWeightSong.getSong());
+                requestIndex++;
+            } else {
+                nextSongs.add(defaultPlaylist.stream().toList().get(defaultIndex));
+                defaultIndex = (defaultIndex + 1) % defaultPlaylist.size();
+            }
+        }
+        return nextSongs;
     }
 }

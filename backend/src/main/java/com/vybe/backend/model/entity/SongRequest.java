@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * SongRequest class that will be used as a transfer object for song requests
@@ -36,11 +37,15 @@ public class SongRequest {
      */
     @OneToOne
     @JoinColumn(name = "requested_by_username")
-    private User requestedBy;
+    private Customer requestedBy;
+
+    @OneToOne
+    @JoinColumn(name = "requested_in_venue_id")
+    private Venue requestedInVenue;
 
     /**
      * The song's request time
      */
-    private String requestDate;
+    private Date requestDate;
 
 }
