@@ -2,10 +2,7 @@ package com.vybe.backend.service;
 
 import com.vybe.backend.exception.*;
 import com.vybe.backend.model.dto.*;
-import com.vybe.backend.model.entity.Customer;
-import com.vybe.backend.model.entity.Streak;
-import com.vybe.backend.model.entity.User;
-import com.vybe.backend.model.entity.Venue;
+import com.vybe.backend.model.entity.*;
 import com.vybe.backend.repository.*;
 import org.apache.http.auth.InvalidCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +23,17 @@ public class UserService {
     AdminRepository adminRepository;
     VenueRepository venueRepository;
     StreakRepository streakRepository;
+    VisitRepository visitRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, CustomerRepository customerRepository, VenueAdminRepository venueAdminRepository, AdminRepository adminRepository, VenueRepository venueRepository, StreakRepository streakRepository) {
+    public UserService(UserRepository userRepository, CustomerRepository customerRepository, VenueAdminRepository venueAdminRepository, AdminRepository adminRepository, VenueRepository venueRepository, StreakRepository streakRepository, VisitRepository visitRepository) {
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
         this.venueAdminRepository = venueAdminRepository;
         this.adminRepository = adminRepository;
         this.venueRepository = venueRepository;
         this.streakRepository = streakRepository;
+        this.visitRepository = visitRepository;
     }
 
     // ********** CUSTOMER **********
@@ -102,6 +101,9 @@ public class UserService {
         // might comment
         updateStreak(customer_username, venue_id);
 
+        // add visit
+        Visit visit = new Visit(0, customer_username, venue_id, venue.getName(), new Date());
+        visitRepository.save(visit);
 
         venue.getCheckedInCustomers().add(customer);
         customer.setCheckedInVenue(venue);
