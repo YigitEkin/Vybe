@@ -1,6 +1,8 @@
 package com.vybe.backend.model.entity;
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 
 import javax.persistence.*;
 import java.util.*;
@@ -113,7 +115,7 @@ public class Customer extends User {
     public Boolean acquireBadge(String badgeName) {
         return null;
     }
-    
+
 
     /**
      * Increases the points of the customer by a variable amount

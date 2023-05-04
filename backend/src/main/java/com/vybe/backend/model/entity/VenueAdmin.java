@@ -1,11 +1,12 @@
 package com.vybe.backend.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import java.util.Collection;
 import java.util.Stack;
 
 /**
@@ -13,9 +14,10 @@ import java.util.Stack;
  * @author Harun Can Surav
  */
 @Entity
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class VenueAdmin extends User {
 
     //TODO: one to many or one to one, decide if we want to have multiple admins for a venue
@@ -28,4 +30,5 @@ public class VenueAdmin extends User {
         super(username, password, phoneNumber, profilePicture, currentVenue, requests);
         this.enabled = enabled;
     }
+
 }

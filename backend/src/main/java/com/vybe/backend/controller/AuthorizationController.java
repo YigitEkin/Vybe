@@ -1,10 +1,13 @@
 package com.vybe.backend.controller;
 
+import com.vybe.backend.exception.CustomerNotFoundException;
 import com.vybe.backend.model.dto.*;
 import com.vybe.backend.service.AuthService;
+import com.vybe.backend.util.JwtTokenUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -14,10 +17,15 @@ public class AuthorizationController {
 
     @Resource
     private AuthService authService;
+    @Resource
+    private JwtTokenUtil jwtTokenUtil;
 
     @GetMapping("/signIn")
-    public Boolean authorizeUser(@RequestBody SignInDTO signInDTO ) {
-            return authService.authorizeUsernameAndPassword(signInDTO.getUsername(), signInDTO.getPassword());
+    public String authorizeUser(@RequestBody SignInDTO signInDTO ) {
+            if(authService.authorizeUsernameAndPassword(signInDTO.getUsername(), signInDTO.getPassword()))
+                return jwtTokenUtil.generateJwtToken(signInDTO.getUsername());
+            else
+                throw new CustomerNotFoundException("Username or password is incorrect");
     }
 
     @GetMapping("/customer/2FA")
