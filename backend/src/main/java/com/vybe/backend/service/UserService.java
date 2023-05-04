@@ -187,8 +187,8 @@ public class UserService {
         if (!customerRepository.existsByUsername(customer_username)) {
             throw new CustomerNotFoundException("Customer with username: " + customer_username + " not found");
         }
-        Customer customer = customerRepository.findByUsername(customer_username);
-        return customer.getStreaks().stream().map(StreakDTO::new).collect(Collectors.toList());
+        List<Streak> streaks = streakRepository.findAllByCustomerUsername(customer_username);
+        return streaks.stream().map(StreakDTO::new).collect(Collectors.toList());
     }
 
     // ********** VENUE ADMIN **********
