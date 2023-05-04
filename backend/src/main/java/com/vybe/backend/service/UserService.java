@@ -83,6 +83,52 @@ public class UserService {
         return customerRepository.deleteByUsername(username) > 0;
     }
 
+    // ********** Check in/out Methods **********
+    public String checkIn(String customer_username, Integer venue_id) {
+        if (!customerRepository.existsByUsername(customer_username)) {
+            throw new CustomerNotFoundException("Customer with username: " + customer_username + " not found");
+        }
+        if (!venueRepository.existsById(venue_id)) {
+            throw new VenueNotFoundException("Venue with id: " + venue_id + " not found");
+        }
+        Venue venue = venueRepository.findById(venue_id).get();
+        Customer customer = customerRepository.findByUsername(customer_username);
+        if (customer.getCheckedInVenue() != null) {
+            throw new AlreadyCheckedInException("Customer with username: " + customer_username + " is already checked in venue with id: " + customer.getCheckedInVenue().getId());
+        }
+        if (venue.getCheckedInCustomers().contains(customer)) {
+            throw new AlreadyCheckedInException("Customer with username: " + customer_username + " is already checked in venue with id: " + venue_id);
+        }
+        // might comment
+        updateStreak(customer_username, venue_id);
+
+
+        venue.getCheckedInCustomers().add(customer);
+        customer.setCheckedInVenue(venue);
+        return "Customer with username: " + customer_username + " checked in venue with id: " + venue_id + " and name " + venue.getName();
+    }
+
+    public String checkOut(String customer_username, Integer venue_id) {
+        if (!customerRepository.existsByUsername(customer_username)) {
+            throw new CustomerNotFoundException("Customer with username: " + customer_username + " not found");
+        }
+        if (!venueRepository.existsById(venue_id)) {
+            throw new VenueNotFoundException("Venue with id: " + venue_id + " not found");
+        }
+        Venue venue = venueRepository.findById(venue_id).get();
+        Customer customer = customerRepository.findByUsername(customer_username);
+        if (customer.getCheckedInVenue() == null) {
+            throw new NotCheckedInException("Customer with username: " + customer_username + " is not checked in");
+        }
+        if (!venue.getCheckedInCustomers().contains(customer)) {
+            throw new NotCheckedInException("Customer with username: " + customer_username + " is not checked in venue with id: " + venue_id);
+        }
+        venue.getCheckedInCustomers().remove(customer);
+        customer.setCheckedInVenue(null);
+        return "Customer with username: " + customer_username + " checked out of venue with id: " + venue_id + " and name " + venue.getName();
+    }
+
+    // ********** Streak Methods **********
     // get specific streak
     public StreakDTO getStreak(String customer_username, Integer venue_id) {
         if (!customerRepository.existsByUsername(customer_username)) {
