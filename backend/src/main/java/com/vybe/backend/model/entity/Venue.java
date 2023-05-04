@@ -67,8 +67,12 @@ public class Venue {
     /**
      * List of users that are currently checked in
      */
-    @Transient
-    private List<Customer> checkedInCustomers;
+    @OneToMany(
+            mappedBy = "checkedInVenue",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
+    private Set<Customer> checkedInCustomers;
 
     /**
      * List of ratings left to the venue
