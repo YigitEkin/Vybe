@@ -39,7 +39,7 @@ const SignupVerification = ({ navigation }: any) => {
       dateOfBirth: moment(Date.now()).format('DD/MM/yyyy HH:mm'),
       code: OTPCode,
     };
-    console.log(data);
+    //console.log(data);
     OTPCode.toString().length === 4
       ? axios
           .post('http://192.168.1.120:8080/api/auth/customer', data)
