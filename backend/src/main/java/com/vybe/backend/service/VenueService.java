@@ -1,5 +1,7 @@
 package com.vybe.backend.service;
 
+import com.vybe.backend.exception.CustomerNotFoundException;
+import com.vybe.backend.model.dto.CustomerDTO;
 import com.vybe.backend.model.dto.SongDTO;
 import com.vybe.backend.model.dto.VenueCreationDTO;
 import com.vybe.backend.model.dto.VenueDTO;
@@ -91,6 +93,7 @@ public class VenueService {
         }
         Venue venue = venueRepository.findById(venueId).get();
         Song song = venue.getPlaylist().playNextSong(songNodeRepository);
+
         // find the playlist and update the currentMode
         Playlist playlist = playlistRepository.findById(venue.getPlaylist().getId()).get();
         playlist.setCurrentMode(venue.getPlaylist().getCurrentMode());
@@ -108,8 +111,6 @@ public class VenueService {
     }
 
     public Song startSong(Integer venueId) {
-        // delete null song nodes
-
         if (!venueRepository.existsById(venueId))
             throw new VenueNotFoundException("Venue with id: " + venueId + " not found");
 
@@ -117,9 +118,8 @@ public class VenueService {
         Venue venue = venueRepository.findById(venueId).get();
         String playlistId;
 
-        if (venue.getPlaylist().getCurrentMode().equals("request")) {
+        if (venue.getPlaylist().getCurrentMode().equals("request"))
             playlistId = venue.getPlaylist().getRequestPlaylistId();
-        }
         else
             playlistId = venue.getPlaylist().getDefaultPlaylistId();
 
@@ -127,7 +127,7 @@ public class VenueService {
         String token = venue.getToken();
         String name = nextSong.getName();
         int index = SoundtrackUtil.findIndexOfSongInPlaylist(playlistId, name, token);
-        System.out.println("playing song in index: " + index);
+        System.out.println("playing song: " + name + " in index: " + index);
         SoundtrackUtil.playSong(playlistId, index, Collections.singletonList(soundzoneId), token);
 
         return nextSong.toSong();
@@ -136,5 +136,15 @@ public class VenueService {
     public void deleteNull() {
         songNodeRepository.deleteAllByPlaylistIdIsNull();
     }
+
+    // ************** Check in/out methods ************** //
+    public List<CustomerDTO> getCheckedInCustomers(Integer venueId) {
+        if(!venueRepository.existsById(venueId)) {
+            throw new VenueNotFoundException("Venue with id: " + venueId + " not found");
+        }
+        Venue venue = venueRepository.findById(venueId).get();
+        return venue.getCheckedInCustomers().stream().map(CustomerDTO::new).collect(Collectors.toList());
+    }
+
 
 }

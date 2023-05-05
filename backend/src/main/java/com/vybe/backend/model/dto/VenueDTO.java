@@ -30,18 +30,20 @@ public class VenueDTO {
     private String token;
 
     public VenueDTO(Venue venue) {
-        this.id = venue.getId();
-        this.name = venue.getName();
-        this.description = venue.getDescription();
-        this.location = venue.getLocation();
-        this.analytics = venue.getAnalytics();
-        this.photos = venue.getPhotos();
-        this.playlist = venue.getPlaylist();
-        this.ratings = venue.getRatings();
-        this.comments = CommentDTO.toCommentDTOSet(venue.getComments());
-        this.qrCode = venue.getQrCode();
-        this.soundzoneId = venue.getSoundzoneId();
-        this.token = venue.getToken();
+        if (venue != null) {
+            this.id = venue.getId();
+            this.name = venue.getName();
+            this.description = venue.getDescription();
+            this.location = venue.getLocation();
+            this.analytics = venue.getAnalytics();
+            this.photos = venue.getPhotos();
+            this.playlist = venue.getPlaylist();
+            this.ratings = venue.getRatings();
+            this.comments = CommentDTO.toCommentDTOSet(venue.getComments());
+            this.qrCode = venue.getQrCode();
+            this.soundzoneId = venue.getSoundzoneId();
+            this.token = venue.getToken();
+        }
     }
 
     public Venue toVenue() {

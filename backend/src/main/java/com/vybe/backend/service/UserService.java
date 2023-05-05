@@ -2,10 +2,7 @@ package com.vybe.backend.service;
 
 import com.vybe.backend.exception.*;
 import com.vybe.backend.model.dto.*;
-import com.vybe.backend.model.entity.Customer;
-import com.vybe.backend.model.entity.Streak;
-import com.vybe.backend.model.entity.User;
-import com.vybe.backend.model.entity.Venue;
+import com.vybe.backend.model.entity.*;
 import com.vybe.backend.repository.*;
 import org.apache.http.auth.InvalidCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +23,17 @@ public class UserService {
     AdminRepository adminRepository;
     VenueRepository venueRepository;
     StreakRepository streakRepository;
+    VisitRepository visitRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, CustomerRepository customerRepository, VenueAdminRepository venueAdminRepository, AdminRepository adminRepository, VenueRepository venueRepository, StreakRepository streakRepository) {
+    public UserService(UserRepository userRepository, CustomerRepository customerRepository, VenueAdminRepository venueAdminRepository, AdminRepository adminRepository, VenueRepository venueRepository, StreakRepository streakRepository, VisitRepository visitRepository) {
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
         this.venueAdminRepository = venueAdminRepository;
         this.adminRepository = adminRepository;
         this.venueRepository = venueRepository;
         this.streakRepository = streakRepository;
+        this.visitRepository = visitRepository;
     }
 
     // ********** CUSTOMER **********
@@ -83,6 +82,55 @@ public class UserService {
         return customerRepository.deleteByUsername(username) > 0;
     }
 
+    // ********** Check in/out Methods **********
+    public String checkIn(String customer_username, Integer venue_id) {
+        if (!customerRepository.existsByUsername(customer_username)) {
+            throw new CustomerNotFoundException("Customer with username: " + customer_username + " not found");
+        }
+        if (!venueRepository.existsById(venue_id)) {
+            throw new VenueNotFoundException("Venue with id: " + venue_id + " not found");
+        }
+        Venue venue = venueRepository.findById(venue_id).get();
+        Customer customer = customerRepository.findByUsername(customer_username);
+        if (customer.getCheckedInVenue() != null) {
+            throw new AlreadyCheckedInException("Customer with username: " + customer_username + " is already checked in venue with id: " + customer.getCheckedInVenue().getId());
+        }
+        if (venue.getCheckedInCustomers().contains(customer)) {
+            throw new AlreadyCheckedInException("Customer with username: " + customer_username + " is already checked in venue with id: " + venue_id);
+        }
+        // might comment
+        updateStreak(customer_username, venue_id);
+
+        // add visit
+        Visit visit = new Visit(0, customer_username, venue_id, venue.getName(), new Date());
+        visitRepository.save(visit);
+
+        venue.getCheckedInCustomers().add(customer);
+        customer.setCheckedInVenue(venue);
+        return "Customer with username: " + customer_username + " checked in venue with id: " + venue_id + " and name " + venue.getName();
+    }
+
+    public String checkOut(String customer_username, Integer venue_id) {
+        if (!customerRepository.existsByUsername(customer_username)) {
+            throw new CustomerNotFoundException("Customer with username: " + customer_username + " not found");
+        }
+        if (!venueRepository.existsById(venue_id)) {
+            throw new VenueNotFoundException("Venue with id: " + venue_id + " not found");
+        }
+        Venue venue = venueRepository.findById(venue_id).get();
+        Customer customer = customerRepository.findByUsername(customer_username);
+        if (customer.getCheckedInVenue() == null) {
+            throw new NotCheckedInException("Customer with username: " + customer_username + " is not checked in");
+        }
+        if (!venue.getCheckedInCustomers().contains(customer)) {
+            throw new NotCheckedInException("Customer with username: " + customer_username + " is not checked in venue with id: " + venue_id);
+        }
+        venue.getCheckedInCustomers().remove(customer);
+        customer.setCheckedInVenue(null);
+        return "Customer with username: " + customer_username + " checked out of venue with id: " + venue_id + " and name " + venue.getName();
+    }
+
+    // ********** Streak Methods **********
     // get specific streak
     public StreakDTO getStreak(String customer_username, Integer venue_id) {
         if (!customerRepository.existsByUsername(customer_username)) {
@@ -141,8 +189,8 @@ public class UserService {
         if (!customerRepository.existsByUsername(customer_username)) {
             throw new CustomerNotFoundException("Customer with username: " + customer_username + " not found");
         }
-        Customer customer = customerRepository.findByUsername(customer_username);
-        return customer.getStreaks().stream().map(StreakDTO::new).collect(Collectors.toList());
+        List<Streak> streaks = streakRepository.findAllByCustomerUsername(customer_username);
+        return streaks.stream().map(StreakDTO::new).collect(Collectors.toList());
     }
 
     // ********** VENUE ADMIN **********

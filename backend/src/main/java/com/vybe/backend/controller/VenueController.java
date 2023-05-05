@@ -1,11 +1,9 @@
 package com.vybe.backend.controller;
 
 import com.vybe.backend.model.dto.*;
-import com.vybe.backend.service.CommentService;
-import com.vybe.backend.service.PlaylistService;
-import com.vybe.backend.service.SongService;
-import com.vybe.backend.service.VenueService;
 import org.springframework.security.access.prepost.PreAuthorize;
+import com.vybe.backend.model.entity.Visit;
+import com.vybe.backend.service.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -30,6 +28,12 @@ public class VenueController {
 
     @Resource
     private SongService songService;
+
+    @Resource
+    private UserService userService;
+
+    @Resource
+    private VisitService visitService;
 
 
     // ************* Venue Endpoints ************* //
@@ -68,6 +72,9 @@ public class VenueController {
         return commentService.getAllCommentsForVenue(venueId);
     }
 
+
+    // ************* Song Endpoints ************* //
+
     @GetMapping("/{venueId}/nextSong")
     public SongDTO playNextSong(@PathVariable Integer venueId) {
 
@@ -78,6 +85,65 @@ public class VenueController {
     public List<SongDTO> syncDefaultPlaylist(@PathVariable Integer venueId) {
         return playlistService.addAllSongsToDefaultPlaylist(venueId);
     }
+
+
+    @GetMapping("/{venueId}/defaultPlaylist/songs")
+    public List<SongDTO> getDefaultPlaylistSongs(@PathVariable Integer venueId) {
+        return playlistService.getSongsOfDefaultPlaylist(venueId);
+    }
+
+    @GetMapping("/{venueId}/requestsQueue/songs")
+    public List<SongNodeDTO> getRequestsQueueSongs(@PathVariable Integer venueId) {
+        return songService.getAllSongNodesByVenueId(venueId);
+    }
+
+    @GetMapping("/{venueId}/nextSongs")
+    public List<SongDTO> getNextSongs(@PathVariable Integer venueId) {
+        return songService.getNextXSongs(venueId, 10);
+    }
+
+    // ************* Song Request Endpoints ************* //
+    @GetMapping("/{venueId}/songRequests")
+    public List<SongRequestDTO> getSongRequests(@PathVariable Integer venueId) {
+        return songService.getSongRequestsByVenueId(venueId);
+    }
+
+    // ************* Check in/out Endpoints ************* //
+    @PostMapping("/{venueId}/checkIn/{username}")
+    public String checkIn(@PathVariable Integer venueId, @PathVariable String username) {
+        return userService.checkIn(username, venueId);
+    }
+
+    @PostMapping("/{venueId}/checkOut/{username}")
+    public String checkOut(@PathVariable Integer venueId, @PathVariable String username) {
+        return userService.checkOut(username, venueId);
+    }
+
+    // get checked in customers
+    @GetMapping("/{venueId}/checkedIn")
+    public List<CustomerDTO> getCheckedInCustomers(@PathVariable Integer venueId) {
+        return venueService.getCheckedInCustomers(venueId);
+    }
+
+    // ************* Visit Endpoints ************* //
+    @GetMapping("/{venueId}/visits")
+    public List<Visit> getVisits(@PathVariable Integer venueId) {
+        return visitService.getAllVisitsByVenueId(venueId);
+    }
+
+    @GetMapping("/{venueId}/visits/{username}")
+    public List<Visit> getVisitsByCustomerUsername(@PathVariable Integer venueId, @PathVariable String username) {
+        return visitService.getAllVisitsByCustomerUsername(username);
+    }
+
+    // get todays visits
+    @GetMapping("/{venueId}/visits/today")
+    public List<Visit> getTodaysVisits(@PathVariable Integer venueId) {
+        return visitService.getVisitsByVenueIdAndToday(venueId);
+    }
+
+
+
 
 
 }

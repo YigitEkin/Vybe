@@ -82,6 +82,9 @@ public class Customer extends User {
     )
     private Set<Comment> comments;
 
+    @ManyToOne
+    private Venue checkedInVenue;
+
     /**
      * Checking the customer in to a venue (entering a venue)
      * @param venueId id of the venue that the customer is being checked in to

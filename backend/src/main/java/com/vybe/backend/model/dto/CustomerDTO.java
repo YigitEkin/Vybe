@@ -16,11 +16,14 @@ public class CustomerDTO {
     private String phoneNumber;
     private String dateOfBirth;
     private String dateOfCreation;
+    private VenueDTO checkedInVenue;
 
     public CustomerDTO(Customer customer) {
         this.username = customer.getUsername();
         this.phoneNumber = customer.getPhoneNumber();
         this.dateOfBirth = customer.getDateOfBirth();
         this.dateOfCreation = customer.getDateOfCreation();
+        if (customer.getCheckedInVenue() != null)
+            this.checkedInVenue = new VenueDTO(customer.getCheckedInVenue());
     }
 }
