@@ -11,6 +11,7 @@ const DismissKeyboard = ({ children }: any) => (
 );
 
 const EnterPhoneNumberSignUp = ({ navigation }: any) => {
+  const baseUrl = process.env.BASE_URL;
   const { phoneNumber, setPhoneNumber, selectedCode, setSelectedCode } =
     useSignUpStore((state: any) => {
       return {
@@ -31,9 +32,9 @@ const EnterPhoneNumberSignUp = ({ navigation }: any) => {
       return;
     }
 
-    console.log(phoneNo, phoneNumber);
+    console.log(baseUrl);
     axios
-      .get(`http://192.168.1.120:8080/api/auth/2FA?phoneNumber=${phoneNo}`)
+      .get(`http://192.168.1.127:8080/api/auth/2FA?phoneNumber=${phoneNo}`)
       .then((res) => {
         if (res.data) {
           navigation.navigate('SignupVerification');

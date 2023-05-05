@@ -29,8 +29,26 @@ import SwitchSelector from 'react-native-switch-selector-fix';
 import StyledButton from '../../components/HomePage/StyledButton';
 import CoinIcon from '../../assets/coin.png';
 import InputSpinner from 'react-native-input-spinner';
+import { useLoginStore } from '../../stores/LoginStore';
+import axios from 'axios';
 
 const HomeCheckedIn = () => {
+  const { phoneNumber, selectedCode } = useLoginStore((state: any) => {
+    return {
+      phoneNumber: state.phoneNumber,
+      selectedCode: state.selectedCode,
+    };
+  });
+  const dbUserName = selectedCode.dial_code.replace('+', '') + phoneNumber;
+  const [checkedInVenueId, setCheckedInVenueId] = useState();
+  useEffect(() => {
+    axios
+      .get(`http://192.168.1.127:8080/api/customers/${dbUserName}`)
+      .then((res) => {
+        console.log(res.data.checkedInVenue.id);
+        setCheckedInVenueId(res.data.checkedInVenue.id);
+      });
+  }, []);
   const [showBox, setShowBox] = useState(true);
   const showConfirmDialog = () => {
     return Alert.alert('Are your sure?', 'Are you sure you want to checkout?', [
@@ -43,8 +61,17 @@ const HomeCheckedIn = () => {
       {
         text: 'Yes',
         onPress: () => {
-          setShowBox(false);
-          setIsCheckIn(false);
+          axios
+            .post(
+              `http://192.168.1.127:8080/api/venues/${checkedInVenueId}/checkOut/${dbUserName}`
+            )
+            .then((res) => {
+              if (res.data) {
+                setShowBox(false);
+                setIsCheckIn(false);
+              }
+            })
+            .catch((e) => console.log(e));
         },
       },
     ]);

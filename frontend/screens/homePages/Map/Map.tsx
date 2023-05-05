@@ -36,6 +36,7 @@ import StarRating from '../components/StarRating';
 import { useNavigation, useTheme } from '@react-navigation/native';
 import { Colors } from '../../../constants/Colors';
 import Splash from '../../Splash';
+import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
 const CARD_HEIGHT = 220;
@@ -363,6 +364,39 @@ const MapPage = () => {
   );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+  const [markersRes, setMarkersRes] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://192.168.1.127:8080/api/venues')
+      .then((res) => {
+        //console.log(res.data);
+        let data = res.data;
+        let markersRes = data.map((venue) => {
+          return {
+            coordinate: {
+              latitude: parseFloat(venue.location.split(',')[0]),
+              longitude: parseFloat(venue.location.split(',')[1]),
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
+            },
+            title: venue.name,
+            description: venue.description,
+            image: Images[0].image,
+            rating: 4,
+            reviews: 99,
+            id: venue.id,
+          };
+        });
+        console.log(markersRes);
+        setMarkersRes(markersRes);
+        let apiMapState = {
+          markersRes,
+        };
+        setState(apiMapState);
+      })
+      .catch((e) => e.message);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -380,7 +414,7 @@ const MapPage = () => {
   }, []);
 
   const initialMapState = {
-    markers,
+    markersRes,
   };
 
   const [state, setState] = React.useState(initialMapState);
@@ -394,15 +428,15 @@ const MapPage = () => {
   useEffect(() => {
     mapAnimation.addListener(({ value }) => {
       let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
-      if (index >= state.markers.length) {
-        index = state.markers.length - 1;
+      if (index >= state.markersRes.length) {
+        index = state.markersRes.length - 1;
       }
       if (index <= 0) {
         index = 0;
       }
       if (mapIndex !== index) {
         setMapIndex(index);
-        const { coordinate } = state.markers[index];
+        const { coordinate } = state.markersRes[index];
         _map.current &&
           _map.current.animateToRegion(
             {
@@ -415,7 +449,7 @@ const MapPage = () => {
       /*const regionTimeout = setTimeout(() => {
         if (mapIndex !== index) {
           setMapIndex(index);
-          const { coordinate } = state.markers[index];
+          const { coordinate } = state.markersRes[index];
           _map.current &&
             _map.current.animateToRegion(
               {
@@ -429,7 +463,7 @@ const MapPage = () => {
     });
   });
 
-  const interpolations = state.markers.map((marker: any, index: number) => {
+  const interpolations = state.markersRes.map((marker: any, index: number) => {
     const inputRange = [
       (index - 1) * CARD_WIDTH,
       index * CARD_WIDTH,
@@ -478,7 +512,7 @@ const MapPage = () => {
         >
           {
             // @ts-ignore
-            state.markers.map((marker: any, index: number) => {
+            state.markersRes.map((marker: any, index: number) => {
               const scaleStyle = {
                 transform: [
                   {
@@ -556,7 +590,7 @@ const MapPage = () => {
             { useNativeDriver: true }
           )}
         >
-          {state.markers.map((marker: any, index: number) => (
+          {state.markersRes.map((marker: any, index: number) => (
             <Pressable
               style={styles.card}
               key={index}

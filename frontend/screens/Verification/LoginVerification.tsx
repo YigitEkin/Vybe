@@ -38,10 +38,10 @@ const LoginVerification = ({ navigation }: any) => {
   const handleSubmit = () => {
     String(OTPCode).length === 4 &&
       axios
-        .post('http://192.168.1.120:8080/api/auth/customer/2FA', data)
+        .post('http://192.168.1.127:8080/api/auth/customer/2FA', data)
         .then((res) => {
           if (res.data) {
-            setPhoneNumber(null);
+            //setPhoneNumber(null);
             setIsLogin(true);
           } else {
             Toast.show({

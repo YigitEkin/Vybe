@@ -6,7 +6,7 @@ import {
   Pressable,
   Image,
   Alert,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import GroupItem from '../../components/HomePage/GroupItem';
@@ -21,6 +21,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import * as Font from 'expo-font';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useCheckedInStore } from '../../stores/CheckedInStore';
+import { useLoginStore } from '../../stores/LoginStore';
+import axios from 'axios';
 
 const HomeNotCheckedIn = () => {
   const [isCamOpen, setIsCamOpen] = useState(false);
@@ -30,6 +32,12 @@ const HomeNotCheckedIn = () => {
   const [searchPhrase, setSearchPhrase] = useState('');
   const [clicked, setClicked] = useState(false);
   const navigation = useNavigation();
+  const { phoneNumber, selectedCode } = useLoginStore((state: any) => {
+    return {
+      phoneNumber: state.phoneNumber,
+      selectedCode: state.selectedCode,
+    };
+  });
   const [userList, setUserList] = useState([
     {
       id: 1,
@@ -63,8 +71,30 @@ const HomeNotCheckedIn = () => {
     },
   ]);
   const { setIsCheckIn } = useCheckedInStore();
+  const [isRequested, setIsRequested] = useState(false);
+  const dbUserName = selectedCode.dial_code.replace('+', '') + phoneNumber;
+  const handleScan = (res) => {
+    console.log(dbUserName);
+    if (!isRequested) {
+      setIsRequested(true);
+      axios
+        .post(
+          `http://192.168.1.127:8080/api/venues/${res}/checkIn/${dbUserName}`
+        )
+        .then((result) => {
+          if (result.data) {
+            setIsCheckIn(true);
+            setIsRequested(false);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+          setIsRequested(false);
+        });
+    }
+  };
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
   const __startCamera = async () => {
     const { status } = await Camera.requestCameraPermissionsAsync();
 
@@ -113,7 +143,7 @@ const HomeNotCheckedIn = () => {
       'ProfileDetails',
       { id: id }
     );
-  }
+  };
 
   return !startCamera ? (
     <View style={styles.container}>
@@ -142,7 +172,7 @@ const HomeNotCheckedIn = () => {
                   }
                   android_ripple={{ color: '#000' }}
                   onPress={() => {
-                    setClicked(true)
+                    setClicked(true);
                   }}
                 >
                   <Image source={SearchIcon} />
@@ -162,9 +192,7 @@ const HomeNotCheckedIn = () => {
         {clicked ? (
           <ScrollView style={{ height: '100%', marginBottom: 100 }}>
             {userList.map((user) => (
-              <Pressable
-                key={user.id}
-                onPress={() => handleUserPress(user.id)}>
+              <Pressable key={user.id} onPress={() => handleUserPress(user.id)}>
                 <ListItem
                   key={user.id}
                   topText={user.name}
@@ -189,12 +217,12 @@ const HomeNotCheckedIn = () => {
         )}
       </View>
 
-      {(!clicked) &&
+      {!clicked && (
         <FAButton
           style={{ zIndex: 100, bottom: 100, position: 'absolute' }}
           onPress={__startCamera}
         />
-      }
+      )}
     </View>
   ) : (
     <View
@@ -211,7 +239,9 @@ const HomeNotCheckedIn = () => {
         }}
         onBarCodeScanned={(result: any) => {
           //TODO: fetch data if is valid
-          setIsCheckIn(true);
+          handleScan(result.data);
+
+          //setIsCheckIn(true);
         }}
       >
         <Pressable

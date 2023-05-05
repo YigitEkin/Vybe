@@ -12,9 +12,11 @@ import OTPTextView from 'react-native-otp-textinput';
 import { useSignUpStore } from '../../stores/SignUpStore';
 import { DismissKeyboard } from '../../components/common/DismissKeyboard';
 import moment from 'moment';
+
 import axios from 'axios';
 
 const SignupVerification = ({ navigation }: any) => {
+  const baseUrl = process.env.BASE_URL;
   const [OTPCode, setOTPCode] = useState(0);
   const { phoneNumber, setPhoneNumber, password, email, selectedCode } =
     useSignUpStore((state: any) => {
@@ -42,7 +44,7 @@ const SignupVerification = ({ navigation }: any) => {
     //console.log(data);
     OTPCode.toString().length === 4
       ? axios
-          .post('http://192.168.1.120:8080/api/auth/customer', data)
+          .post(`http://192.168.1.127:8080/api/auth/customer`, data)
           .then((res) => {
             if (res.data) {
               navigation.navigate('SignUpCompletedScreen');
