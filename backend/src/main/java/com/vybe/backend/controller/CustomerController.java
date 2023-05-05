@@ -5,6 +5,7 @@ import com.vybe.backend.service.CommentService;
 import com.vybe.backend.service.FriendshipService;
 import com.vybe.backend.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -14,6 +15,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/customers")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+
 // TODO: restrict origins
 public class CustomerController {
     @Resource private UserService userService;

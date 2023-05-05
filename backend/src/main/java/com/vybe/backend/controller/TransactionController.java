@@ -5,6 +5,7 @@ import com.vybe.backend.model.dto.TransactionDTO;
 import com.vybe.backend.model.dto.WalletDTO;
 import com.vybe.backend.service.TransactionService;
 import com.vybe.backend.util.IyzicoUtil;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -14,6 +15,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/transactions")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+
 public class TransactionController {
 
     @Resource

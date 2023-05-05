@@ -3,13 +3,21 @@ package com.vybe.backend.controller;
 import com.vybe.backend.model.dto.SongDTO;
 import com.vybe.backend.model.dto.SongRequestDTO;
 import com.vybe.backend.service.SongService;
-import org.springframework.web.bind.annotation.*;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 
 import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/api/songs")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+
 // TODO: restrict origins
 public class SongController {
 
