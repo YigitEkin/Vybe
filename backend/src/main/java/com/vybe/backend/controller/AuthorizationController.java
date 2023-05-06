@@ -20,7 +20,7 @@ public class AuthorizationController {
     @Resource
     private JwtTokenUtil jwtTokenUtil;
 
-    @GetMapping("/signIn")
+    @PostMapping("/signIn")
     public String authorizeUser(@RequestBody SignInDTO signInDTO ) {
             if(authService.authorizeUsernameAndPassword(signInDTO.getUsername(), signInDTO.getPassword()))
                 return jwtTokenUtil.generateJwtToken(signInDTO.getUsername());
