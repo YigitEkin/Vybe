@@ -138,7 +138,7 @@ public class BackendApplication {
 			}
 
 			// test adding a venue
-			VenueCreationDTO venueCreationDTO = new VenueCreationDTO("testname1", "testdescription1", "testlocation1", "testtoken", "testsoundzoneID");
+			VenueCreationDTO venueCreationDTO = new VenueCreationDTO("testname1", "testdescription1", "40.1, 20.23", "testtoken", "testsoundzoneID");
 			VenueDTO venueDTO = venueService.addVenue(venueCreationDTO);
 			assert venueDTO.getName().equals("testname1");
 			assert venueDTO.getDescription().equals("testdescription1");
@@ -213,8 +213,8 @@ public class BackendApplication {
 			}
 
 			// test adding a playlist
-			VenueCreationDTO venueCreationDTO2 = new VenueCreationDTO("testname2", "testdescription2", "testlocation2", "U291bmRab25lLCwxZXB1NDM3OGJuay9Mb2NhdGlvbiwsMWZlbHNmMGFkcTgvQWNjb3VudCwsMW96ZDN6dGk0ZzAv","WkxnTVI0RW9YRWdPRWVsOEZ5TzZJZFBtSzFzOWpUQ0c6aVlxcVdIVXY3NGFLaXREQVFFQ2V3WmJHUHVxeVRNMlpybUo4Ulp3R3BQS2N3NEZpWGczT2FnUTFFVGtudGlPZQ==");
-			venueDTO2 = venueService.addVenue(venueCreationDTO2);
+			VenueCreationDTO venueCreationDTO2 = new VenueCreationDTO("testname2", "testdescription2", "40.1, 20.23", "U291bmRab25lLCwxZXB1NDM3OGJuay9Mb2NhdGlvbiwsMWZlbHNmMGFkcTgvQWNjb3VudCwsMW96ZDN6dGk0ZzAv","WkxnTVI0RW9YRWdPRWVsOEZ5TzZJZFBtSzFzOWpUQ0c6aVlxcVdIVXY3NGFLaXREQVFFQ2V3WmJHUHVxeVRNMlpybUo4Ulp3R3BQS2N3NEZpWGczT2FnUTFFVGtudGlPZQ==");
+			venueDTO2 = venueService. addVenue(venueCreationDTO2);
 			PlaylistCreationDTO playlistCreationDTO = new PlaylistCreationDTO(venueDTO2.getId(), "Q29sbGVjdGlvbiwsMXBsNmFpYzVjMDAvU291bmRab25lLCwxZXB1NDM3OGJuay9Mb2NhdGlvbiwsMWZlbHNmMGFkcTgvQWNjb3VudCwsMW96ZDN6dGk0ZzAv", "Q29sbGVjdGlvbiwsMXBsNmFpYzVjMDAvU291bmRab25lLCwxZXB1NDM3OGJuay9Mb2NhdGlvbiwsMWZlbHNmMGFkcTgvQWNjb3VudCwsMW96ZDN6dGk0ZzAv");
 
 			VenueDTO venueDTO4 = venueService.getVenue(venueDTO2.getId());

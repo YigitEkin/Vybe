@@ -19,10 +19,16 @@ soundtrackyourbrand:
     url: https://api.soundtrackyourbrand.com/v2
 
 iyzico:
-  apiKey:
-  privateKey:
-  baseUrl:
+  apiKey: sandbox-YJJvqvClgk65pKRLE8bcQweizGI1VEM4
+  privateKey: sandbox-fcxJPWZJXajEBJKkkt3O4v6clCINRlKq
+  baseUrl: https://sandbox-api.iyzipay.com
 
+security:
+  jwt:
+    secret: "iEmDqrnUeQzzF4y8gfzBKrba2p31VCQEEw23zqSGkS7P0H77Gc2G0lOJr7B9m9be0MCCr15LkllKkbY05GY8w2DFJlR6AzfYFLAoT74A5UqLdj1zp9950WE0"
+    renew-secret: "U5Nfg9rspI8kH5ZlcI6l2Mz358TVK3fB03qPkRr1Q14nbAlo53T0t0ypgpDpHKoNv6G2cjKLq5OaQxY84kLTkLak5C07F94wWM3ulpfHw68H67u9Nembu942"
+    expirationMinutes: 4320 # 4320 minutes = 3 days
+  allowedOrigin: "*"
 server:
   error:
     include-message: always

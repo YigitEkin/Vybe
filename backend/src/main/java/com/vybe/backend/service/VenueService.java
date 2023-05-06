@@ -1,6 +1,7 @@
 package com.vybe.backend.service;
 
 import com.vybe.backend.exception.CustomerNotFoundException;
+import com.vybe.backend.exception.InputException;
 import com.vybe.backend.model.dto.CustomerDTO;
 import com.vybe.backend.model.dto.SongDTO;
 import com.vybe.backend.model.dto.VenueCreationDTO;
@@ -38,6 +39,10 @@ public class VenueService {
     // add venue
     public VenueDTO addVenue(VenueCreationDTO venueCreationDTO) {
         Venue venue = venueCreationDTO.toVenue();
+        // if location is not in format float, float throw exception using regex
+        if(!venue.getLocation().matches("^-?\\d+(\\.\\d+)?, -?\\d+(\\.\\d+)?$")) {
+            throw new InputException("Location must be in format float, float but found: " + venue.getLocation());
+        }
         venue.setComments(Collections.emptySet());
         return new VenueDTO(venueRepository.save(venue));
     }
@@ -144,6 +149,16 @@ public class VenueService {
         }
         Venue venue = venueRepository.findById(venueId).get();
         return venue.getCheckedInCustomers().stream().map(CustomerDTO::new).collect(Collectors.toList());
+    }
+
+    // helper method
+    private boolean isFloat(String s) {
+        try {
+            Float.parseFloat(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
 

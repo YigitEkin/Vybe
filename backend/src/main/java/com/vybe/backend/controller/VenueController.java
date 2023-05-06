@@ -1,6 +1,7 @@
 package com.vybe.backend.controller;
 
 import com.vybe.backend.model.dto.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import com.vybe.backend.model.entity.Visit;
 import com.vybe.backend.service.*;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/venues")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+
 // TODO: restrict origins
 public class VenueController {
 
