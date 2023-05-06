@@ -33,6 +33,7 @@ import { useLoginStore } from '../../stores/LoginStore';
 import axios from 'axios';
 
 const HomeCheckedIn = () => {
+  const [checkedInVenue, setCheckedInVenue] = useState({});
   const { phoneNumber, selectedCode } = useLoginStore((state: any) => {
     return {
       phoneNumber: state.phoneNumber,
@@ -43,9 +44,10 @@ const HomeCheckedIn = () => {
   const [checkedInVenueId, setCheckedInVenueId] = useState();
   useEffect(() => {
     axios
-      .get(`http://192.168.1.127:8080/api/customers/${dbUserName}`)
+      .get(`http://172.20.10.4:8080/api/customers/${dbUserName}`)
       .then((res) => {
         console.log(res.data.checkedInVenue.id);
+        setCheckedInVenue(res.data.checkedInVenue);
         setCheckedInVenueId(res.data.checkedInVenue.id);
       });
   }, []);
@@ -63,7 +65,7 @@ const HomeCheckedIn = () => {
         onPress: () => {
           axios
             .post(
-              `http://192.168.1.127:8080/api/venues/${checkedInVenueId}/checkOut/${dbUserName}`
+              `http://172.20.10.4:8080/api/venues/${checkedInVenueId}/checkOut/${dbUserName}`
             )
             .then((res) => {
               if (res.data) {
@@ -287,7 +289,7 @@ const HomeCheckedIn = () => {
                     <EvilIcon name='location' color={'#7c757e'} size={30} />
                   </View>
                   <Text style={styles.locationTextStyle}>
-                    {'Location will be displayed here'}
+                    {checkedInVenue.name}
                   </Text>
                 </View>
               </View>

@@ -32,9 +32,9 @@ const EnterPhoneNumberSignUp = ({ navigation }: any) => {
       return;
     }
 
-    console.log(baseUrl);
+    console.log(phoneNo);
     axios
-      .get(`http://192.168.1.127:8080/api/auth/2FA?phoneNumber=${phoneNo}`)
+      .get(`http://172.20.10.4:8080/api/auth/2FA?phoneNumber=${phoneNo}`)
       .then((res) => {
         if (res.data) {
           navigation.navigate('SignupVerification');

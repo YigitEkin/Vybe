@@ -52,7 +52,7 @@ const LoginPassword = () => {
     <Form
       cb={() =>
         axios
-          .post('http://192.168.1.127:8080/api/auth/signIn', {
+          .post('http://172.20.10.4:8080/api/auth/signIn', {
             username: selectedCode.dial_code.replace('+', '') + phoneNumber,
             password: password,
             code: '',

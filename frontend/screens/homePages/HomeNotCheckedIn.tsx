@@ -78,9 +78,7 @@ const HomeNotCheckedIn = () => {
     if (!isRequested) {
       setIsRequested(true);
       axios
-        .post(
-          `http://192.168.1.127:8080/api/venues/${res}/checkIn/${dbUserName}`
-        )
+        .post(`http://172.20.10.4:8080/api/venues/${res}/checkIn/${dbUserName}`)
         .then((result) => {
           if (result.data) {
             setIsCheckIn(true);

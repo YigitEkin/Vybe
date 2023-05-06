@@ -368,7 +368,7 @@ const MapPage = () => {
 
   useEffect(() => {
     axios
-      .get('http://192.168.1.127:8080/api/venues')
+      .get('http://172.20.10.4:8080/api/venues')
       .then((res) => {
         //console.log(res.data);
         let data = res.data;

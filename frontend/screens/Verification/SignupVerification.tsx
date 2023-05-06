@@ -44,7 +44,7 @@ const SignupVerification = ({ navigation }: any) => {
     //console.log(data);
     OTPCode.toString().length === 4
       ? axios
-          .post(`http://192.168.1.127:8080/api/auth/customer`, data)
+          .post(`http://172.20.10.4:8080/api/auth/customer`, data)
           .then((res) => {
             if (res.data) {
               navigation.navigate('SignUpCompletedScreen');

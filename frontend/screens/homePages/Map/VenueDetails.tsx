@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -16,6 +16,7 @@ import moment from 'moment';
 import { FontAwesome } from '@expo/vector-icons';
 import StyledButton from '../../../components/HomePage/StyledButton';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import axios from 'axios';
 
 interface Comment extends NotificationCardProps {}
 function NotificationCard(data: NotificationCardProps) {
@@ -93,15 +94,27 @@ const data: VenueDetails = {
 };
 
 const VenueDetails = () => {
+  const takeAvg = (arr) => {
+    const sum = arr.reduce((acc, curr) => acc + curr, 0);
+    const avg = sum / arr.length;
+    return avg;
+  };
+
   const [fontsLoaded] = Font.useFonts({
     'Inter-Bold': require('../../../assets/fonts/Inter/static/Inter-Bold.ttf'),
     'Inter-Regular': require('../../../assets/fonts/Inter/static/Inter-Regular.ttf'),
   });
-
+  const [venue, setVenue] = useState({});
   const navigation = useNavigation();
   const route = useRoute();
   // @ts-ignore
   const { id } = route.params;
+  console.log(id);
+  useEffect(() => {
+    axios.get(`http://172.20.10.4:8080/api/venues/${id}`).then((res) => {
+      setVenue(res.data);
+    });
+  }, []);
 
   return fontsLoaded ? (
     <View style={styles.Topcontainer}>
@@ -122,11 +135,11 @@ const VenueDetails = () => {
         </View>
         <View style={styles.ph20}>
           <View style={styles.venueInfo}>
-            <Text style={styles.venueName}>{data.title}</Text>
+            <Text style={styles.venueName}>{venue?.name}</Text>
             <View style={{ flexDirection: 'row' }}>
               <Entypo name='location-pin' size={16} color={Colors.gray.muted} />
               <Text style={[styles.smallText, { marginLeft: 5 }]}>
-                {data.location}
+                {venue.location}
               </Text>
             </View>
             <Text style={styles.smallText}>
@@ -146,12 +159,16 @@ const VenueDetails = () => {
                 size={16}
                 color={'#f1c40f'}
               />
-              <Text style={styles.boldText}>{data.rating}</Text>
+              <Text style={styles.boldText}>
+                {/*{venue.ratings?.length !== 0
+                  ? takeAvg(venue.ratings)
+                  : 'Loading'}*/}
+              </Text>
             </View>
           </View>
         </View>
         <ScrollView style={styles.mh_240}>
-          {data.comments.map((comment) => (
+          {venue.comments?.map((comment) => (
             <NotificationCard
               id={comment.id}
               key={comment.id}
