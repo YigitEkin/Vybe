@@ -3,6 +3,7 @@ import EnterPhoneNumber from '../../components/phoneCodePicker/PhoneCodePicker';
 import { useSignUpStore } from '../../stores/SignUpStore';
 import { Keyboard, TouchableWithoutFeedback } from 'react-native';
 import axios from 'axios';
+import axiosConfig from '../../constants/axiosConfig';
 
 const DismissKeyboard = ({ children }: any) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -11,6 +12,7 @@ const DismissKeyboard = ({ children }: any) => (
 );
 
 const EnterPhoneNumberSignUp = ({ navigation }: any) => {
+  const instanceToken = axiosConfig();
   const baseUrl = process.env.BASE_URL;
   const { phoneNumber, setPhoneNumber, selectedCode, setSelectedCode } =
     useSignUpStore((state: any) => {
@@ -33,8 +35,8 @@ const EnterPhoneNumberSignUp = ({ navigation }: any) => {
     }
 
     console.log(phoneNo);
-    axios
-      .get(`http://172.20.10.4:8080/api/auth/2FA?phoneNumber=${phoneNo}`)
+    instanceToken
+      .get(`/api/auth/2FA?phoneNumber=${phoneNo}`)
       .then((res) => {
         if (res.data) {
           navigation.navigate('SignupVerification');

@@ -37,6 +37,7 @@ import { useNavigation, useTheme } from '@react-navigation/native';
 import { Colors } from '../../../constants/Colors';
 import Splash from '../../Splash';
 import axios from 'axios';
+import axiosConfig from '../../../constants/axiosConfig';
 
 const { width, height } = Dimensions.get('window');
 const CARD_HEIGHT = 220;
@@ -357,6 +358,7 @@ const DismissKeyboard = ({ children }) => (
   </TouchableWithoutFeedback>
 );
 const MapPage = () => {
+  const instanceToken = axiosConfig();
   const theme = useTheme();
 
   const [location, setLocation] = useState<Location.LocationObject | null>(
@@ -367,8 +369,8 @@ const MapPage = () => {
   const [markersRes, setMarkersRes] = useState([]);
 
   useEffect(() => {
-    axios
-      .get('http://172.20.10.4:8080/api/venues')
+    instanceToken
+      .get('/api/venues')
       .then((res) => {
         //console.log(res.data);
         let data = res.data;
@@ -499,6 +501,7 @@ const MapPage = () => {
     <DismissKeyboard>
       <View style={styles.container}>
         <MapView
+          showsUserLocation={true}
           ref={_map}
           initialRegion={{
             latitude: location!.coords!.latitude,

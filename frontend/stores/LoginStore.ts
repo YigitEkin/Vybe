@@ -3,6 +3,7 @@ import { create } from 'zustand';
 export type LoginStore = {
   isLogin: boolean;
   password: string | null;
+  token: string | null;
   setIsLogin: (isLogin: boolean) => void;
   phoneNumber: string | null;
   selectedCode: any | null;
@@ -14,6 +15,8 @@ export type LoginStore = {
 export const useLoginStore = create<LoginStore>((set) => ({
   phoneNumber: null,
   password: null,
+  token: null,
+  setToken: (token: string | null) => set({ token }),
   setPassword: (password: string | null) => set({ password }),
   setPhoneNumber: (phoneNumber: string | null) => set({ phoneNumber }),
   isLogin: false,

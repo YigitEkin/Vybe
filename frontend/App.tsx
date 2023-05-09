@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import HomePage from './screens/HomePage';
 import { useCallback, useState } from 'react';
@@ -14,6 +14,7 @@ import Splash from './screens/Splash';
 import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 
 import Router from './navigation/Router';
+import { useLoginStore } from './stores/LoginStore';
 
 //SplashScreen.preventAutoHideAsync();
 const toastConfig = {

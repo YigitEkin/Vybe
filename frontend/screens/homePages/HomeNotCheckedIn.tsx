@@ -23,8 +23,10 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useCheckedInStore } from '../../stores/CheckedInStore';
 import { useLoginStore } from '../../stores/LoginStore';
 import axios from 'axios';
+import axiosConfig from '../../constants/axiosConfig';
 
 const HomeNotCheckedIn = () => {
+  const instanceToken = axiosConfig();
   const [isCamOpen, setIsCamOpen] = useState(false);
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
@@ -77,8 +79,8 @@ const HomeNotCheckedIn = () => {
     console.log(dbUserName);
     if (!isRequested) {
       setIsRequested(true);
-      axios
-        .post(`http://172.20.10.4:8080/api/venues/${res}/checkIn/${dbUserName}`)
+      instanceToken
+        .post(`/api/venues/${res}/checkIn/${dbUserName}`)
         .then((result) => {
           if (result.data) {
             setIsCheckIn(true);

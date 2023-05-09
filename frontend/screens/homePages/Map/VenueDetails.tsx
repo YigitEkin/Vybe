@@ -17,6 +17,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import StyledButton from '../../../components/HomePage/StyledButton';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
+import axiosConfig from '../../../constants/axiosConfig';
 
 interface Comment extends NotificationCardProps {}
 function NotificationCard(data: NotificationCardProps) {
@@ -94,6 +95,7 @@ const data: VenueDetails = {
 };
 
 const VenueDetails = () => {
+  const instanceToken = axiosConfig();
   const takeAvg = (arr) => {
     const sum = arr.reduce((acc, curr) => acc + curr, 0);
     const avg = sum / arr.length;
@@ -111,7 +113,7 @@ const VenueDetails = () => {
   const { id } = route.params;
   console.log(id);
   useEffect(() => {
-    axios.get(`http://172.20.10.4:8080/api/venues/${id}`).then((res) => {
+    instanceToken.get(`/api/venues/${id}`).then((res) => {
       setVenue(res.data);
     });
   }, []);

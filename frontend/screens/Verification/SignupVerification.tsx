@@ -14,8 +14,10 @@ import { DismissKeyboard } from '../../components/common/DismissKeyboard';
 import moment from 'moment';
 
 import axios from 'axios';
+import axiosConfig from '../../constants/axiosConfig';
 
 const SignupVerification = ({ navigation }: any) => {
+  const instanceToken = axiosConfig();
   const baseUrl = process.env.BASE_URL;
   const [OTPCode, setOTPCode] = useState(0);
   const { phoneNumber, setPhoneNumber, password, email, selectedCode } =
@@ -43,8 +45,8 @@ const SignupVerification = ({ navigation }: any) => {
     };
     //console.log(data);
     OTPCode.toString().length === 4
-      ? axios
-          .post(`http://172.20.10.4:8080/api/auth/customer`, data)
+      ? instanceToken
+          .post(`/api/auth/customer`, data)
           .then((res) => {
             if (res.data) {
               navigation.navigate('SignUpCompletedScreen');

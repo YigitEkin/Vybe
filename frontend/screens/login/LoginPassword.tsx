@@ -5,19 +5,22 @@ import { useLoginStore } from '../../stores/LoginStore';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
+import axiosConfig from '../../constants/axiosConfig';
 
 const LoginPassword = () => {
+  const instanceToken = axiosConfig();
   const navigation = useNavigation();
-  const { password, setPassword, phoneNumber, selectedCode } = useLoginStore(
-    (state: any) => {
+  const { password, setPassword, phoneNumber, selectedCode, setToken, token } =
+    useLoginStore((state: any) => {
       return {
         selectedCode: state.selectedCode,
         phoneNumber: state.phoneNumber,
         password: state.password,
         setPassword: state.setPassword,
+        setToken: state.setToken,
+        token: state.token,
       };
-    }
-  );
+    });
 
   const formItems = useMemo(
     () => [
@@ -51,14 +54,16 @@ const LoginPassword = () => {
   return (
     <Form
       cb={() =>
-        axios
-          .post('http://172.20.10.4:8080/api/auth/signIn', {
+        instanceToken
+          .post('/api/auth/signIn', {
             username: selectedCode.dial_code.replace('+', '') + phoneNumber,
             password: password,
             code: '',
           })
           .then((res) => {
             if (res.data) {
+              console.log(res.data);
+              setToken(res.data);
               navigation.navigate('LoginVerification');
             } else {
               Toast.show({

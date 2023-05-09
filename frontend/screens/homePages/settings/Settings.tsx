@@ -168,7 +168,7 @@ const SettingsPage = () => {
           <View style={styles.paymentMethodsContainer}>
             <View>
               <Text style={styles.mutedText}>Payment Methods</Text>
-              <Text style={styles.whiteText}>Content is Here</Text>
+              <Text style={styles.whiteText}>Earn Coins</Text>
             </View>
             <Pressable
               style={styles.rightArrowContainer}

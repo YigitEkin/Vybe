@@ -31,8 +31,10 @@ import CoinIcon from '../../assets/coin.png';
 import InputSpinner from 'react-native-input-spinner';
 import { useLoginStore } from '../../stores/LoginStore';
 import axios from 'axios';
+import axiosConfig from '../../constants/axiosConfig';
 
 const HomeCheckedIn = () => {
+  const instanceToken = axiosConfig();
   const [checkedInVenue, setCheckedInVenue] = useState({});
   const { phoneNumber, selectedCode } = useLoginStore((state: any) => {
     return {
@@ -43,13 +45,11 @@ const HomeCheckedIn = () => {
   const dbUserName = selectedCode.dial_code.replace('+', '') + phoneNumber;
   const [checkedInVenueId, setCheckedInVenueId] = useState();
   useEffect(() => {
-    axios
-      .get(`http://172.20.10.4:8080/api/customers/${dbUserName}`)
-      .then((res) => {
-        console.log(res.data.checkedInVenue.id);
-        setCheckedInVenue(res.data.checkedInVenue);
-        setCheckedInVenueId(res.data.checkedInVenue.id);
-      });
+    instanceToken.get(`/api/customers/${dbUserName}`).then((res) => {
+      console.log(res.data.checkedInVenue.id);
+      setCheckedInVenue(res.data.checkedInVenue);
+      setCheckedInVenueId(res.data.checkedInVenue.id);
+    });
   }, []);
   const [showBox, setShowBox] = useState(true);
   const showConfirmDialog = () => {
@@ -63,10 +63,8 @@ const HomeCheckedIn = () => {
       {
         text: 'Yes',
         onPress: () => {
-          axios
-            .post(
-              `http://172.20.10.4:8080/api/venues/${checkedInVenueId}/checkOut/${dbUserName}`
-            )
+          instanceToken
+            .post(`api/venues/${checkedInVenueId}/checkOut/${dbUserName}`)
             .then((res) => {
               if (res.data) {
                 setShowBox(false);

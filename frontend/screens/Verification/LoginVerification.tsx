@@ -14,8 +14,10 @@ import { DismissKeyboard } from '../../components/common/DismissKeyboard';
 import { deFormatPhoneNumber } from '../../components/phoneCodePicker/utils/helpers';
 import axios from 'axios';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
+import axiosConfig from '../../constants/axiosConfig';
 
 const LoginVerification = ({ navigation }: any) => {
+  const instanceToken = axiosConfig();
   const [OTPCode, setOTPCode] = useState(0);
   const { phoneNumber, password, setIsLogin, selectedCode, setPhoneNumber } =
     useLoginStore((state: any) => {
@@ -37,8 +39,8 @@ const LoginVerification = ({ navigation }: any) => {
   };
   const handleSubmit = () => {
     String(OTPCode).length === 4 &&
-      axios
-        .post('http://172.20.10.4:8080/api/auth/customer/2FA', data)
+      instanceToken
+        .post('/api/auth/customer/2FA', data)
         .then((res) => {
           if (res.data) {
             //setPhoneNumber(null);
