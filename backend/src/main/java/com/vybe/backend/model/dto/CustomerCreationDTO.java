@@ -14,13 +14,15 @@ import lombok.Setter;
 public class CustomerCreationDTO {
     private String password;
     private String username;
+    private String name;
+    private String surname;
     private String phoneNumber;
     private String dateOfBirth;
     private String dateOfCreation;
 
     private String code;
     public Customer toCustomer() {
-        return new Customer(username, password, phoneNumber, null, null, null, null, dateOfBirth, dateOfCreation);
+        return new Customer(username, name, surname, password, phoneNumber, null, null, null, null, dateOfBirth, dateOfCreation);
     }
 
 }

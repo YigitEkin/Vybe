@@ -26,8 +26,8 @@ public class VenueAdmin extends User {
 
     private Boolean enabled;
 
-    public VenueAdmin(String username, String password, String phoneNumber, Object profilePicture, Venue currentVenue, Stack<SongRequest> requests, Boolean enabled) {
-        super(username, password, phoneNumber, profilePicture, currentVenue, requests);
+    public VenueAdmin(String username, String name, String surname, String password, String phoneNumber, Object profilePicture, Venue currentVenue, Stack<SongRequest> requests, Boolean enabled) {
+        super(username, name, surname, password, phoneNumber, profilePicture, currentVenue, requests);
         this.enabled = enabled;
     }
 

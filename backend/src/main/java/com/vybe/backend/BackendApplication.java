@@ -50,8 +50,8 @@ public class BackendApplication {
 										UserService userService, VenueService venueService, SongService songService, PlaylistService playlistService) {
 		return args -> {
 			// test user service class using assert statements to check if the methods work
-			CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO( "testpass1", "testname1", "testphone1", "testdate1", "testdate1", "000000");
-			VenueAdminCreationDTO venueAdminCreationDTO = new VenueAdminCreationDTO("testname3", "testpass3", "testmail3", "testphone3");
+			CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO( "testpass1", "testname1","name", "surname", "testphone1", "testdate1", "testdate1", "000000");
+			VenueAdminCreationDTO venueAdminCreationDTO = new VenueAdminCreationDTO("testname3", "name", "surname", "testpass3", "testmail3", "testphone3");
 			AdminCreationDTO adminCreationDTO = new AdminCreationDTO("testname5", "testpass5");
 			System.out.println("Testing");
 
@@ -90,7 +90,7 @@ public class BackendApplication {
 			assert adminDTO2.getUsername().equals("testname5");
 
 			// test adding a customer with an existing username
-			CustomerCreationDTO customerCreationDTO3 = new CustomerCreationDTO( "testpass1", "testname1", "testphone1", "testdate1", "testgender1", "000000");
+			CustomerCreationDTO customerCreationDTO3 = new CustomerCreationDTO( "testpass1", "testname1", "name", "surname", "testphone1", "testdate1", "testgender1", "000000");
 			try {
 				CustomerDTO customerDTO3 = userService.addCustomer(customerCreationDTO3);
 			} catch (Exception e) {
@@ -98,7 +98,7 @@ public class BackendApplication {
 			}
 
 			// test adding a venue admin with an existing username
-			VenueAdminCreationDTO venueAdminCreationDTO3 = new VenueAdminCreationDTO("testname3", "testpass3", "testmail3", "testphone3");
+			VenueAdminCreationDTO venueAdminCreationDTO3 = new VenueAdminCreationDTO("testname3", "name", "surname", "testpass3", "testmail3", "testphone3");
 			try {
 				VenueAdminDTO venueAdminDTO3 = userService.addVenueAdmin(venueAdminCreationDTO3);
 			} catch (Exception e) {
