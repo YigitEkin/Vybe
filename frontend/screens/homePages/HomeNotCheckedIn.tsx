@@ -53,25 +53,58 @@ const HomeNotCheckedIn = () => {
     },
     {
       id: 3,
-      name: 'John Doe',
+      name: 'May Doe',
       status: 'At Federal Coffee Shop',
     },
     {
       id: 4,
-      name: 'Jane Doe',
+      name: 'Jane anan',
       status: 'At Bluejay Coffee Shop',
     },
     {
       id: 5,
-      name: 'John Doe',
+      name: 'anan baban',
       status: 'At Federal Coffee Shop',
     },
     {
       id: 6,
-      name: 'Jane Doe',
+      name: 'eben Doe',
       status: 'At Bluejay Coffee Shop',
     },
   ]);
+  const [filteredUserList, setFilteredUserList] = useState([
+    {
+      id: 1,
+      name: 'John Doe',
+      status: 'At Federal Coffee Shop',
+    },
+    {
+      id: 2,
+      name: 'Jane Doe',
+      status: 'At Bluejay Coffee Shop',
+    },
+    {
+      id: 3,
+      name: 'May Doe',
+      status: 'At Federal Coffee Shop',
+    },
+    {
+      id: 4,
+      name: 'Jane anan',
+      status: 'At Bluejay Coffee Shop',
+    },
+    {
+      id: 5,
+      name: 'anan baban',
+      status: 'At Federal Coffee Shop',
+    },
+    {
+      id: 6,
+      name: 'eben Doe',
+      status: 'At Bluejay Coffee Shop',
+    },
+  ]);
+  const [friendList, setFriendList] = useState([]);
   const { setIsCheckIn } = useCheckedInStore();
   const [isRequested, setIsRequested] = useState(false);
   const dbUserName = selectedCode.dial_code.replace('+', '') + phoneNumber;
@@ -94,7 +127,21 @@ const HomeNotCheckedIn = () => {
     }
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    instanceToken.get(`/api/customers`).then((res) => {
+      console.log(res.data);
+      setFilteredUserList(
+        res.data.filter((user) => user.username !== dbUserName)
+      );
+    });
+  }, []);
+  useEffect(() => {
+    instanceToken.get(`/api/customers/${dbUserName}/friends`).then((res) => {
+      console.log(res.data);
+      setFriendList(res.data.filter((user) => user.checkedInVenue !== null));
+    });
+  }, []);
+
   const __startCamera = async () => {
     const { status } = await Camera.requestCameraPermissionsAsync();
 
@@ -104,6 +151,14 @@ const HomeNotCheckedIn = () => {
       Alert.alert('Please grant access to camera from device settings!');
     }
   };
+
+  useEffect(() => {
+    console.log('searchPhrase', searchPhrase);
+    const filteredArray = userList.filter((user) => {
+      return user.name.toLowerCase().includes(searchPhrase.toLowerCase());
+    });
+    setFilteredUserList(filteredArray);
+  }, [searchPhrase]);
 
   const [fontsLoaded] = Font.useFonts({
     'Inter-Bold': require('../../assets/fonts/Inter/static/Inter-Bold.ttf'),
@@ -191,12 +246,19 @@ const HomeNotCheckedIn = () => {
 
         {clicked ? (
           <ScrollView style={{ height: '100%', marginBottom: 100 }}>
-            {userList.map((user) => (
-              <Pressable key={user.id} onPress={() => handleUserPress(user.id)}>
+            {filteredUserList.map((user) => (
+              <Pressable
+                key={user.username}
+                onPress={() => handleUserPress(user.username)}
+              >
                 <ListItem
-                  key={user.id}
-                  topText={user.name}
-                  subText={user.status}
+                  key={user.username}
+                  topText={user.name + ' ' + user.surname}
+                  subText={
+                    user.checkedInVenue
+                      ? user.checkedInVenue.name
+                      : 'Not checked in'
+                  }
                 />
               </Pressable>
             ))}
@@ -209,10 +271,25 @@ const HomeNotCheckedIn = () => {
               horizontal={true}
               style={{ flexGrow: 0, marginBottom: 100 }}
             />
-            <Text style={[styles.textStyle, { marginBottom: 20 }]}>
-              {'Friends currently Vybing'}
-            </Text>
-            <ListItem topText={'Friend name'} subText={'Location'} />
+            {friendList.length > 0 ? (
+              <>
+                <Text style={[styles.textStyle]}>
+                  {'Friends currently Vybing'}
+                </Text>
+
+                {friendList.map((friend) => (
+                  <ListItem
+                    key={friend.username}
+                    topText={friend.name + ' ' + friend.surname}
+                    subText={friend.checkedInVenue.name}
+                  />
+                ))}
+              </>
+            ) : (
+              <Text style={[styles.textStyle, { marginBottom: 20 }]}>
+                {'No friends currently Vybing'}
+              </Text>
+            )}
           </>
         )}
       </View>

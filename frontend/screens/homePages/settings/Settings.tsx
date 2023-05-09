@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -15,9 +15,11 @@ import * as Font from 'expo-font';
 import CoinIcon from '../../../assets/coin.png';
 import { useNavigation } from '@react-navigation/native';
 import { useLoginStore } from '../../../stores/LoginStore';
+import axiosConfig from '../../../constants/axiosConfig';
 
 type editSectionArea = {
   name: string;
+  value: any;
   editability: boolean;
   borderBottomless?: boolean;
   marginTop?: number;
@@ -28,26 +30,28 @@ type editSectionArea = {
 const editSections: editSectionArea[] = [
   {
     name: 'First Name',
-    editability: true,
+    value: 'First Name',
+    editability: false,
     marginTop: 20,
   },
   {
     name: 'Last Name',
-    editability: true,
+    value: 'Last Name',
+    editability: false,
   },
-  {
-    name: 'Location',
-    editability: true,
-  },
+  //{
+  //  name: 'Location',
+  //  editability: true,
+  //},
   {
     name: 'Notfications',
+    value: 'Notifications',
     editability: false,
     borderBottomless: true,
     notificationCount: 0,
     onPress: () => {},
   },
 ];
-
 const EditProfileSection = (
   section: editSectionArea,
   notificationCount: number
@@ -67,11 +71,10 @@ const EditProfileSection = (
         },
       ]}
     >
-      <Text style={styles.sectionName}>{section.name}</Text>
+      <Text style={styles.sectionName}>{section.name}:</Text>
+      <Text style={styles.sectionName}>{section.value}</Text>
       {section.editability ? (
-        <Pressable>
-          <Text style={styles.editText}>Edit</Text>
-        </Pressable>
+        <></>
       ) : section.notificationCount ? (
         <Pressable
           style={styles.notificationContainer}
@@ -87,18 +90,61 @@ const EditProfileSection = (
 };
 
 const SettingsPage = () => {
+  const { phoneNumber, selectedCode } = useLoginStore((state: any) => {
+    return {
+      phoneNumber: state.phoneNumber,
+      selectedCode: state.selectedCode,
+    };
+  });
+  const dbUserName = selectedCode.dial_code.replace('+', '') + phoneNumber;
+  const instanceToken = axiosConfig();
   const navigation = useNavigation();
   const openModal = () => {
     setModalVisible(true);
   };
-  const [notificationCount, setNotificationCount] = useState(1);
+  const [notificationCount, setNotificationCount] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [fontsLoaded] = Font.useFonts({
     'Inter-Regular': require('../../../assets/fonts/Inter/static/Inter-Regular.ttf'),
   });
   const { isLogin, setIsLogin } = useLoginStore();
   const [coinBalance, setCoinBalance] = useState(200);
+  const [section, setSection] = useState(editSections);
 
+  useEffect(() => {
+    instanceToken
+      .get(`/api/customers/${dbUserName}/friends/incoming_requests`)
+      .then((res) => {
+        console.log(res.data, res.data.length);
+        setNotificationCount(res.data.length);
+      });
+
+    instanceToken.get(`/api/customers/${dbUserName}/`).then((res) => {
+      let section = [
+        {
+          name: 'First Name',
+          value: res.data.name,
+          editability: true,
+          marginTop: 20,
+        },
+        {
+          name: 'Last Name',
+          value: res.data.surname,
+          editability: true,
+        },
+        {
+          name: 'Notfications',
+          value: '',
+          editability: false,
+          borderBottomless: true,
+          notificationCount: notificationCount,
+
+          onPress: () => {},
+        },
+      ];
+      setSection(section);
+    });
+  }, []);
   return fontsLoaded ? (
     <>
       <Modal
@@ -150,7 +196,7 @@ const SettingsPage = () => {
             }}
             style={styles.changeButton}
           />
-          {editSections.map((section) => (
+          {section.map((section) => (
             <EditProfileSection
               {...section}
               key={section.name}

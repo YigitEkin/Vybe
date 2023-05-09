@@ -51,6 +51,11 @@ const HomeCheckedIn = () => {
       setCheckedInVenueId(res.data.checkedInVenue.id);
     });
   }, []);
+  useEffect(() => {
+    instanceToken.get(`/api/customers`).then((res) => {
+      console.log(res.data);
+    });
+  }, []);
   const [showBox, setShowBox] = useState(true);
   const showConfirmDialog = () => {
     return Alert.alert('Are your sure?', 'Are you sure you want to checkout?', [
@@ -170,6 +175,7 @@ const HomeCheckedIn = () => {
   ];
   const [amount, setAmount] = useState(200);
   const [addingSongToQueue, setAddingSongToQueue] = useState(false);
+  const [filteredUserList, setFilteredUserList] = useState([]);
   const handleUserPress = (id: Number) => {
     navigation.navigate(
       // @ts-ignore
@@ -183,6 +189,13 @@ const HomeCheckedIn = () => {
   };
   const navigation = useNavigation();
   useEffect(() => {}, []);
+  useEffect(() => {
+    console.log('searchPhrase', searchPhrase);
+    const filteredArray = userList.filter((user) => {
+      return user.name.toLowerCase().includes(searchPhrase.toLowerCase());
+    });
+    setFilteredUserList(filteredArray);
+  }, []);
   const __addSongToQueue = async () => {
     setAddSong(true);
   };
@@ -320,7 +333,7 @@ const HomeCheckedIn = () => {
             </>
           ) : (
             <ScrollView style={{ height: '100%', marginBottom: 100 }}>
-              {userList.map((user) => (
+              {filteredUserList.map((user) => (
                 <Pressable
                   key={user.id}
                   onPress={() => handleUserPress(user.id)}

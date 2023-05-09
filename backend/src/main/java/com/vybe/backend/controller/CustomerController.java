@@ -92,9 +92,9 @@ public class CustomerController {
     }
 
     // accept/reject a friend request
-    @PutMapping("/{username}/friends/{friendUsername}")
-    public FriendshipDTO acceptFriendRequest(@PathVariable String username, @PathVariable String friendUsername, @RequestBody String status) {
-        if (Boolean.parseBoolean(status)) {
+    @PutMapping("/{username}/friends/{friendUsername}/{isAccept}")
+    public FriendshipDTO acceptFriendRequest(@PathVariable String username, @PathVariable String friendUsername, @PathVariable String isAccept) {
+        if (isAccept.equals("true")) {
             return friendshipService.acceptFriendRequest(username, friendUsername);
         } else {
             friendshipService.declineFriendRequest(username, friendUsername);

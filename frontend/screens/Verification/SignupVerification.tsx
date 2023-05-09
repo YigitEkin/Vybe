@@ -20,22 +20,33 @@ const SignupVerification = ({ navigation }: any) => {
   const instanceToken = axiosConfig();
   const baseUrl = process.env.BASE_URL;
   const [OTPCode, setOTPCode] = useState(0);
-  const { phoneNumber, setPhoneNumber, password, email, selectedCode } =
-    useSignUpStore((state: any) => {
-      return {
-        password: state.password,
-        email: state.email,
-        phoneNumber: state.phoneNumber,
-        setPhoneNumber: state.setPhoneNumber,
-        selectedCode: state.selectedCode,
-      };
-    });
+  const {
+    phoneNumber,
+    setPhoneNumber,
+    password,
+    email,
+    selectedCode,
+    firstName,
+    lastName,
+  } = useSignUpStore((state: any) => {
+    return {
+      password: state.password,
+      email: state.email,
+      phoneNumber: state.phoneNumber,
+      setPhoneNumber: state.setPhoneNumber,
+      selectedCode: state.selectedCode,
+      firstName: state.firstName,
+      lastName: state.lastName,
+    };
+  });
   const handleChange = (e) => {
     setOTPCode(e);
   };
   const handleSubmit = () => {
     const data = {
       username: selectedCode.dial_code.replace('+', '') + phoneNumber,
+      name: firstName,
+      surname: lastName,
       password: password,
       email: email,
       phoneNumber: selectedCode.dial_code + phoneNumber,

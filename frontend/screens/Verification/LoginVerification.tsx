@@ -15,10 +15,14 @@ import { deFormatPhoneNumber } from '../../components/phoneCodePicker/utils/help
 import axios from 'axios';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import axiosConfig from '../../constants/axiosConfig';
+import { useCheckedInStore } from '../../stores/CheckedInStore';
 
 const LoginVerification = ({ navigation }: any) => {
   const instanceToken = axiosConfig();
   const [OTPCode, setOTPCode] = useState(0);
+  const { setIsCheckIn } = useCheckedInStore((state: any) => ({
+    setIsCheckIn: state.setIsCheckIn,
+  }));
   const { phoneNumber, password, setIsLogin, selectedCode, setPhoneNumber } =
     useLoginStore((state: any) => {
       return {
@@ -45,6 +49,7 @@ const LoginVerification = ({ navigation }: any) => {
           if (res.data) {
             //setPhoneNumber(null);
             setIsLogin(true);
+            setIsCheckIn(res.data.checkedInVenue !== null);
           } else {
             Toast.show({
               type: 'error',

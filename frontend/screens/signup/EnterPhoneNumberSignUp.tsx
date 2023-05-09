@@ -14,15 +14,27 @@ const DismissKeyboard = ({ children }: any) => (
 const EnterPhoneNumberSignUp = ({ navigation }: any) => {
   const instanceToken = axiosConfig();
   const baseUrl = process.env.BASE_URL;
-  const { phoneNumber, setPhoneNumber, selectedCode, setSelectedCode } =
-    useSignUpStore((state: any) => {
-      return {
-        phoneNumber: state.phoneNumber,
-        setPhoneNumber: state.setPhoneNumber,
-        selectedCode: state.selectedCode,
-        setSelectedCode: state.setSelectedCode,
-      };
-    });
+  const {
+    phoneNumber,
+    setPhoneNumber,
+    selectedCode,
+    setSelectedCode,
+    firstName,
+    setFirstName,
+    lastName,
+    setLastName,
+  } = useSignUpStore((state: any) => {
+    return {
+      phoneNumber: state.phoneNumber,
+      setPhoneNumber: state.setPhoneNumber,
+      selectedCode: state.selectedCode,
+      setSelectedCode: state.setSelectedCode,
+      firstName: state.firstName,
+      setFirstName: state.setFirstName,
+      lastName: state.lastName,
+      setLastName: state.setLastName,
+    };
+  });
 
   const onPress = useCallback(() => {
     let phoneNo =

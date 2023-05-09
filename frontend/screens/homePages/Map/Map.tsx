@@ -16,6 +16,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import MapView, {
   PROVIDER_GOOGLE,
   Marker,
@@ -38,6 +39,7 @@ import { Colors } from '../../../constants/Colors';
 import Splash from '../../Splash';
 import axios from 'axios';
 import axiosConfig from '../../../constants/axiosConfig';
+import StyledButton from '../../../components/HomePage/StyledButton';
 
 const { width, height } = Dimensions.get('window');
 const CARD_HEIGHT = 220;
@@ -367,7 +369,7 @@ const MapPage = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
   const [markersRes, setMarkersRes] = useState([]);
-
+  const [allVenues, setAllVenues] = useState([]);
   useEffect(() => {
     instanceToken
       .get('/api/venues')
@@ -390,7 +392,8 @@ const MapPage = () => {
             id: venue.id,
           };
         });
-        console.log(markersRes);
+        //console.log(markersRes);
+        setAllVenues(markersRes);
         setMarkersRes(markersRes);
         let apiMapState = {
           markersRes,
@@ -426,6 +429,21 @@ const MapPage = () => {
 
   let mapAnimation = new Animated.Value(0);
   const navigation = useNavigation();
+
+  // For search bar filtering
+  useEffect(() => {
+    console.log('searchPhrase', searchPhrase);
+    let filteredArray = allVenues.filter((venue: MapItem) =>
+      venue?.title.toLowerCase().includes(searchPhrase.toLowerCase())
+    );
+    console.log(filteredArray);
+    setMarkersRes(filteredArray);
+  }, [searchPhrase]);
+  useEffect(() => {
+    setState({
+      markersRes,
+    });
+  }, [markersRes]);
 
   useEffect(() => {
     mapAnimation.addListener(({ value }) => {
@@ -493,6 +511,17 @@ const MapPage = () => {
     _scrollView.current.scrollTo({ x: x, y: 0, animated: true });
     setMapIndex(markerID);
   };
+  const goToLocation = () => {
+    _map.current.animateToRegion(
+      {
+        latitude: location!.coords!.latitude,
+        longitude: location!.coords!.longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      },
+      ANIMATION_TIMEOUT
+    );
+  };
 
   const _map = React.useRef(null);
   const _scrollView = React.useRef(null);
@@ -500,6 +529,17 @@ const MapPage = () => {
   return success ? (
     <DismissKeyboard>
       <View style={styles.container}>
+        <Pressable
+          onPress={() => {
+            goToLocation();
+          }}
+          style={({ pressed }) =>
+            pressed ? styles.pressed : styles.notPressed
+          }
+        >
+          <Icon name='my-location' size={30} color={'#000'} />
+        </Pressable>
+
         <MapView
           showsUserLocation={true}
           ref={_map}
@@ -681,6 +721,29 @@ const MapPage = () => {
 export default MapPage;
 
 const styles = StyleSheet.create({
+  pressed: {
+    backgroundColor: '#777',
+    borderRadius: 15,
+    padding: 10,
+    position: 'absolute',
+    top: '10%',
+    right: '10%',
+    zIndex: 999,
+  },
+  notPressed: {
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+
+    borderRadius: 15,
+    padding: 10,
+    position: 'absolute',
+    top: '10%',
+    right: '10%',
+    zIndex: 999,
+  },
   container: {
     flex: 1,
     backgroundColor: '#000',

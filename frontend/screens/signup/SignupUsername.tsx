@@ -4,10 +4,21 @@ import Form from '../../components/Form/Form';
 import { SignUpStore, useSignUpStore } from '../../stores/SignUpStore';
 
 const SignUpUsername = () => {
-  const { username, setUsername } = useSignUpStore((state: any) => {
+  const {
+    username,
+    setUsername,
+    firstName,
+    setFirstName,
+    lastName,
+    setLastName,
+  } = useSignUpStore((state: any) => {
     return {
       username: state.username,
       setUsername: state.setUsername,
+      firstName: state.firstName,
+      setFirstName: state.setFirstName,
+      lastName: state.lastName,
+      setLastName: state.setLastName,
     };
   });
 
@@ -41,7 +52,13 @@ const SignUpUsername = () => {
       totalSteps={4}
       navigateRoute={navigateRoute}
       validator={() => {
-        return username && username.trim().length > 0;
+        if (username.trim() === '') {
+          return false;
+        } else {
+          setLastName(username.split(' ').slice(-1).join(' '));
+          setFirstName(username.split(' ').slice(0, -1).join(' '));
+          return true;
+        }
       }}
     />
   );
