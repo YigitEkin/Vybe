@@ -13,20 +13,24 @@ import lombok.Setter;
 @Setter
 public class VenueAdminCreationDTO {
     private String username;
+    private String name;
+    private String surname;
     private String password;
     private String email;
     private String phoneNumber;
     private String venueName;
 
     private String code;
-    public VenueAdminCreationDTO(String username, String password, String email, String phoneNumber) {
+    public VenueAdminCreationDTO(String username, String name, String surname, String password, String email, String phoneNumber) {
         this.username = username;
+        this.name = name;
+        this.surname = surname;
         this.password = password;
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
 
     public VenueAdmin toVenueAdmin() {
-        return new VenueAdmin(username, password, phoneNumber, null, null, null, true);
+        return new VenueAdmin(username, name, surname, password, phoneNumber, null, null, null, true);
     }
 }

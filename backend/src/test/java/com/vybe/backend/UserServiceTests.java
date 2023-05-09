@@ -50,7 +50,7 @@ public class UserServiceTests {
     @Test
     void should_save_one_customer() {
         // Arrange
-        final CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO( "testpass1", "testname1", "testphone1", "testdate1", "testdate1", "000000");
+        final CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO( "testpass1", "name", "surname", "testname1", "testphone1", "testdate1", "testdate1", "000000");
         when(customerRepository.save(any(Customer.class))).thenReturn(customerCreationDTO.toCustomer());
 
         // Act
@@ -97,7 +97,7 @@ public class UserServiceTests {
     void should_not_save_customer_with_taken_username(){
         // Arrange
         when(userRepository.existsByUsername("testname1")).thenReturn(true);
-        CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO( "testpass1", "testname1", "testphone1", "testdate1", "testdate1", "000000");
+        CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO( "testpass1", "name", "surname","testname1", "testphone1", "testdate1", "testdate1", "000000");
 
         // Act & Assert
         Assertions.assertThrows(UsernameTakenException.class, () -> userService.addCustomer(customerCreationDTO));
