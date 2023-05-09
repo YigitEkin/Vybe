@@ -12,8 +12,10 @@ import com.vybe.backend.repository.*;
 import com.vybe.backend.util.SoundtrackUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -136,6 +138,31 @@ public class VenueService {
         SoundtrackUtil.playSong(playlistId, index, Collections.singletonList(soundzoneId), token);
 
         return nextSong.toSong();
+    }
+
+    public void startSongScheduled(Integer venueId) {
+        if (!venueRepository.existsById(venueId))
+            throw new VenueNotFoundException("Venue with id: " + venueId + " not found");
+        SongDTO nextSong = getNextSong(venueId);
+        Venue venue = venueRepository.findById(venueId).get();
+        String playlistId;
+        if (venue.getPlaylist().getCurrentMode().equals("request"))
+            playlistId = venue.getPlaylist().getRequestPlaylistId();
+        else
+            playlistId = venue.getPlaylist().getDefaultPlaylistId();
+        String soundzoneId = venue.getSoundzoneId();
+        String token = venue.getToken();
+        String name = nextSong.getName();
+        HashMap<String, Integer> tmp = SoundtrackUtil.findIndexOfSongInPlaylist(playlistId, name, token);
+        int index = tmp.get("index");
+        int duration = tmp.get("duration");
+        System.out.println("playing song: " + name + " in index: " + index);
+        SoundtrackUtil.playSong(playlistId, index, Collections.singletonList(soundzoneId), token);
+        try {
+            Thread.sleep(duration);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteNull() {
