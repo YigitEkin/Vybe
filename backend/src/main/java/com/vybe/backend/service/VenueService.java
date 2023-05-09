@@ -131,7 +131,7 @@ public class VenueService {
         String soundzoneId = venue.getSoundzoneId();
         String token = venue.getToken();
         String name = nextSong.getName();
-        int index = SoundtrackUtil.findIndexOfSongInPlaylist(playlistId, name, token);
+        int index = SoundtrackUtil.findIndexOfSongInPlaylist(playlistId, name, token).get("index");
         System.out.println("playing song: " + name + " in index: " + index);
         SoundtrackUtil.playSong(playlistId, index, Collections.singletonList(soundzoneId), token);
 
