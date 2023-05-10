@@ -1,12 +1,14 @@
 package com.vybe.backend.service;
 
 import com.vybe.backend.exception.TransactionNotFoundException;
+import com.vybe.backend.exception.TransactionNotValidatedException;
 import com.vybe.backend.exception.WalletNotFoundException;
 import com.vybe.backend.model.dto.IncomingTransactionDTO;
 import com.vybe.backend.model.dto.TransactionDTO;
 import com.vybe.backend.model.dto.WalletDTO;
 import com.vybe.backend.model.entity.Transaction;
 import com.vybe.backend.model.entity.Wallet;
+import com.vybe.backend.model.enums.TransactionTypes;
 import com.vybe.backend.repository.TransactionRepository;
 import com.vybe.backend.repository.WalletRepository;
 import com.vybe.backend.util.IyzicoUtil;
@@ -16,7 +18,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TransactionService {
@@ -39,9 +40,37 @@ public class TransactionService {
         if (wallet == null) {
             throw new WalletNotFoundException("Wallet with id " + walletId + " is not found.");
         }
-        iyzicoUtil.executeTransaction(incomingTransaction);
-        wallet.executeTransaction(incomingTransaction.toTransaction());
-        walletRepository.save(wallet);
+
+        if(incomingTransaction.getTransactionType().equals(TransactionTypes.CARD)) {
+            if(incomingTransaction.getCardNumber() == null || incomingTransaction.getCardNumber().length() != 16) {
+                throw new TransactionNotValidatedException("Card number is not valid");
+            }
+
+            String errorGroup = iyzicoUtil.executeTransaction(incomingTransaction);
+            if (errorGroup == null) {
+                wallet.executeTransaction(incomingTransaction.toTransaction());
+                walletRepository.save(wallet);
+            } else {
+                switch (errorGroup) {
+                    case "NOT_SUFFICIENT_FUNDS" -> errorGroup = "Not enough funds in the card";
+                    case "EXPIRED_CARD" -> errorGroup = "Card is expired";
+                    case "LOST_CARD" -> errorGroup = "Card is lost";
+                    case "STOLEN_CARD" -> errorGroup = "Card is stolen";
+                    case "INVALID_CVC2" -> errorGroup = "Invalid CVC2 code";
+                    case "NOT_PERMITTED_TO_CARDHOLDER" -> errorGroup = "Transaction is not permitted to cardholder";
+                    case "FRAUD_SUSPECT" -> errorGroup = "Fraud suspect";
+                    default -> errorGroup = "Transaction is not completed";
+                }
+                throw new TransactionNotValidatedException(errorGroup);
+            }
+        }
+        else if(incomingTransaction.getTransactionType().equals(TransactionTypes.ADVERTISEMENT)) {
+            wallet.executeTransaction(incomingTransaction.toTransaction());
+            walletRepository.save(wallet);
+        }
+        else {
+            throw new TransactionNotValidatedException("Transaction type is not valid");
+        }
         return new WalletDTO(wallet);
 
     }

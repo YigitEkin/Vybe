@@ -37,10 +37,10 @@ public class IyzicoUtil {
 
         CreatePaymentRequest request = new CreatePaymentRequest();
         request.setLocale(Locale.TR.getValue());
-
+        double amount = transactionDTO.getReceivedCoins() * 0.05;
         request.setConversationId("0");
-        request.setPrice(BigDecimal.valueOf(transactionDTO.getPaidAmount())); // Actual cost of items
-        request.setPaidPrice(BigDecimal.valueOf(transactionDTO.getPaidAmount() * 1.04 + 0.25)); // 0.25 Kuruş + %4 iyzico commission
+        request.setPrice(BigDecimal.valueOf(amount * 0.96 - 0.25)); // Actual cost of items
+        request.setPaidPrice(BigDecimal.valueOf(amount)); // 0.25 Kuruş + %4 iyzico commission
         request.setCurrency(Currency.TRY.name()); // Currency is TRY for now
         request.setInstallment(1); // We can add installment options later
         request.setBasketId("0"); // Default
@@ -96,12 +96,12 @@ public class IyzicoUtil {
         basketItem.setCategory1("Vybe Coin");
         basketItem.setCategory2("Coin");
         basketItem.setItemType(BasketItemType.VIRTUAL.name());
-        basketItem.setPrice(BigDecimal.valueOf(transactionDTO.getPaidAmount()));
+        basketItem.setPrice(BigDecimal.valueOf(amount * 0.96 - 0.25));
         basketItems.add(basketItem);
         request.setBasketItems(basketItems);
 
         Payment payment = Payment.create(request, options);
-        return payment.getErrorCode();
+        return payment.getErrorGroup();
 
     }
 }

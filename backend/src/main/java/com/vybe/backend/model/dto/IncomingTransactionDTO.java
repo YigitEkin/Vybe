@@ -1,6 +1,7 @@
 package com.vybe.backend.model.dto;
 
 import com.vybe.backend.model.entity.Transaction;
+import com.vybe.backend.model.enums.TransactionTypes;
 import lombok.*;
 
 @Getter
@@ -9,9 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 public class IncomingTransactionDTO {
 
-    private Double paidAmount;
-
-    private String transactionType;
+    private TransactionTypes transactionType;
 
     private Double receivedCoins;
 
@@ -32,7 +31,7 @@ public class IncomingTransactionDTO {
     public Transaction toTransaction() {
         Transaction t = new Transaction();
         t.setTransactionDate(date);
-        t.setPaidAmount(paidAmount);
+        t.setPaidAmount(receivedCoins * 0.05);
         t.setReceivedCoins(receivedCoins);
         t.setTransactionType(transactionType);
         return t;
