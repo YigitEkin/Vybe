@@ -24,17 +24,33 @@ public class SoundtrackUtil {
     //@Value("${soundtrackyourbrand.api.url}")
     private static final String url = "https://api.soundtrackyourbrand.com/v2";
 
-    public static List<String> getTracksOnPlaylist(String playlistId, String token) {
+    public static List<HashMap<String, String>> getTracksOnPlaylist(String playlistId, String token) {
         HashMap<String, Object> variables = new HashMap<>();
         variables.put("playlistId", playlistId);
         variables.put("first", 1000);
+        variables.put("height", 500);
+        variables.put("width", 500);
+        variables.put("market", "TR");
         String document = """
-                query Playlist($playlistId: ID!, $first: Int) {
+                query Playlist($playlistId: ID!, $first: Int, $height: Int!, $width: Int!, $market: IsoCountry!) {
                   playlist(id: $playlistId) {
                     tracks(first: $first) {
                       edges {
                         node {
                           title
+                          durationMs
+                          album {
+                            display {
+                              image {
+                                size(height: $height, width: $width)
+                              }
+                            }
+                            isAvailable(market: $market)
+                            
+                          }
+                          artists {
+                            name
+                          }
                         }
                       }
                     }
@@ -57,22 +73,41 @@ public class SoundtrackUtil {
         LinkedHashMap<String, Object> playlist = (LinkedHashMap<String, Object>) ((LinkedHashMap<String, Object>) response).get("playlist");
         LinkedHashMap<String, Object> tracks = (LinkedHashMap<String, Object>) (playlist).get("tracks");
         ArrayList<LinkedHashMap<String, Object>> edges = (ArrayList<LinkedHashMap<String, Object>> ) ((LinkedHashMap<String, Object>) tracks).get("edges");
-        ArrayList<String> trackNames = new ArrayList<>();
+        ArrayList<HashMap<String, String>> trackList = new ArrayList<>();
         for (LinkedHashMap<String, Object> edge : edges) {
             LinkedHashMap<String, Object> node = (LinkedHashMap<String, Object>) ((LinkedHashMap<String, Object>) edge).get("node");
             String trackName = (String) ((LinkedHashMap<String, Object>) node).get("title");
-            trackNames.add(trackName);
+            String duration = (String) ((LinkedHashMap<String, Object>) node).get("durationMs").toString();
+            String imageUrl = "";
+            try {
+                imageUrl = ((LinkedHashMap<String, String>)((LinkedHashMap<String, Object>)((LinkedHashMap<String, Object>)node.get("album")).get("display")).get("image")).get("size");
+            }
+            catch (NullPointerException nullPointerException) {
+                imageUrl = "https://i.imgur.com/2j5ZQ9V.png";
+            }
+            String artistNames = ((ArrayList<LinkedHashMap<String, Object>>) node.get("artists")).stream().map(artist -> (String) artist.get("name")).reduce((a, b) -> a + ", " + b).get();
+            HashMap<String, String> track = new HashMap<>();
+
+            track.put("artistNames", artistNames);
+            track.put("trackName", trackName);
+            track.put("isAvailable", ((Boolean)((LinkedHashMap<String, Object>)node.get("album")).get("isAvailable")).toString());
+            track.put("imageUrl", imageUrl);
+            track.put("duration", duration);
+            trackList.add(track);
         }
-        return trackNames;
+        return trackList;
     }
-    public static int findIndexOfSongInPlaylist(String playlistId, String songName, String token) {
-        List<String> trackNames = getTracksOnPlaylist(playlistId, token);
+    public static HashMap<String, Integer> findIndexOfSongInPlaylist(String playlistId, String songName, String token) {
+        List<HashMap<String, String>> trackNames = getTracksOnPlaylist(playlistId, token);
         for (int i = 0; i < trackNames.size(); i++) {
-            if (trackNames.get(i).equals(songName)) {
-                return i;
+            if (trackNames.get(i).get("trackName").equals(songName)) {
+                HashMap<String, Integer> track = new HashMap<>();
+                track.put("index", i);
+                track.put("duration", Integer.parseInt(trackNames.get(i).get("duration")));
+                return track;
             }
         }
-        return -1;
+        throw new RuntimeException("Song not found in playlist");
     }
     public static boolean playSong(String playlistId, int index, List<String> soundZones, String token) {
         HashMap<String, Object> variables = new HashMap<>();
