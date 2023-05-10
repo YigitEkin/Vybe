@@ -48,4 +48,6 @@ public class SongRequest {
      */
     private Date requestDate;
 
+    private Double coinCost;
+
 }

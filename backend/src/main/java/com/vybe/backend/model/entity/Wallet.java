@@ -1,5 +1,6 @@
 package com.vybe.backend.model.entity;
 
+import com.vybe.backend.model.enums.TransactionTypes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -52,9 +53,12 @@ public class Wallet {
      * @return TRUE if transaction is successful, FALSE otherwise
      */
     public void executeTransaction(Transaction transaction) {
+        if(transaction.getTransactionType().equals(TransactionTypes.ADVERTISEMENT))
+            transaction.setPaidAmount(0.0);
         transactions.add(transaction);
         balance += transaction.getReceivedCoins();
-        totalSpent += transaction.getPaidAmount();
+        if(transaction.getTransactionType().equals(TransactionTypes.CARD))
+            totalSpent += transaction.getPaidAmount();
     }
 
     public Wallet(Double balance, Double totalSpent) {

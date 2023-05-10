@@ -1,6 +1,7 @@
 package com.vybe.backend.model.dto;
 
 import com.vybe.backend.model.entity.Transaction;
+import com.vybe.backend.model.enums.TransactionTypes;
 import lombok.*;
 
 @Getter
@@ -10,7 +11,7 @@ import lombok.*;
 public class TransactionDTO {
     private Integer id;
     private Double paidAmount;
-    private String transactionType;
+    private TransactionTypes transactionType;
     private Double receivedCoins;
     private String transactionDate;
 

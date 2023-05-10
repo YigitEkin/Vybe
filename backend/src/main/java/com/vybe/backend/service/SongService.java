@@ -1,11 +1,8 @@
 package com.vybe.backend.service;
 
 
-import com.vybe.backend.exception.CustomerNotFoundException;
-import com.vybe.backend.exception.PlaylistNotFoundException;
-import com.vybe.backend.exception.VenueNotFoundException;
+import com.vybe.backend.exception.*;
 import com.vybe.backend.model.dto.SongDTO;
-import com.vybe.backend.exception.SongNotFoundException;
 import com.vybe.backend.model.dto.SongNodeDTO;
 import com.vybe.backend.model.dto.SongRequestDTO;
 import com.vybe.backend.model.entity.*;
@@ -14,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.net.http.HttpTimeoutException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +26,7 @@ public class SongService {
     @Resource SongRequestRepository songRequestRepository;
     @Resource CustomerRepository customerRepository;
     @Resource VenueRepository venueRepository;
+    @Resource WalletRepository walletRepository;
 
 
     // ************** Song Methods ************** //
@@ -137,12 +137,16 @@ public class SongService {
             throw new SongNotFoundException("Song with id: " + songRequestDTO.getSongId() + " not found");
 
         Customer customer = customerRepository.findById(songRequestDTO.getRequestedByUsername()).get();
+        Wallet wallet = customer.getWallet();
+        if(wallet.getBalance() < songRequestDTO.getCoinCost())
+            throw new NotEnoughCoinsException("Customer with username: " + customer.getUsername() + " does not have enough coins");
+        wallet.setBalance(wallet.getBalance() - songRequestDTO.getCoinCost());
         Venue venue = venueRepository.findById(songRequestDTO.getRequestedInVenueId()).get();
         Song song = songRepository.findById(songRequestDTO.getSongId()).get();
         songRequestDTO.setRequestDate(new Date());
-        SongRequest songRequest = new SongRequest(0, song, customer, venue, songRequestDTO.getRequestDate());
+        SongRequest songRequest = new SongRequest(0, song, customer, venue, songRequestDTO.getRequestDate(), songRequestDTO.getCoinCost());
         songRequestRepository.save(songRequest);
-
+        walletRepository.save(wallet);
         // create song node according to song request
         SongNodeDTO songNodeDTO = new SongNodeDTO(songRequestDTO);
         songNodeDTO.setPlaylistId(venue.getPlaylist().getId());
@@ -153,7 +157,7 @@ public class SongService {
         // if songNode with song id and playlist id exists, update weight
         if (songNodeRepository.existsBySong_IdAndPlaylistId(songNodeDTO.getSongId(), songNodeDTO.getPlaylistId())) {
             SongNode songNode = songNodeRepository.findBySong_IdAndPlaylistId(songNodeDTO.getSongId(), songNodeDTO.getPlaylistId());
-            songNode.setWeight(songNode.getWeight() + 1);
+            songNode.setWeight(songNode.getWeight() + songNodeDTO.getWeight());
             return new SongNodeDTO(songNodeRepository.save(songNode));
         }
         // else create song node
