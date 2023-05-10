@@ -24,6 +24,6 @@ public class SongNodeDTO {
     public SongNodeDTO(SongRequestDTO songRequestDTO){
         this.playlistId = songRequestDTO.getPlaylistId();
         this.songId = songRequestDTO.getSongId();
-        this.weight = 1.0;
+        this.weight = songRequestDTO.getCoinCost();
     }
 }
