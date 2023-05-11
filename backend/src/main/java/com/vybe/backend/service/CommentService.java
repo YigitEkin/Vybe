@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,7 @@ public class CommentService {
         Venue venue = venueRepository.findById(commentCreationDTO.getVenueId()).get();
         Customer customer = customerRepository.findById(commentCreationDTO.getCustomerUsername()).get();
         Comment comment = commentCreationDTO.toComment();
+        comment.setDate(new Date());
         comment.setVenue(venue);
         comment.setCommentedBy(customer);
         return new CommentDTO(commentRepository.save(comment));

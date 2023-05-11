@@ -2,6 +2,7 @@ package com.vybe.backend;
 
 import com.vybe.backend.model.dto.*;
 import com.vybe.backend.model.entity.Song;
+import com.vybe.backend.model.enums.TransactionTypes;
 import com.vybe.backend.repository.CustomerRepository;
 import com.vybe.backend.repository.SongRepository;
 import com.vybe.backend.repository.UserRepository;
@@ -27,10 +28,14 @@ public class BackendApplication {
 	SongService songService;
 	PlaylistService playlistService;
 	FriendshipService friendshipService;
+	TransactionService transactionService;
+	CommentService commentService;
+	RatingService ratingService;
 
 	@Autowired
 	public BackendApplication(UserRepository userRepository, CustomerRepository customerRepository, SongRepository songRepository,
-							  UserService userService, VenueService venueService, SongService songService, PlaylistService playlistService, FriendshipService friendshipService, IyzicoUtil iyzicoUtil) {
+							  UserService userService, VenueService venueService, SongService songService, PlaylistService playlistService, FriendshipService friendshipService,TransactionService transactionService
+							, CommentService commentService, RatingService ratingService) {
 		this.userRepository = userRepository;
 		this.customerRepository = customerRepository;
 		this.songRepository = songRepository;
@@ -39,6 +44,9 @@ public class BackendApplication {
 		this.songService = songService;
 		this.playlistService = playlistService;
 		this.friendshipService = friendshipService;
+		this.transactionService = transactionService;
+		this.commentService = commentService;
+		this.ratingService = ratingService;
 	}
 
 	public static void main(String[] args) {
@@ -368,7 +376,7 @@ public class BackendApplication {
 			CustomerCreationDTO customerDTO3 = new CustomerCreationDTO("abc", "3", "Mehmet Berk", "Türkçapar", "3", "01.01.2001", "10.05.2023", null);
 			CustomerCreationDTO customerDTO4 = new CustomerCreationDTO("abc","905332346981", "Harun Can", "Surav", "+905332346981", "01.01.2001", "10.05.2023", null);
 			CustomerCreationDTO customerDTO5 = new CustomerCreationDTO("abc", "5", "Can", "Önal", "5", "01.01.2001", "10.05.2023", null);
-			CustomerCreationDTO adminCustomer = new CustomerCreationDTO("abc","6", "Admin", "admin", "6", "01.01.2001", "10.05.2023", null);
+			CustomerCreationDTO adminCustomer = new CustomerCreationDTO("1234","admin", "admin", "admin", "6", "01.01.2001", "10.05.2023", null);
 
 			CustomerDTO customerResult1 = userService.addCustomer(customerDTO1);
 			CustomerDTO customerResult2 = userService.addCustomer(customerDTO21);
@@ -423,16 +431,27 @@ public class BackendApplication {
 
 			friendshipService.acceptFriendRequest(customerResult2.getUsername(), customerResult3.getUsername());
 
+			// ------------------------ Coins ------------------------
+			IncomingTransactionDTO incomingTransactionDTO1 = new IncomingTransactionDTO(TransactionTypes.ADVERTISEMENT, 100.0, "date", "name", "surname", "card number", "expiration month", "year", "ccv");
+
+			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult1.getWalletID());
+			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult2.getWalletID());
+			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult3.getWalletID());
+			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult4.getWalletID());
+			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult5.getWalletID());
+			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult6.getWalletID());
+
+
 			// ------------------------ Song Requests ------------------------
-			SongRequestDTO songRequestDTO1 = new SongRequestDTO(24, customerResult1.getUsername(), 2, new Date(), 0);
-			SongRequestDTO songRequestDTO2 = new SongRequestDTO(25, customerResult2.getUsername(), 2, new Date(), 0);
-			SongRequestDTO songRequestDTO3 = new SongRequestDTO(32, customerResult3.getUsername(), 2, new Date(), 0);
-			SongRequestDTO songRequestDTO4 = new SongRequestDTO(24, customerResult4.getUsername(), 2, new Date(), 0);
+			SongRequestDTO songRequestDTO1 = new SongRequestDTO(24, customerResult1.getUsername(), 2, new Date(), 0,1.0);
+			SongRequestDTO songRequestDTO2 = new SongRequestDTO(25, customerResult2.getUsername(), 2, new Date(), 0, 1.0);
+			SongRequestDTO songRequestDTO3 = new SongRequestDTO(32, customerResult3.getUsername(), 2, new Date(), 0, 1.0);
+			SongRequestDTO songRequestDTO4 = new SongRequestDTO(24, customerResult4.getUsername(), 2, new Date(), 0, 1.0);
 
 
-			SongRequestDTO songRequestDTO5 = new SongRequestDTO(92, customerResult1.getUsername(), 2, new Date(), 0);
-			SongRequestDTO songRequestDTO6 = new SongRequestDTO(213, customerResult1.getUsername(), 2, new Date(), 0);
-			SongRequestDTO songRequestDTO7 = new SongRequestDTO(421, customerResult3.getUsername(), 2, new Date(), 0);
+			SongRequestDTO songRequestDTO5 = new SongRequestDTO(92, customerResult1.getUsername(), 2, new Date(), 0, 1.0);
+			SongRequestDTO songRequestDTO6 = new SongRequestDTO(213, customerResult1.getUsername(), 2, new Date(), 0, 1.0);
+			SongRequestDTO songRequestDTO7 = new SongRequestDTO(421, customerResult3.getUsername(), 2, new Date(), 0, 2.0);
 
 			SongNodeDTO resultRequest1 = songService.addSongRequest(songRequestDTO1);
 			SongNodeDTO resultRequest2 = songService.addSongRequest(songRequestDTO2);
@@ -441,6 +460,62 @@ public class BackendApplication {
 			SongNodeDTO resultRequest5 = songService.addSongRequest(songRequestDTO5);
 			SongNodeDTO resultRequest6 = songService.addSongRequest(songRequestDTO6);
 			SongNodeDTO resultRequest7 = songService.addSongRequest(songRequestDTO7);
+
+			// ------------------------ Comments ------------------------
+			CommentDTO commentDTO1 = new CommentDTO("This is a comment", "date", customerResult1.getUsername(), resultVenue1.getId());
+			CommentDTO commentDTO2 = new CommentDTO("This is a comment", "date", customerResult2.getUsername(), resultVenue1.getId());
+			CommentDTO commentDTO3 = new CommentDTO("This is a comment", "date", customerResult3.getUsername(), resultVenue1.getId());
+
+			CommentDTO commentDTO4 = new CommentDTO("This is a comment", "date", customerResult1.getUsername(), resultVenue2.getId());
+			CommentDTO commentDTO5 = new CommentDTO("This is a comment", "date", customerResult2.getUsername(), resultVenue2.getId());
+			CommentDTO commentDTO6 = new CommentDTO("This is a comment", "date", customerResult3.getUsername(), resultVenue2.getId());
+
+			CommentDTO commentDTO7 = new CommentDTO("This is a comment", "date", customerResult1.getUsername(), resultVenue3.getId());
+			CommentDTO commentDTO8 = new CommentDTO("This is a comment", "date", customerResult2.getUsername(), resultVenue3.getId());
+			CommentDTO commentDTO9 = new CommentDTO("This is a comment", "date", customerResult3.getUsername(), resultVenue3.getId());
+
+			CommentDTO commentDTO10 = new CommentDTO("This is a comment", "date", customerResult1.getUsername(), resultVenue4.getId());
+			CommentDTO commentDTO11 = new CommentDTO("This is a comment", "date", customerResult2.getUsername(), resultVenue4.getId());
+			CommentDTO commentDTO12 = new CommentDTO("This is a comment", "date", customerResult3.getUsername(), resultVenue4.getId());
+
+			commentService.addComment(commentDTO1);
+			commentService.addComment(commentDTO2);
+			commentService.addComment(commentDTO3);
+			commentService.addComment(commentDTO4);
+			commentService.addComment(commentDTO5);
+			commentService.addComment(commentDTO6);
+			commentService.addComment(commentDTO7);
+			commentService.addComment(commentDTO8);
+			commentService.addComment(commentDTO9);
+			commentService.addComment(commentDTO10);
+			commentService.addComment(commentDTO11);
+			commentService.addComment(commentDTO12);
+
+			// ------------------------ Ratings ------------------------
+			RatingDTO ratingDTO1 = new RatingDTO(0, 5.0, "date", customerResult1.getUsername(), resultVenue1.getId());
+			RatingDTO ratingDTO2 = new RatingDTO(0, 3.0, "date", customerResult2.getUsername(), resultVenue1.getId());
+			RatingDTO ratingDTO3 = new RatingDTO(0, 1.0, "date", customerResult3.getUsername(), resultVenue1.getId());
+
+			RatingDTO ratingDTO4 = new RatingDTO(0, 5.0, "date", customerResult1.getUsername(), resultVenue2.getId());
+			RatingDTO ratingDTO5 = new RatingDTO(0, 2.0, "date", customerResult2.getUsername(), resultVenue2.getId());
+			RatingDTO ratingDTO6 = new RatingDTO(0, 4.0, "date", customerResult3.getUsername(), resultVenue2.getId());
+
+			RatingDTO ratingDTO7 = new RatingDTO(0, 5.0, "date", customerResult1.getUsername(), resultVenue3.getId());
+			RatingDTO ratingDTO8 = new RatingDTO(0, 3.0, "date", customerResult2.getUsername(), resultVenue3.getId());
+			RatingDTO ratingDTO9 = new RatingDTO(0, 1.0, "date", customerResult3.getUsername(), resultVenue3.getId());
+
+			ratingService.addRating(ratingDTO1);
+			ratingService.addRating(ratingDTO2);
+			ratingService.addRating(ratingDTO3);
+			ratingService.addRating(ratingDTO4);
+			ratingService.addRating(ratingDTO5);
+			ratingService.addRating(ratingDTO6);
+			ratingService.addRating(ratingDTO7);
+			ratingService.addRating(ratingDTO8);
+			ratingService.addRating(ratingDTO9);
+
+
+
 
 
 

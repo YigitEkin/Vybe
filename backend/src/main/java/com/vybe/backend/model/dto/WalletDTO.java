@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +18,7 @@ public class WalletDTO {
     private Integer id;
     private Double balance;
     private Double totalSpent;
-    private List<Transaction> transactions;
+    private Set<Transaction> transactions;
 
     public WalletDTO(Wallet wallet) {
         this.id = wallet.getId();

@@ -3,6 +3,7 @@ package com.vybe.backend.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Comment class that holds the information of a comment on a venue by a customer
@@ -29,7 +30,8 @@ public class Comment {
     /**
      * Date that the comment was written
      */
-    private String date;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date;
 
     /**
      * The customer that the comment belongs to

@@ -23,8 +23,6 @@ public class VenueDTO {
     private Analytics analytics;
     private List<Object> photos;
     private Playlist playlist;
-    private Set<Rating> ratings;
-    private Set<CommentDTO> comments;
     private String qrCode;
     private String soundzoneId;
     private String token;
@@ -38,8 +36,6 @@ public class VenueDTO {
             this.analytics = venue.getAnalytics();
             this.photos = venue.getPhotos();
             this.playlist = venue.getPlaylist();
-            this.ratings = venue.getRatings();
-            this.comments = CommentDTO.toCommentDTOSet(venue.getComments());
             this.qrCode = venue.getQrCode();
             this.soundzoneId = venue.getSoundzoneId();
             this.token = venue.getToken();
@@ -47,6 +43,6 @@ public class VenueDTO {
     }
 
     public Venue toVenue() {
-        return new Venue(id, name, description, location, analytics, photos, playlist, null, ratings, null, qrCode, token, soundzoneId);
+        return new Venue(id, name, description, location, analytics, photos, playlist, null, null, null, qrCode, token, soundzoneId);
     }
 }

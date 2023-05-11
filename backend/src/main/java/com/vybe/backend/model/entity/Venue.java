@@ -2,10 +2,7 @@ package com.vybe.backend.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -61,6 +58,7 @@ public class Venue {
      */
     @OneToOne(fetch = FetchType.EAGER)
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Playlist playlist;
 
 
@@ -81,6 +79,8 @@ public class Venue {
             mappedBy = "venue",
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
     private Set<Rating> ratings;
 
     /**
@@ -91,6 +91,8 @@ public class Venue {
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER
     )
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
     private Set<Comment> comments;
 
     /**

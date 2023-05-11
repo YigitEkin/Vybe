@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Rating class that holds the information of the rating that a customer gave to a venue
@@ -27,6 +28,9 @@ public class Rating {
      * The actual rating that the user gave
      */
     private Double rating;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date;
 
     /**
      * The customer that the rating is given by
