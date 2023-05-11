@@ -165,17 +165,17 @@ public class VenueController {
     }
 
     // ************* Image Endpoints ************* //
-    @GetMapping("/{venueId}/image")
+    @GetMapping("/{venueId}/images")
     public List<ImageDTO> getImage(@PathVariable Integer venueId) {
         return venueService.getVenuePhotos(venueId);
     }
 
-    @PostMapping("/{venueId}/image")
+    @PostMapping("/{venueId}/images")
     public Boolean addImage(@PathVariable Integer venueId, @RequestBody ImageDTO imageDTO) {
         return venueService.uploadVenuePhoto(imageDTO, venueId);
     }
 
-    @DeleteMapping("/{venueId}/image/{imageId}")
+    @DeleteMapping("/{venueId}/images/{imageId}")
     public Boolean deleteImage(@PathVariable Integer venueId, @PathVariable Long imageId) {
         return venueService.deleteVenuePhoto(venueId, imageId);
     }
