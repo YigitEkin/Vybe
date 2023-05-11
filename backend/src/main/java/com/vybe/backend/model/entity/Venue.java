@@ -104,6 +104,9 @@ public class Venue {
 
     private String soundzoneId;
 
+    @ManyToOne
+    private Song currentSong;
+
     /**
      * Called when coins are spent on the venue
      * @param points the amount of points to be added to the venue
