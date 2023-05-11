@@ -2,10 +2,7 @@ package com.vybe.backend.service;
 
 import com.vybe.backend.exception.CustomerNotFoundException;
 import com.vybe.backend.exception.InputException;
-import com.vybe.backend.model.dto.CustomerDTO;
-import com.vybe.backend.model.dto.SongDTO;
-import com.vybe.backend.model.dto.VenueCreationDTO;
-import com.vybe.backend.model.dto.VenueDTO;
+import com.vybe.backend.model.dto.*;
 import com.vybe.backend.exception.VenueNotFoundException;
 import com.vybe.backend.model.entity.*;
 import com.vybe.backend.repository.*;
@@ -14,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,6 +41,7 @@ public class VenueService {
             throw new InputException("Location must be in format float, float but found: " + venue.getLocation());
         }
         venue.setComments(Collections.emptySet());
+        venue.setPhotos(Collections.emptySet());
         return new VenueDTO(venueRepository.save(venue));
     }
 
@@ -201,5 +197,39 @@ public class VenueService {
         }
     }
 
+    public Boolean uploadVenuePhoto(ImageDTO dto, Integer venueId) {
+        String data = dto.getImage();
+        if(!venueRepository.existsById(venueId)) {
+            throw new VenueNotFoundException("Venue with id: " + venueId + " not found");
+        }
+        Venue venue = venueRepository.findById(venueId).get();
+        Set<Image> photos = venue.getPhotos();
+        Image image = new Image();
+        image.setData(data);
+        photos.add(image);
+        venue.setPhotos(photos);
+        venueRepository.save(venue);
+        return true;
+    }
 
+    public List<ImageDTO> getVenuePhotos(Integer venueId) {
+        if(!venueRepository.existsById(venueId)) {
+            throw new VenueNotFoundException("Venue with id: " + venueId + " not found");
+        }
+        Venue venue = venueRepository.findById(venueId).get();
+        List<Image> images = new ArrayList<>(venue.getPhotos());
+        return images.stream().map(ImageDTO::new).collect(Collectors.toList());
+    }
+
+    public boolean deleteVenuePhoto(Integer venueId, Long imageId) {
+        if(!venueRepository.existsById(venueId)) {
+            throw new VenueNotFoundException("Venue with id: " + venueId + " not found");
+        }
+        Venue venue = venueRepository.findById(venueId).get();
+        Set<Image> photos = venue.getPhotos();
+        photos.remove(photos.stream().filter(image -> Objects.equals(image.getId(), imageId)).findFirst().get());
+        venue.setPhotos(photos);
+        venueRepository.save(venue);
+        return true;
+    }
 }

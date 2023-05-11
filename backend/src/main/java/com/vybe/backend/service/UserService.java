@@ -265,5 +265,60 @@ public class UserService {
         adminRepository.deleteByUsername(username);
     }
 
+    public boolean uploadCustomerPhoto(String username, ImageDTO data) {
+        if (!customerRepository.existsByUsername(username)) {
+            throw new CustomerNotFoundException("Customer with username: " + username + " not found");
+        }
+        Customer customer = customerRepository.findByUsername(username);
+        Image image = customer.getProfilePicture();
+        if (image == null) {
+            image = new Image();
+        }
+        image.setData(data.getImage());
+        customer.setProfilePicture(image);
+        customerRepository.save(customer);
+        return true;
+    }
+
+    public boolean deleteCustomerPhoto(String username) {
+        if (!customerRepository.existsByUsername(username)) {
+            throw new CustomerNotFoundException("Customer with username: " + username + " not found");
+        }
+        Customer customer = customerRepository.findByUsername(username);
+        Image image = customer.getProfilePicture();
+        if (image == null) {
+            return false;
+        }
+        customer.setProfilePicture(null);
+        customerRepository.save(customer);
+        return true;
+    }
+
+    public boolean uploadVenueAdminImage(String username, String data) {
+        if (!venueAdminRepository.existsByUsername(username)) {
+            throw new VenueAdminNotFoundException("Venue admin with username: " + username + " not found");
+        }
+        VenueAdmin venueAdmin = venueAdminRepository.findByUsername(username);
+        Image image = venueAdmin.getProfilePicture();
+        if (image == null) {
+            image = new Image();
+        }
+        image.setData(data);
+        venueAdmin.setProfilePicture(image);
+        venueAdminRepository.save(venueAdmin);
+        return true;
+    }
+
+    public ImageDTO getCustomerPhoto(String username) {
+        if (!customerRepository.existsByUsername(username)) {
+            throw new CustomerNotFoundException("Customer with username: " + username + " not found");
+        }
+        Customer customer = customerRepository.findByUsername(username);
+        Image image = customer.getProfilePicture();
+        if (image == null) {
+            return null;
+        }
+        return new ImageDTO(image);
+    }
 
 }

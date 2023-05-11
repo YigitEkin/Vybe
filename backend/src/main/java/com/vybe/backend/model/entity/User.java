@@ -41,9 +41,8 @@ public class User implements UserDetails {
     /**
      * The users profile picture
      */
-    //TODO: Decide on Object type
-    @Transient
-    private Object profilePicture;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Image profilePicture;
     /**
      * The venue user is currently checked in
      */
