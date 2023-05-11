@@ -94,8 +94,12 @@ public class VenueController {
 
     @GetMapping("/{venueId}/nextSong")
     public SongDTO playNextSong(@PathVariable Integer venueId) {
-
         return new SongDTO(venueService.startSong(venueId));
+    }
+
+    @GetMapping("/{venueId}/currentSong")
+    public SongDTO getCurrentSong(@PathVariable Integer venueId) {
+        return venueService.getCurrentSong(venueId);
     }
 
     @PostMapping("/{venueId}/defaultPlaylist")

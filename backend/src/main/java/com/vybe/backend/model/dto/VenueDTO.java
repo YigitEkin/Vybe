@@ -26,6 +26,7 @@ public class VenueDTO {
     private String qrCode;
     private String soundzoneId;
     private String token;
+    private SongDTO currentSong;
 
     public VenueDTO(Venue venue) {
         if (venue != null) {
@@ -39,10 +40,13 @@ public class VenueDTO {
             this.qrCode = venue.getQrCode();
             this.soundzoneId = venue.getSoundzoneId();
             this.token = venue.getToken();
+            this.currentSong = null;
+            if (venue.getCurrentSong() != null)
+                this.currentSong = new SongDTO(venue.getCurrentSong());
         }
     }
 
     public Venue toVenue() {
-        return new Venue(id, name, description, location, analytics, photos, playlist, null, null, null, qrCode, token, soundzoneId);
+        return new Venue(id, name, description, location, analytics, photos, playlist, null, null, null, qrCode, token, soundzoneId, null);
     }
 }
