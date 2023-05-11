@@ -1,6 +1,7 @@
 package com.vybe.backend.controller;
 
 import com.vybe.backend.model.dto.*;
+import com.vybe.backend.util.SchedulerUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import com.vybe.backend.model.entity.Visit;
 import com.vybe.backend.service.*;
@@ -27,6 +28,9 @@ public class VenueController {
     private CommentService commentService;
 
     @Resource
+    private RatingService ratingService;
+
+    @Resource
     private SongService songService;
 
     @Resource
@@ -34,6 +38,9 @@ public class VenueController {
 
     @Resource
     private VisitService visitService;
+
+    @Resource
+    private SchedulerUtil schedulerUtil;
 
 
     // ************* Venue Endpoints ************* //
@@ -72,6 +79,16 @@ public class VenueController {
         return commentService.getAllCommentsForVenue(venueId);
     }
 
+    // ************* Rating Endpoints ************* //
+    @GetMapping("/{venueId}/ratings")
+    public List<RatingDTO> getRatings(@PathVariable Integer venueId) {
+        return ratingService.getAllRatingsForVenue(venueId);
+    }
+
+    @GetMapping("/{venueId}/ratings/average")
+    public Double getAverageRating(@PathVariable Integer venueId) {
+        return ratingService.getAverageRatingForVenue(venueId);
+    }
 
     // ************* Song Endpoints ************* //
 
@@ -84,6 +101,10 @@ public class VenueController {
     @PostMapping("/{venueId}/defaultPlaylist")
     public List<SongDTO> syncDefaultPlaylist(@PathVariable Integer venueId) {
         return playlistService.addAllSongsToDefaultPlaylist(venueId);
+    }
+    @PostMapping("/{venueId}/initialize")
+    public void initializeVenue(@PathVariable Integer venueId) {
+        schedulerUtil.initializeVenue(venueId);
     }
 
 

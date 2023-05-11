@@ -19,6 +19,7 @@ public class CustomerDTO {
     private String dateOfBirth;
     private String dateOfCreation;
     private VenueDTO checkedInVenue;
+    private Integer walletID;
 
     public CustomerDTO(Customer customer) {
         this.username = customer.getUsername();
@@ -29,5 +30,6 @@ public class CustomerDTO {
         this.dateOfCreation = customer.getDateOfCreation();
         if (customer.getCheckedInVenue() != null)
             this.checkedInVenue = new VenueDTO(customer.getCheckedInVenue());
+        this.walletID = customer.getWallet().getId();
     }
 }

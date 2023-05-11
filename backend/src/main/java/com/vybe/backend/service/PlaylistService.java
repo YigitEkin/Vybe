@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -141,11 +142,15 @@ public class PlaylistService {
     // add all songs returned from soundtrackyourbrand to song repository then add them to default playlist
     public List<SongDTO> addAllSongsToDefaultPlaylist(Integer id) {
         Playlist playlist = playlistRepository.findById(id).orElseThrow(() -> new PlaylistNotFoundException("Playlist with id: " + id + " not found"));
-        List<String> songs = SoundtrackUtil.getTracksOnPlaylist(playlist.getDefaultPlaylistId(), playlist.getVenue().getToken());
+        List<HashMap<String, String>> songs = SoundtrackUtil.getTracksOnPlaylist(playlist.getDefaultPlaylistId(), playlist.getVenue().getToken());
         List<SongDTO> songDTOs = new ArrayList<>();
-        for (String song : songs) {
+        for (HashMap<String,String> song : songs) {
+            if(song.get("isAvailable").equals("false"))
+                continue;
             SongDTO songDTO = new SongDTO();
-            songDTO.setName(song);
+            songDTO.setName(song.get("trackName"));
+            songDTO.setArtist(song.get("artistNames"));
+            songDTO.setLink(song.get("imageUrl"));
             Song song1 = songRepository.save(songDTO.toSong());
             playlist.getDefaultPlaylist().add(song1);
             songDTO = new SongDTO(song1);

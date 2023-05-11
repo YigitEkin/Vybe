@@ -1,5 +1,6 @@
 package com.vybe.backend.model.entity;
 
+import com.vybe.backend.model.enums.TransactionTypes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,7 +33,7 @@ public class Transaction {
     /**
      * The transaction type (cash or ad)
      */
-    private String transactionType;
+    private TransactionTypes transactionType;
     /**
      * Coins purchased for paidAmount
      */

@@ -25,7 +25,6 @@ public class CommentDTO {
     public Comment toComment() {
         Comment comment = new Comment();
         comment.setText(text);
-        comment.setDate(date);
 
         return comment;
     }
@@ -39,7 +38,7 @@ public class CommentDTO {
 
     public CommentDTO(Comment comment) {
         this.text = comment.getText();
-        this.date = comment.getDate();
+        this.date = comment.getDate().toString();
         this.customerUsername = comment.getCommentedBy().getUsername();
         this.venueId = comment.getVenue().getId();
         this.id = comment.getId();
