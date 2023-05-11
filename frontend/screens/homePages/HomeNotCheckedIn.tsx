@@ -8,6 +8,7 @@ import {
   Alert,
   ScrollView,
 } from 'react-native';
+import haversine from 'haversine';
 import React, { useEffect, useState } from 'react';
 import GroupItem from '../../components/HomePage/GroupItem';
 import { Colors } from '../../constants/Colors';
@@ -19,12 +20,15 @@ import SearchBar from '../../components/HomePage/SearchBar';
 import SearchIcon from '../../assets/SearchIcon.png';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as Font from 'expo-font';
+import * as Location from 'expo-location';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useCheckedInStore } from '../../stores/CheckedInStore';
 import { useLoginStore } from '../../stores/LoginStore';
 import axios from 'axios';
 import axiosConfig from '../../constants/axiosConfig';
-
+import { useIsFocused } from '@react-navigation/native';
+import { ActivityIndicator } from 'react-native';
+import StyledButton from '../../components/HomePage/StyledButton';
 const HomeNotCheckedIn = () => {
   const instanceToken = axiosConfig();
   const [isCamOpen, setIsCamOpen] = useState(false);
@@ -107,11 +111,87 @@ const HomeNotCheckedIn = () => {
   const [friendList, setFriendList] = useState([]);
   const { setIsCheckIn } = useCheckedInStore();
   const [isRequested, setIsRequested] = useState(false);
+  const [locationVenue, setLocationVenue] = useState('');
+  const [success, setSuccess] = useState(true);
+
   const dbUserName = selectedCode.dial_code.replace('+', '') + phoneNumber;
+  //const getCurrentPositionAsync = async () => {
+  //  console.log('entered c');
+
+  //  try {
+  //    const { status } = await Location.requestForegroundPermissionsAsync();
+  //    if (status !== 'granted') {
+  //      Alert.alert(
+  //        'Permission denied',
+  //        'You need to grant location permission to use this feature',
+  //        [{ text: 'OK' }]
+  //      );
+  //      return;
+  //    }
+  //    const location = await Location.getCurrentPositionAsync();
+  //    return location;
+  //  } catch (e) {
+  //    console.log(e);
+  //  }
+  //};
+  const [userLocation, setUserLocation] = useState(null);
+  const calculateDistance = (startLocation, endLocation) => {
+    return haversine(startLocation, endLocation, { unit: 'meter' });
+  };
+
   const handleScan = (res) => {
-    console.log(dbUserName);
+    //let locationVenue = '';
+    //console.log(dbUserName);
     if (!isRequested) {
       setIsRequested(true);
+      console.log('entered func');
+
+      console.log('userLocation', userLocation);
+      let { latitude, longitude } = userLocation?.coords;
+      let locUser = { latitude, longitude };
+      console.log('locUser', locUser);
+
+      instanceToken
+        .get(`/api/venues/${res}`)
+        .then((result) => {
+          console.log(result.data);
+          if (result.data) {
+            setLocationVenue(result.data.location);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+          setIsRequested(false);
+        });
+      if (locationVenue === '') {
+        setIsRequested(false);
+        return;
+      }
+      let latitudeV = locationVenue.split(',')[0];
+      let longitudeV = locationVenue.split(',')[1];
+
+      if (!userLocation) {
+        console.log('user location not found');
+
+        setIsRequested(false);
+        return;
+      }
+      const venueLocation = {
+        latitude: latitudeV,
+        longitude: longitudeV,
+      };
+      const distance = calculateDistance(locUser, venueLocation);
+      console.log('venueLocation', venueLocation);
+
+      console.log('distance', distance);
+      if (distance > 100) {
+        Alert.alert('Out of range', 'You are not in the range of the venue', [
+          { text: 'OK' },
+        ]);
+        setIsRequested(false);
+        setStartCamera(false);
+        return;
+      }
       instanceToken
         .post(`/api/venues/${res}/checkIn/${dbUserName}`)
         .then((result) => {
@@ -127,22 +207,59 @@ const HomeNotCheckedIn = () => {
     }
   };
 
-  useEffect(() => {
+  const fetchUsers = () => {
+    //console.log('fetching');
     instanceToken.get(`/api/customers`).then((res) => {
-      console.log(res.data);
+      //console.log(res.data);
       setFilteredUserList(
         res.data.filter((user) => user.username !== dbUserName)
       );
+      setUserList(res.data.filter((user) => user.username !== dbUserName));
     });
-  }, []);
-  useEffect(() => {
     instanceToken.get(`/api/customers/${dbUserName}/friends`).then((res) => {
-      console.log(res.data);
+      //console.log(res.data);
       setFriendList(res.data.filter((user) => user.checkedInVenue !== null));
     });
-  }, []);
-
+  };
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    fetchUsers();
+  }, [clicked, isFocused]);
+  //useEffect(() => {
+  //  instanceToken.get(`/api/customers/${dbUserName}/friends`).then((res) => {
+  //    console.log(res.data);
+  //    setFriendList(res.data.filter((user) => user.checkedInVenue !== null));
+  //  });
+  //}, []);
   const __startCamera = async () => {
+    //let { status } = await Location.requestForegroundPermissionsAsync();
+    //console.log(status);
+    //if (status !== 'granted') {
+    //  Alert.alert(
+    //    'Permission denied',
+    //    'You need to grant location permission to use this feature',
+    //    [{ text: 'OK' }]
+    //  );
+    //  return;
+    //}
+    setSuccess(false);
+    try {
+      let location = await Location.getCurrentPositionAsync({});
+      setUserLocation(location);
+    } catch (error) {
+      Alert.alert(
+        'Permission denied',
+        'You need to grant location permission to use this feature',
+        [{ text: 'OK' }]
+      );
+      setSuccess(true);
+      setIsCamOpen(false);
+
+      console.log('Error getting current location:', error);
+      return;
+    }
+    //setUserLocation(location);
+    setSuccess(true);
     const { status } = await Camera.requestCameraPermissionsAsync();
 
     if (status === 'granted') {
@@ -153,9 +270,12 @@ const HomeNotCheckedIn = () => {
   };
 
   useEffect(() => {
-    console.log('searchPhrase', searchPhrase);
+    //console.log('searchPhrase', searchPhrase);
     const filteredArray = userList.filter((user) => {
-      return user.name.toLowerCase().includes(searchPhrase.toLowerCase());
+      return (
+        user.name.toLowerCase().includes(searchPhrase.toLowerCase()) ||
+        user.surname.toLowerCase().includes(searchPhrase.toLowerCase())
+      );
     });
     setFilteredUserList(filteredArray);
   }, [searchPhrase]);
@@ -200,7 +320,35 @@ const HomeNotCheckedIn = () => {
     );
   };
 
-  return !startCamera ? (
+  return !success ? (
+    <View
+      style={{
+        backgroundColor: '#000',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Text
+        style={{
+          fontFamily: 'Inter-Regular',
+          fontSize: 12,
+          marginBottom: 20,
+          color: '#fff',
+        }}
+      >
+        {'Please wait while we check your location...'}
+      </Text>
+      <ActivityIndicator size='large' color='#EA34C9' />
+      {/*<StyledButton
+        buttonText='Cancel'
+        onPress={() => {
+          setStartCamera(false);
+          setSuccess(true);
+        }}
+      />*/}
+    </View>
+  ) : !startCamera ? (
     <View style={styles.container}>
       <View
         style={{
@@ -278,11 +426,16 @@ const HomeNotCheckedIn = () => {
                 </Text>
 
                 {friendList.map((friend) => (
-                  <ListItem
+                  <Pressable
                     key={friend.username}
-                    topText={friend.name + ' ' + friend.surname}
-                    subText={friend.checkedInVenue.name}
-                  />
+                    onPress={() => handleUserPress(friend.username)}
+                  >
+                    <ListItem
+                      key={friend.username}
+                      topText={friend.name + ' ' + friend.surname}
+                      subText={friend.checkedInVenue.name}
+                    />
+                  </Pressable>
                 ))}
               </>
             ) : (

@@ -8,6 +8,7 @@ import {
   Alert,
   ScrollView,
   Modal,
+  ActivityIndicator,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import GroupItem from '../../components/HomePage/GroupItem';
@@ -36,6 +37,7 @@ import axiosConfig from '../../constants/axiosConfig';
 const HomeCheckedIn = () => {
   const instanceToken = axiosConfig();
   const [checkedInVenue, setCheckedInVenue] = useState({});
+  const [songQueue, setSongQueue] = useState([]);
   const { phoneNumber, selectedCode } = useLoginStore((state: any) => {
     return {
       phoneNumber: state.phoneNumber,
@@ -51,11 +53,11 @@ const HomeCheckedIn = () => {
       setCheckedInVenueId(res.data.checkedInVenue.id);
     });
   }, []);
-  useEffect(() => {
-    instanceToken.get(`/api/customers`).then((res) => {
-      console.log(res.data);
-    });
-  }, []);
+  //useEffect(() => {
+  //  instanceToken.get(`/api/customers`).then((res) => {
+  //    console.log(res.data);
+  //  });
+  //}, []);
   const [showBox, setShowBox] = useState(true);
   const showConfirmDialog = () => {
     return Alert.alert('Are your sure?', 'Are you sure you want to checkout?', [
@@ -94,6 +96,7 @@ const HomeCheckedIn = () => {
   const { isCheckIn, setIsCheckIn } = useCheckedInStore();
   const [requestType, setRequestType] = useState('default');
   const [coinBalance, setCoinBalance] = useState(1000);
+  const [success, setSuccess] = useState(true);
   const [userList, setUserList] = useState([
     {
       id: 1,
@@ -188,15 +191,55 @@ const HomeCheckedIn = () => {
     setSelectedSong(name);
   };
   const navigation = useNavigation();
-  useEffect(() => {}, []);
+  const fetchUsers = () => {
+    //console.log('fetching');
+    instanceToken.get(`/api/customers`).then((res) => {
+      //console.log(res.data);
+      setFilteredUserList(
+        res.data.filter((user) => user.username !== dbUserName)
+      );
+      setUserList(res.data.filter((user) => user.username !== dbUserName));
+    });
+  };
+  const fetchQueue = () => {
+    instanceToken
+      .get(`/api/venues/${checkedInVenueId}/nextSongs`)
+      .then((res) => {
+        console.log(res.data);
+        setSongQueue(res.data);
+      });
+  };
+
+  const fetchSongs = () => {
+    setSuccess(false);
+    instanceToken
+      .get(`/api/venues/${checkedInVenueId}/defaultPlaylist/songs`)
+      .then((res) => {
+        console.log(res.data);
+        setSongList(res.data);
+        setSuccess(true);
+      })
+      .catch((e) => {
+        console.log(e);
+        setSuccess(true);
+      });
+  };
+
   useEffect(() => {
-    console.log('searchPhrase', searchPhrase);
+    fetchUsers();
+    fetchQueue();
+  }, []);
+  useEffect(() => {
     const filteredArray = userList.filter((user) => {
-      return user.name.toLowerCase().includes(searchPhrase.toLowerCase());
+      return (
+        user.name.toLowerCase().includes(searchPhraseHome.toLowerCase()) ||
+        user.surname.toLowerCase().includes(searchPhraseHome.toLowerCase())
+      );
     });
     setFilteredUserList(filteredArray);
-  }, []);
+  }, [searchPhraseHome]);
   const __addSongToQueue = async () => {
+    fetchSongs();
     setAddSong(true);
   };
 
@@ -321,27 +364,32 @@ const HomeCheckedIn = () => {
                 {'Current Song Queue'}
               </Text>
               <ScrollView style={{ height: '100%', marginBottom: 100 }}>
-                <ListItem topText={'Song Name'} subText={'Artist Name'} />
-                <ListItem topText={'Song Name'} subText={'Artist Name'} />
-                <ListItem topText={'Song Name'} subText={'Artist Name'} />
-                <ListItem topText={'Song Name'} subText={'Artist Name'} />
-                <ListItem topText={'Song Name'} subText={'Artist Name'} />
-                <ListItem topText={'Song Name'} subText={'Artist Name'} />
-                <ListItem topText={'Song Name'} subText={'Artist Name'} />
-                <ListItem topText={'Song Name'} subText={'Artist Name'} />
+                {songQueue.map((song) => (
+                  <Pressable key={song.id}>
+                    <ListItem
+                      key={song.id}
+                      topText={song.name}
+                      subText={song.artist ? song.artist : 'No Artist'}
+                    />
+                  </Pressable>
+                ))}
               </ScrollView>
             </>
           ) : (
             <ScrollView style={{ height: '100%', marginBottom: 100 }}>
               {filteredUserList.map((user) => (
                 <Pressable
-                  key={user.id}
-                  onPress={() => handleUserPress(user.id)}
+                  key={user.username}
+                  onPress={() => handleUserPress(user.username)}
                 >
                   <ListItem
-                    key={user.id}
-                    topText={user.name}
-                    subText={user.status}
+                    key={user.username}
+                    topText={user.name + ' ' + user.surname}
+                    subText={
+                      user.checkedInVenue
+                        ? user.checkedInVenue.name
+                        : 'Not checked in'
+                    }
                   />
                 </Pressable>
               ))}
@@ -497,22 +545,47 @@ const HomeCheckedIn = () => {
           </Text>
         </View>
       </View>
-      <SearchBar
-        searchPhrase={searchPhrase}
-        clicked={clicked}
-        setClicked={setClicked}
-        setSearchPhrase={setSearchPhrase}
-      />
-      <ScrollView style={{ height: '100%', marginBottom: 100 }}>
-        {songList.map((song) => (
-          <Pressable
-            key={song.id}
-            onPress={() => handleSongPress(song.id, song.name)}
+
+      {success ? (
+        <>
+          <SearchBar
+            searchPhrase={searchPhrase}
+            clicked={clicked}
+            setClicked={setClicked}
+            setSearchPhrase={setSearchPhrase}
+          />
+          <ScrollView style={{ height: '100%', marginBottom: 100 }}>
+            {songList.map((song) => (
+              <Pressable
+                key={song.id}
+                onPress={() => handleSongPress(song.id, song.name)}
+              >
+                <ListItem
+                  key={song.id}
+                  topText={song.name}
+                  subText={song.artist ? song.artist : 'No Artist'}
+                />
+              </Pressable>
+            ))}
+          </ScrollView>
+        </>
+      ) : (
+        <View
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        >
+          <Text
+            style={{
+              fontFamily: 'Inter-Regular',
+              fontSize: 20,
+              marginBottom: 20,
+              color: '#fff',
+            }}
           >
-            <ListItem key={song.id} topText={song.name} subText={song.artist} />
-          </Pressable>
-        ))}
-      </ScrollView>
+            {'Fetcing Songs...'}
+          </Text>
+          <ActivityIndicator size='large' color='#EA34C9' />
+        </View>
+      )}
     </View>
   );
 };

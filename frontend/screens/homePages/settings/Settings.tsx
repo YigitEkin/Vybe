@@ -15,6 +15,7 @@ import * as Font from 'expo-font';
 import CoinIcon from '../../../assets/coin.png';
 import { useNavigation } from '@react-navigation/native';
 import { useLoginStore } from '../../../stores/LoginStore';
+import { useIsFocused } from '@react-navigation/native';
 import axiosConfig from '../../../constants/axiosConfig';
 
 type editSectionArea = {
@@ -110,12 +111,14 @@ const SettingsPage = () => {
   const { isLogin, setIsLogin } = useLoginStore();
   const [coinBalance, setCoinBalance] = useState(200);
   const [section, setSection] = useState(editSections);
-
+  const isFocused = useIsFocused();
   useEffect(() => {
+    //console.log(isFocused);
+
     instanceToken
       .get(`/api/customers/${dbUserName}/friends/incoming_requests`)
       .then((res) => {
-        console.log(res.data, res.data.length);
+        //console.log(res.data, res.data.length);
         setNotificationCount(res.data.length);
       });
 
@@ -144,7 +147,7 @@ const SettingsPage = () => {
       ];
       setSection(section);
     });
-  }, []);
+  }, [isFocused]);
   return fontsLoaded ? (
     <>
       <Modal

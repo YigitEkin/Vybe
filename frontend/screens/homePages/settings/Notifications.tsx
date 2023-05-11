@@ -1,11 +1,19 @@
 import moment from 'moment';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { View, Text, StyleSheet, Pressable, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  FlatList,
+  ScrollView,
+} from 'react-native';
 import * as Font from 'expo-font';
 import { Colors } from '../../../constants/Colors';
 import { useLoginStore } from '../../../stores/LoginStore';
 import axiosConfig from '../../../constants/axiosConfig';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 
 export interface NotificationCardProps {
   id: number;
@@ -17,8 +25,10 @@ export interface NotificationCardProps {
 
 function NotificationCard(
   data: NotificationCardProps,
-  { setNotification }: any
+  setNotifications: any,
+  notifications: NotificationCardProps[]
 ) {
+  console.log('data,data', data.data.name);
   const instanceToken = axiosConfig();
   const { phoneNumber, selectedCode } = useLoginStore((state: any) => {
     return {
@@ -33,11 +43,16 @@ function NotificationCard(
   });
   const handleRequest = (isAccept: string) => {
     console.log(data.username);
+    console.log(notifications);
     instanceToken
-      .put(`/api/customers/${data.username}/friends/${dbUserName}/${isAccept}`)
+      .put(
+        `/api/customers/${data.data.username}/friends/${dbUserName}/${isAccept}`
+      )
       .then((res) => {
         console.log(res.data);
-        setNotification();
+        data.setNotifications(
+          data.notifications.filter((x) => x.username !== data.data.username)
+        );
       })
       .catch((err) => {
         console.log(err.message);
@@ -50,7 +65,7 @@ function NotificationCard(
           <View style={styles.picture} />
           <View style={styles.ml_20}>
             <Text style={styles.username}>
-              {data.name} {data.surname}
+              {data.data.name} {data.data.surname}
             </Text>
             <Text style={styles.desc}>{`Sent you a friend request`}</Text>
           </View>
@@ -69,7 +84,10 @@ function NotificationCard(
         >
           <Text style={styles.acceptText}>Accept</Text>
         </Pressable>
-        <Pressable style={styles.declineBtn}>
+        <Pressable
+          style={styles.declineBtn}
+          onPress={() => handleRequest('true')}
+        >
           <Text style={styles.declineText}>Decline</Text>
         </Pressable>
       </View>
@@ -77,7 +95,9 @@ function NotificationCard(
   ) : null;
 }
 
-const Notifications = () => {
+const Notifications = ({ navigation }) => {
+  //const navigation = useNavigation();
+  const isFocused = navigation.isFocused();
   const [notifications, setNotifications] = useState<NotificationCardProps[]>(
     []
   );
@@ -99,22 +119,30 @@ const Notifications = () => {
       });
   }
   useEffect(() => {
+    console.log('useEffect');
+
     instanceToken
       .get(`/api/customers/${dbUserName}/friends/incoming_requests`)
       .then((res) => {
         //console.log(res.data, res.data.length);
         setNotifications(res.data);
       });
-  }, []);
+  }, [isFocused]);
 
   return (
-    <FlatList
-      data={notifications}
-      renderItem={({ item }) => (
-        <NotificationCard {...item} setNotification={refetchData} />
-      )}
-      //keyExtractor={(item) => item.id.toString()}
-    />
+    <ScrollView horizontal={false} style={{ flex: 1 }}>
+      {notifications.map((item) => {
+        console.log('item', item);
+        return (
+          <NotificationCard
+            key={item.username}
+            data={item}
+            setNotifications={setNotifications}
+            notifications={notifications}
+          />
+        );
+      })}
+    </ScrollView>
   );
 };
 
