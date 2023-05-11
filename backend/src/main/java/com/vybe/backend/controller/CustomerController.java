@@ -3,6 +3,7 @@ package com.vybe.backend.controller;
 import com.vybe.backend.model.dto.*;
 import com.vybe.backend.service.CommentService;
 import com.vybe.backend.service.FriendshipService;
+import com.vybe.backend.service.RatingService;
 import com.vybe.backend.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +25,8 @@ public class CustomerController {
     @Resource private CommentService commentService;
 
     @Resource private FriendshipService friendshipService;
+
+    @Resource private RatingService ratingService;
 
     // ************* Customer Endpoints ************* //
     // get all customers
@@ -64,6 +67,12 @@ public class CustomerController {
         return commentService.getAllCommentsByCustomer(username);
     }
 
+    // ************** Rating Endpoints ************** //
+    // get all ratings for a customer
+    @GetMapping("/{username}/ratings")
+    public List<RatingDTO> getAllRatingsForCustomer(@PathVariable String username) {
+        return ratingService.getAllRatingsByCustomer(username);
+    }
 
     // ************** Friendship Endpoints ************** //
     // TODO: can a customer send a friend request to themselves?

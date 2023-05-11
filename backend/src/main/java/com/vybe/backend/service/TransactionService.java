@@ -97,7 +97,7 @@ public class TransactionService {
         if (wallet == null) {
             throw new WalletNotFoundException("Wallet with id " + walletId + " is not found.");
         }
-        List<Transaction> transactions = wallet.getTransactions();
+        List<Transaction> transactions = wallet.getTransactions().stream().toList();
         List<Transaction> tmp = new ArrayList<>();
         // Filter transactions by date
         for (Transaction transaction : transactions) {

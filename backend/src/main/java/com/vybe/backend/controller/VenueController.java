@@ -28,6 +28,9 @@ public class VenueController {
     private CommentService commentService;
 
     @Resource
+    private RatingService ratingService;
+
+    @Resource
     private SongService songService;
 
     @Resource
@@ -76,6 +79,16 @@ public class VenueController {
         return commentService.getAllCommentsForVenue(venueId);
     }
 
+    // ************* Rating Endpoints ************* //
+    @GetMapping("/{venueId}/ratings")
+    public List<RatingDTO> getRatings(@PathVariable Integer venueId) {
+        return ratingService.getAllRatingsForVenue(venueId);
+    }
+
+    @GetMapping("/{venueId}/ratings/average")
+    public Double getAverageRating(@PathVariable Integer venueId) {
+        return ratingService.getAverageRatingForVenue(venueId);
+    }
 
     // ************* Song Endpoints ************* //
 

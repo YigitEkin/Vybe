@@ -1,5 +1,6 @@
 package com.vybe.backend.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,7 @@ public class Friendship {
     @ManyToOne
     @JoinColumn(name = "sender_customer_username", referencedColumnName = "username", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private Customer sender;
 
     /*
@@ -39,6 +41,7 @@ public class Friendship {
     @ManyToOne
     @JoinColumn(name = "receiver_customer_username", referencedColumnName = "username", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private Customer receiver;
 
     /*

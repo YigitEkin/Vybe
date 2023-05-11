@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -119,7 +120,7 @@ public class CommentServiceTests {
         comment.setText("test comment");
         comment.setCommentedBy(customer);
         comment.setVenue(venue);
-        when(commentRepository.findAll()).thenReturn(Arrays.asList(new Comment(11, "test comment 1", "test_date", customer, venue), new Comment(12, "test comment 2", "test_date", customer, venue)));
+        when(commentRepository.findAll()).thenReturn(Arrays.asList(new Comment(11, "test comment 1", new Date(), customer, venue), new Comment(12, "test comment 2", new Date(), customer, venue)));
 
 
         // Act
@@ -142,8 +143,8 @@ public class CommentServiceTests {
         Customer customer = new Customer();
         customer.setUsername("username1");
 
-        Comment comment1 = new Comment(1, "test comment", "test_date", customer, venue);
-        Comment comment2 = new Comment(2, "test comment 2", "test_date", customer, venue);
+        Comment comment1 = new Comment(1, "test comment", new Date(), customer, venue);
+        Comment comment2 = new Comment(2, "test comment 2", new Date(), customer, venue);
 
         when(commentRepository.findAllByVenueId(1)).thenReturn(Arrays.asList(comment1, comment2));
         List<Comment> comments = Arrays.asList(comment1, comment2);
@@ -174,8 +175,8 @@ public class CommentServiceTests {
         Customer customer = new Customer();
         customer.setUsername(customerUsername);
 
-        Comment comment1 = new Comment(1, "test comment 1", "test_date", customer, venue);
-        Comment comment2 = new Comment(2, "test comment 2", "test_date", customer, venue);
+        Comment comment1 = new Comment(1, "test comment 1", new Date(), customer, venue);
+        Comment comment2 = new Comment(2, "test comment 2", new Date(), customer, venue);
 
         List<Comment> comments = Arrays.asList(comment1, comment2);
         when(customerRepository.existsById(customerUsername)).thenReturn(true);

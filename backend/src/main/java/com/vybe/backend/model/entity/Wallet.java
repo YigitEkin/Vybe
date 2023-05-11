@@ -10,7 +10,9 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Wallet class, representation of customer wallets in the database
@@ -43,9 +45,9 @@ public class Wallet {
     /**
      * List of transactions made by the customer
      */
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "wallet_id")
-    private List<Transaction> transactions;
+    private Set<Transaction> transactions;
 
     /**
      * Called when a transaction is made
@@ -64,6 +66,6 @@ public class Wallet {
     public Wallet(Double balance, Double totalSpent) {
         this.balance = balance;
         this.totalSpent = totalSpent;
-        this.transactions = new ArrayList<>();
+        this.transactions = new HashSet<>();
     }
 }
