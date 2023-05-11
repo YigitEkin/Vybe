@@ -21,7 +21,7 @@ public class VenueDTO {
     private String description;
     private String location;
     private Analytics analytics;
-    private List<Image> photos;
+    private Set<Image> photos;
     private Playlist playlist;
     private String qrCode;
     private String soundzoneId;
@@ -35,7 +35,7 @@ public class VenueDTO {
             this.description = venue.getDescription();
             this.location = venue.getLocation();
             this.analytics = venue.getAnalytics();
-            this.photos = venue.getPhotos().parallelStream().toList();
+            this.photos = venue.getPhotos();
             this.playlist = venue.getPlaylist();
             this.qrCode = venue.getQrCode();
             this.soundzoneId = venue.getSoundzoneId();
