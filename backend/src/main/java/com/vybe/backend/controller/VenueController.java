@@ -1,6 +1,7 @@
 package com.vybe.backend.controller;
 
 import com.vybe.backend.model.dto.*;
+import com.vybe.backend.model.entity.Image;
 import com.vybe.backend.util.SchedulerUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import com.vybe.backend.model.entity.Visit;
@@ -163,6 +164,21 @@ public class VenueController {
         return visitService.getVisitsByVenueIdAndToday(venueId);
     }
 
+    // ************* Image Endpoints ************* //
+    @GetMapping("/{venueId}/image")
+    public List<ImageDTO> getImage(@PathVariable Integer venueId) {
+        return venueService.getVenuePhotos(venueId);
+    }
+
+    @PostMapping("/{venueId}/image")
+    public Boolean addImage(@PathVariable Integer venueId, @RequestBody ImageDTO imageDTO) {
+        return venueService.uploadVenuePhoto(imageDTO, venueId);
+    }
+
+    @DeleteMapping("/{venueId}/image/{imageId}")
+    public Boolean deleteImage(@PathVariable Integer venueId, @PathVariable Long imageId) {
+        return venueService.deleteVenuePhoto(venueId, imageId);
+    }
 
 
 

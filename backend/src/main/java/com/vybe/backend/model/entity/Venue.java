@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
+import java.awt.*;
 import java.util.List;
 import java.util.Set;
 
@@ -49,14 +50,21 @@ public class Venue {
     /**
      * Photos of the venue
      */
-    //TODO: Decide on Object type
-    @Transient
-    private List<Object> photos;
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Image> photos;
 
     /**
      * List of playlists defined for the venue
      */
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER,
+              cascade = CascadeType.ALL
+    )
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Playlist playlist;
