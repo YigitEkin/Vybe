@@ -1,9 +1,7 @@
 package com.vybe.backend.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -14,7 +12,8 @@ import javax.persistence.*;
  * @author Oğuz Ata Çal
  */
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"sender_customer_username", "receiver_customer_username"}))

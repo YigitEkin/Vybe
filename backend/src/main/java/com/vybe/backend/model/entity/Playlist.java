@@ -2,10 +2,7 @@ package com.vybe.backend.model.entity;
 
 import com.sun.istack.NotNull;
 import com.vybe.backend.repository.SongNodeRepository;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.*;
@@ -14,7 +11,8 @@ import java.util.*;
  * Playlist class that will govern the restrictions and the next song playing
  * @author Oğuz Ata Çal
  */
-@Data
+@Getter
+@Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

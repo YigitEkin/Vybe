@@ -1,8 +1,6 @@
 package com.vybe.backend.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,7 +9,8 @@ import java.util.Date;
  * SongRequest class that will be used as a transfer object for song requests
  * @author Harun Can Surav
  */
-@Data
+@Getter
+@Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

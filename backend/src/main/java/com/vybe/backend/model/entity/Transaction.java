@@ -1,9 +1,7 @@
 package com.vybe.backend.model.entity;
 
 import com.vybe.backend.model.enums.TransactionTypes;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +13,8 @@ import javax.persistence.Id;
  * @author Harun Can Surav
  */
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Transaction {
