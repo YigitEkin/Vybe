@@ -47,11 +47,16 @@ const HomeCheckedIn = () => {
   const dbUserName = selectedCode.dial_code.replace('+', '') + phoneNumber;
   const [checkedInVenueId, setCheckedInVenueId] = useState();
   useEffect(() => {
-    instanceToken.get(`/api/customers/${dbUserName}`).then((res) => {
-      console.log(res.data.checkedInVenue.id);
-      setCheckedInVenue(res.data.checkedInVenue);
-      setCheckedInVenueId(res.data.checkedInVenue.id);
-    });
+    instanceToken
+      .get(`/api/customers/${dbUserName}`)
+      .then((res) => {
+        console.log('anan', dbUserName);
+        setCheckedInVenue(res.data.checkedInVenue);
+        setCheckedInVenueId(res.data.checkedInVenue.id);
+      })
+      .catch((e) => {
+        console.log(e.message);
+      });
   }, []);
   //useEffect(() => {
   //  instanceToken.get(`/api/customers`).then((res) => {

@@ -184,7 +184,7 @@ const HomeNotCheckedIn = () => {
       console.log('venueLocation', venueLocation);
 
       console.log('distance', distance);
-      if (distance > 100) {
+      if (distance > 10000) {
         Alert.alert('Out of range', 'You are not in the range of the venue', [
           { text: 'OK' },
         ]);

@@ -69,14 +69,20 @@ const SignUpPassword = () => {
           password === confirmPassword
         ) {
           return true;
+        } else if (password !== confirmPassword) {
+          Toast.show({
+            type: 'error',
+            text1: 'Error',
+            text2: 'Your passwords do not match',
+          });
         } else {
           Toast.show({
             type: 'error',
             text1: 'Error',
-            text2: 'Your password should be at least 8 characters',
+            text2: 'Your password must be at least 8 characters long',
           });
-          return false;
         }
+        return false;
       }}
     />
   );

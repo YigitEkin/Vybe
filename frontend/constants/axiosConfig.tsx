@@ -8,7 +8,7 @@ export default function axiosConfig() {
     };
   });
   const instanceToken = axios.create({
-    baseURL: 'http://192.168.31.38:8080',
+    baseURL: 'http://172.20.10.4:8080',
     //  headers: { Authorization: `Bearer ${getToken() ? getToken() : ''}` },
   });
   instanceToken.interceptors.request.use(function (config) {
