@@ -10,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -137,4 +136,18 @@ public class CustomerController {
     public StreakDTO getStreak(@PathVariable String username, @PathVariable Integer venueId) {
         return userService.getStreak(username, venueId);
     }
+    @PostMapping("{username}/profilePicture")
+    public boolean uploadProfilePicture(@PathVariable String username, @RequestBody ImageDTO imageDTO) {
+        return userService.uploadCustomerPhoto(username, imageDTO);
+    }
+
+    @GetMapping("{username}/profilePicture")
+    public ImageDTO getProfilePicture(@PathVariable String username) {
+        return userService.getCustomerPhoto(username);
+    }
+    @DeleteMapping("{username}/profilePicture")
+    public boolean deleteProfilePicture(@PathVariable String username) {
+        return userService.deleteCustomerPhoto(username);
+    }
+
 }

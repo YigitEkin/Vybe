@@ -1,7 +1,6 @@
 package com.vybe.backend;
 
 import com.vybe.backend.model.dto.*;
-import com.vybe.backend.model.entity.Song;
 import com.vybe.backend.model.enums.TransactionTypes;
 import com.vybe.backend.repository.CustomerRepository;
 import com.vybe.backend.repository.SongRepository;
@@ -514,8 +513,13 @@ public class BackendApplication {
 			ratingService.addRating(ratingDTO8);
 			ratingService.addRating(ratingDTO9);
 
-
-
+			// ------------------------ Images ------------------------
+			userService.uploadCustomerPhoto("905332346981", new ImageDTO("image1", 99L));
+			userService.uploadCustomerPhoto("905332346981", new ImageDTO("image2", 99L));
+			venueService.uploadVenuePhoto(new ImageDTO("image4", 99L), 2);
+			venueService.uploadVenuePhoto(new ImageDTO("image5", 99L), 2);
+			venueService.uploadVenuePhoto(new ImageDTO("image6", 99L), 2);
+			venueService.uploadVenuePhoto(new ImageDTO("image7", 99L), 2);
 
 
 

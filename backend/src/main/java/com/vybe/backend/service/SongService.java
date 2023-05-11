@@ -141,6 +141,7 @@ public class SongService {
         if(wallet.getBalance() < songRequestDTO.getCoinCost())
             throw new NotEnoughCoinsException("Customer with username: " + customer.getUsername() + " does not have enough coins");
         wallet.setBalance(wallet.getBalance() - songRequestDTO.getCoinCost());
+        wallet.setTotalSpent(wallet.getTotalSpent() + songRequestDTO.getCoinCost());
         Venue venue = venueRepository.findById(songRequestDTO.getRequestedInVenueId()).get();
         Song song = songRepository.findById(songRequestDTO.getSongId()).get();
         songRequestDTO.setRequestDate(new Date());

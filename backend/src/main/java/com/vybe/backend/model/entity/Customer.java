@@ -17,7 +17,7 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Customer extends User {
-    public Customer(String username, String name, String surname, String password, String phoneNumber, Object profilePicture, Venue currentVenue, Stack<SongRequest> requests, List<Customer> friendships,
+    public Customer(String username, String name, String surname, String password, String phoneNumber, Image profilePicture, Venue currentVenue, Stack<SongRequest> requests, List<Customer> friendships,
                     String dateOfBirth, String dateOfCreation) {
         super(username, name, surname, password, phoneNumber, profilePicture, currentVenue, requests);
         this.wallet = new Wallet(0.0,0.0);

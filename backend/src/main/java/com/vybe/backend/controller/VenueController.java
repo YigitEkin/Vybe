@@ -1,6 +1,7 @@
 package com.vybe.backend.controller;
 
 import com.vybe.backend.model.dto.*;
+import com.vybe.backend.model.entity.Image;
 import com.vybe.backend.util.SchedulerUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import com.vybe.backend.model.entity.Visit;
@@ -94,8 +95,12 @@ public class VenueController {
 
     @GetMapping("/{venueId}/nextSong")
     public SongDTO playNextSong(@PathVariable Integer venueId) {
-
         return new SongDTO(venueService.startSong(venueId));
+    }
+
+    @GetMapping("/{venueId}/currentSong")
+    public SongDTO getCurrentSong(@PathVariable Integer venueId) {
+        return venueService.getCurrentSong(venueId);
     }
 
     @PostMapping("/{venueId}/defaultPlaylist")
@@ -163,6 +168,21 @@ public class VenueController {
         return visitService.getVisitsByVenueIdAndToday(venueId);
     }
 
+    // ************* Image Endpoints ************* //
+    @GetMapping("/{venueId}/images")
+    public List<ImageDTO> getImage(@PathVariable Integer venueId) {
+        return venueService.getVenuePhotos(venueId);
+    }
+
+    @PostMapping("/{venueId}/images")
+    public Boolean addImage(@PathVariable Integer venueId, @RequestBody ImageDTO imageDTO) {
+        return venueService.uploadVenuePhoto(imageDTO, venueId);
+    }
+
+    @DeleteMapping("/{venueId}/images/{imageId}")
+    public Boolean deleteImage(@PathVariable Integer venueId, @PathVariable Long imageId) {
+        return venueService.deleteVenuePhoto(venueId, imageId);
+    }
 
 
 
