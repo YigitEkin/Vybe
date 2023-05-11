@@ -9,7 +9,8 @@ import javax.persistence.Id;
  * Admin class that will be permitted to adjust the system
  * @author Oğuz Ata Çal
  */
-@Data
+@Getter
+@Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

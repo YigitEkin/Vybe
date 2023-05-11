@@ -1,8 +1,6 @@
 package com.vybe.backend.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +13,8 @@ import java.util.Stack;
  * User class that will be inherited by Customer and VenueAdmin classes
  * @author Harun Can Surav
  */
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "\"user\"")
 @AllArgsConstructor

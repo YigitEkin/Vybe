@@ -13,7 +13,8 @@ import java.util.Set;
  * Venue class, representation of physical venues in the database
  * @author Harun Can Surav
  */
-@Data
+@Getter
+@Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -111,6 +112,9 @@ public class Venue {
     private String token;
 
     private String soundzoneId;
+
+    @ManyToOne
+    private Song currentSong;
 
     /**
      * Called when coins are spent on the venue

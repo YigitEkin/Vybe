@@ -78,6 +78,7 @@ public class VenueService {
 
         Venue updatedVenue = venueDTO.toVenue();
         updatedVenue.setComments(venue.getComments());
+        updatedVenue.setCurrentSong(venue.getCurrentSong());
         return new VenueDTO(venueRepository.save(updatedVenue));
     }
 
@@ -132,8 +133,18 @@ public class VenueService {
         int index = SoundtrackUtil.findIndexOfSongInPlaylist(playlistId, name, token).get("index");
         System.out.println("playing song: " + name + " in index: " + index);
         SoundtrackUtil.playSong(playlistId, index, Collections.singletonList(soundzoneId), token);
-
+        venue.setCurrentSong(nextSong.toSong());
+        venueRepository.save(venue);
         return nextSong.toSong();
+    }
+
+    public SongDTO getCurrentSong(Integer venueId) {
+        if (!venueRepository.existsById(venueId))
+            throw new VenueNotFoundException("Venue with id: " + venueId + " not found");
+        Venue venue = venueRepository.findById(venueId).get();
+        if (venue.getCurrentSong() == null)
+            return new SongDTO();
+        return new SongDTO(venue.getCurrentSong());
     }
 
     public void startSongScheduled(Integer venueId) {
@@ -154,6 +165,8 @@ public class VenueService {
         int duration = tmp.get("duration");
         System.out.println("playing song: " + name + " in index: " + index);
         SoundtrackUtil.playSong(playlistId, index, Collections.singletonList(soundzoneId), token);
+        venue.setCurrentSong(nextSong.toSong());
+        venueRepository.save(venue);
         try {
             Thread.sleep(duration);
         } catch (InterruptedException e) {
