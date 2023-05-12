@@ -372,9 +372,9 @@ public class BackendApplication {
 			// ------------------------ Customers ------------------------
 			CustomerCreationDTO customerDTO1 = new CustomerCreationDTO("abc", "905076011168", "Oğuz Ata", "Çal", "+905076011168", "01.01.2001", "10.05.2023", null);
 			CustomerCreationDTO customerDTO21 = new CustomerCreationDTO("abc","2", "Yiğit", "Ekin", "2", "01.01.2001", "10.05.2023", null);
-			CustomerCreationDTO customerDTO3 = new CustomerCreationDTO("abc", "3", "Mehmet Berk", "Türkçapar", "3", "01.01.2001", "10.05.2023", null);
+			CustomerCreationDTO customerDTO3 = new CustomerCreationDTO("12345678", "905309510454", "Mehmet Berk", "Türkçapar", "+905309510454", "01.01.2001", "10.05.2023", null);
 			CustomerCreationDTO customerDTO4 = new CustomerCreationDTO("abc","905332346981", "Harun Can", "Surav", "+905332346981", "01.01.2001", "10.05.2023", null);
-			CustomerCreationDTO customerDTO5 = new CustomerCreationDTO("abc", "5", "Can", "Önal", "5", "01.01.2001", "10.05.2023", null);
+			CustomerCreationDTO customerDTO5 = new CustomerCreationDTO("11111111", "905387866001", "Can", "Önal", "+905387866001", "01.01.2001", "10.05.2023", null);
 			CustomerCreationDTO adminCustomer = new CustomerCreationDTO("1234","admin", "admin", "admin", "6", "01.01.2001", "10.05.2023", null);
 
 			CustomerDTO customerResult1 = userService.addCustomer(customerDTO1);
@@ -389,7 +389,7 @@ public class BackendApplication {
 			venueCreationDTO2 = new VenueCreationDTO("Express Cafe", "Bilkent Üniversitesi merkez kampüs Güzelsanatlar Fakültesi", "39.86645603831937, 32.74941298353142", "dummySounzoneId", "dummyToken");
 			VenueCreationDTO venueCreationDTO3 = new VenueCreationDTO("Keffçe", "Üniversiteler, Real-Praktiker Bilkent Station Avm 3/77, 06800 Çankaya/Ankara", "39.8839923932251, 32.75919199712163", "dummySounzoneId", "dummyToken");
 			VenueCreationDTO venueCreationDTO4 = new VenueCreationDTO("Federal Coffee Bilkent", "Üniversiteler, Ankuva AVM No:12 D:30, 06800 Çankaya/Ankara", "39.8834821708473, 32.75638623924946", "dummySounzoneId", "dummyToken");
-			VenueCreationDTO venueCreationDTO5 = new VenueCreationDTO("Fameo Cafe", "Üniversiteler, 1597. Cd. No:3 D:3, 06800 Çankaya/Ankara", "39.883241251952455, 32.75711146158583", "dummySounzoneId", "dummyToken");
+			VenueCreationDTO venueCreationDTO5 = new VenueCreationDTO("Starbucks", "Üniversiteler, K:Giriş Bilkent Center, 1597. Cd. No:3, 06800 Çankaya/Ankara", "39.88405539773744, 32.76122907128398", "dummySounzoneId", "dummyToken");
 
 			VenueDTO resultVenue1 = venueService.addVenue(venueCreationDTO1);
 			VenueDTO resultVenue2 = venueService.addVenue(venueCreationDTO2);
@@ -419,19 +419,30 @@ public class BackendApplication {
 
 			friendshipService.sendFriendRequest(customerResult2.getUsername(), customerResult3.getUsername());
 			friendshipService.sendFriendRequest(customerResult2.getUsername(), customerResult4.getUsername());
+			friendshipService.sendFriendRequest(customerResult2.getUsername(), customerResult5.getUsername());
 
 			friendshipService.sendFriendRequest(customerResult3.getUsername(), customerResult5.getUsername());
+			friendshipService.sendFriendRequest(customerResult3.getUsername(), customerResult4.getUsername());
 
 			friendshipService.sendFriendRequest(customerResult4.getUsername(), customerResult2.getUsername());
+			friendshipService.sendFriendRequest(customerResult4.getUsername(), customerResult5.getUsername());
 
 
 			friendshipService.acceptFriendRequest(customerResult1.getUsername(), customerResult2.getUsername());
 			friendshipService.acceptFriendRequest(customerResult1.getUsername(), customerResult3.getUsername());
+			friendshipService.acceptFriendRequest(customerResult1.getUsername(), customerResult5.getUsername());
 
 			friendshipService.acceptFriendRequest(customerResult2.getUsername(), customerResult3.getUsername());
+			friendshipService.acceptFriendRequest(customerResult2.getUsername(), customerResult5.getUsername());
+
+			friendshipService.acceptFriendRequest(customerResult3.getUsername(), customerResult5.getUsername());
+			friendshipService.acceptFriendRequest(customerResult3.getUsername(), customerResult4.getUsername());
+
+			friendshipService.acceptFriendRequest(customerResult4.getUsername(), customerResult5.getUsername());
+
 
 			// ------------------------ Coins ------------------------
-			IncomingTransactionDTO incomingTransactionDTO1 = new IncomingTransactionDTO(TransactionTypes.ADVERTISEMENT, 100.0, "date", "name", "surname", "card number", "expiration month", "year", "ccv");
+			IncomingTransactionDTO incomingTransactionDTO1 = new IncomingTransactionDTO(TransactionTypes.ADVERTISEMENT, 1000.0, "date", "name", "surname", "card number", "expiration month", "year", "ccv");
 
 			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult1.getUsername());
 			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult2.getUsername());
@@ -493,7 +504,7 @@ public class BackendApplication {
 			// ------------------------ Ratings ------------------------
 			RatingDTO ratingDTO1 = new RatingDTO(0, 5.0, "date", customerResult1.getUsername(), resultVenue1.getId());
 			RatingDTO ratingDTO2 = new RatingDTO(0, 3.0, "date", customerResult2.getUsername(), resultVenue1.getId());
-			RatingDTO ratingDTO3 = new RatingDTO(0, 1.0, "date", customerResult3.getUsername(), resultVenue1.getId());
+			RatingDTO ratingDTO3 = new RatingDTO(0, 4.0, "date", customerResult3.getUsername(), resultVenue1.getId());
 
 			RatingDTO ratingDTO4 = new RatingDTO(0, 5.0, "date", customerResult1.getUsername(), resultVenue2.getId());
 			RatingDTO ratingDTO5 = new RatingDTO(0, 2.0, "date", customerResult2.getUsername(), resultVenue2.getId());
@@ -501,7 +512,9 @@ public class BackendApplication {
 
 			RatingDTO ratingDTO7 = new RatingDTO(0, 5.0, "date", customerResult1.getUsername(), resultVenue3.getId());
 			RatingDTO ratingDTO8 = new RatingDTO(0, 3.0, "date", customerResult2.getUsername(), resultVenue3.getId());
-			RatingDTO ratingDTO9 = new RatingDTO(0, 1.0, "date", customerResult3.getUsername(), resultVenue3.getId());
+			RatingDTO ratingDTO9 = new RatingDTO(0, 4.0, "date", customerResult3.getUsername(), resultVenue3.getId());
+
+			RatingDTO ratingDTO10 = new RatingDTO(0, 5.0, "date", customerResult1.getUsername(), 2);
 
 			ratingService.addRating(ratingDTO1);
 			ratingService.addRating(ratingDTO2);
@@ -512,6 +525,7 @@ public class BackendApplication {
 			ratingService.addRating(ratingDTO7);
 			ratingService.addRating(ratingDTO8);
 			ratingService.addRating(ratingDTO9);
+			ratingService.addRating(ratingDTO10);
 
 			// ------------------------ Images ------------------------
 			userService.uploadCustomerPhoto("905332346981", new ImageDTO("image1", 99L));
@@ -521,6 +535,10 @@ public class BackendApplication {
 			venueService.uploadVenuePhoto(new ImageDTO("image6", 99L), 2);
 			venueService.uploadVenuePhoto(new ImageDTO("image7", 99L), 2);
 
+			// ------------------------ Checkins ------------------------
+			userService.checkIn("905332346981", 3);
+			userService.checkIn("2", 4);
+			userService.checkIn("905076011168", 5);
 
 
 
