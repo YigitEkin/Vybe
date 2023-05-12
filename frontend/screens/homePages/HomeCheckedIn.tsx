@@ -9,6 +9,7 @@ import {
   ScrollView,
   Modal,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import GroupItem from '../../components/HomePage/GroupItem';
@@ -38,24 +39,39 @@ const HomeCheckedIn = () => {
   const instanceToken = axiosConfig();
   const [checkedInVenue, setCheckedInVenue] = useState({});
   const [songQueue, setSongQueue] = useState([]);
+  const [songListFiltered, setSongListFiltered] = useState([]);
   const { phoneNumber, selectedCode } = useLoginStore((state: any) => {
     return {
       phoneNumber: state.phoneNumber,
       selectedCode: state.selectedCode,
     };
   });
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      fetchQueue();
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   const dbUserName = selectedCode.dial_code.replace('+', '') + phoneNumber;
   const [checkedInVenueId, setCheckedInVenueId] = useState();
   useEffect(() => {
     instanceToken
       .get(`/api/customers/${dbUserName}`)
       .then((res) => {
-        console.log('anan', dbUserName);
+        //console.log('anan', res.data);
         setCheckedInVenue(res.data.checkedInVenue);
         setCheckedInVenueId(res.data.checkedInVenue.id);
+        //fetchQueue();
+        //fetchSongs();
+        console.log('checkedInVenue', res.data.checkedInVenue.id);
       })
       .catch((e) => {
-        console.log(e.message);
+        console.log(e.message, 'get venue');
       });
   }, []);
   //useEffect(() => {
@@ -83,7 +99,7 @@ const HomeCheckedIn = () => {
                 setIsCheckIn(false);
               }
             })
-            .catch((e) => console.log(e));
+            .catch((e) => console.log(e, 'checlkout'));
         },
       },
     ]);
@@ -166,7 +182,7 @@ const HomeCheckedIn = () => {
       artist: 'Artist 6',
     },
   ]);
-  const [selectedSong, setSelectedSong] = useState('');
+  const [selectedSong, setSelectedSong] = useState({});
   const options = [
     {
       label: 'Default Request',
@@ -191,37 +207,56 @@ const HomeCheckedIn = () => {
       { id: id }
     );
   };
-  const handleSongPress = (id: Number, name: string) => {
+  const handleSongPress = (song: any) => {
     setAddingSongToQueue(true);
-    setSelectedSong(name);
+    console.log('id', song.id);
+    setSelectedSong(song);
   };
   const navigation = useNavigation();
   const fetchUsers = () => {
     //console.log('fetching');
-    instanceToken.get(`/api/customers`).then((res) => {
-      //console.log(res.data);
-      setFilteredUserList(
-        res.data.filter((user) => user.username !== dbUserName)
-      );
-      setUserList(res.data.filter((user) => user.username !== dbUserName));
-    });
+    instanceToken
+      .get(`/api/customers`)
+      .then((res) => {
+        //console.log(res.data);
+        setFilteredUserList(
+          res.data.filter((user) => user.username !== dbUserName)
+        );
+        setUserList(res.data.filter((user) => user.username !== dbUserName));
+      })
+      .catch((e) => console.log(e, 'fetchUsers'));
   };
   const fetchQueue = () => {
     instanceToken
       .get(`/api/venues/${checkedInVenueId}/nextSongs`)
       .then((res) => {
-        console.log(res.data);
+        //console.log(res.data);
         setSongQueue(res.data);
-      });
+      })
+      .catch((e) => console.log(e, 'fetchQueue'));
   };
+
+  useEffect(() => {
+    //console.log('searchPhrase', searchPhrase);
+    setSuccess(false);
+    const filteredArray = songList.filter((song) => {
+      return (
+        song.artist.toLowerCase().includes(searchPhrase.toLowerCase()) ||
+        song.name.toLowerCase().includes(searchPhrase.toLowerCase())
+      );
+    });
+    setSongListFiltered(filteredArray);
+    setSuccess(true);
+  }, [searchPhrase]);
 
   const fetchSongs = () => {
     setSuccess(false);
     instanceToken
       .get(`/api/venues/${checkedInVenueId}/defaultPlaylist/songs`)
       .then((res) => {
-        console.log(res.data);
+        //console.log(res.data);
         setSongList(res.data);
+        setSongListFiltered(res.data);
         setSuccess(true);
       })
       .catch((e) => {
@@ -231,9 +266,13 @@ const HomeCheckedIn = () => {
   };
 
   useEffect(() => {
-    fetchUsers();
-    fetchQueue();
-  }, []);
+    if (checkedInVenueId !== '') {
+      fetchSongs();
+      fetchQueue();
+      fetchUsers();
+    }
+    //fetchQueue();
+  }, [checkedInVenueId]);
   useEffect(() => {
     const filteredArray = userList.filter((user) => {
       return (
@@ -258,12 +297,51 @@ const HomeCheckedIn = () => {
   };
 
   const handleDefaultSongRequest = () => {
-    console.log('Default song request');
+    console.log('Default song request', selectedSong);
+
+    let data = {
+      playlistId: 1,
+      songId: selectedSong.id,
+      requestedByUsername: dbUserName,
+      requestedInVenueId: checkedInVenueId,
+      requestDate: Date.now(),
+      coinCost: 100,
+    };
+
+    instanceToken
+      .post(`/api/songRequests`, data)
+      .then((res) => {
+        console.log(res.data);
+        fetchQueue();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
     setAddingSongToQueue(false);
   };
 
   const handleEnhancedSongRequest = () => {
-    console.log('Enhanced song request');
+    console.log('Enhanced song request', amount);
+    let data = {
+      playlistId: 1,
+      songId: selectedSong.id,
+      requestedByUsername: dbUserName,
+      requestedInVenueId: checkedInVenueId,
+      requestDate: Date.now(),
+      coinCost: amount,
+    };
+
+    instanceToken
+      .post(`/api/songRequests`, data)
+      .then((res) => {
+        console.log(res.data);
+        fetchQueue();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
     setAddingSongToQueue(false);
   };
 
@@ -362,24 +440,34 @@ const HomeCheckedIn = () => {
             )}
           </View>
           {!clickedHome ? (
-            <>
+            <View onLayout={fetchQueue} style={{ flex: 1 }}>
               <Text
                 style={[styles.textStyle, { marginBottom: 20, fontSize: 23 }]}
               >
                 {'Current Song Queue'}
               </Text>
-              <ScrollView style={{ height: '100%', marginBottom: 100 }}>
+              <ScrollView
+                style={{ height: '100%', marginBottom: 100 }}
+                refreshControl={
+                  <RefreshControl
+                    tintColor={'#EA34C9'}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
+              >
                 {songQueue.map((song) => (
                   <Pressable key={song.id}>
                     <ListItem
                       key={song.id}
+                      profilePic={song.link}
                       topText={song.name}
                       subText={song.artist ? song.artist : 'No Artist'}
                     />
                   </Pressable>
                 ))}
               </ScrollView>
-            </>
+            </View>
           ) : (
             <ScrollView style={{ height: '100%', marginBottom: 100 }}>
               {filteredUserList.map((user) => (
@@ -445,7 +533,7 @@ const HomeCheckedIn = () => {
                 color: 'white',
               }}
             >
-              Add {selectedSong} to Queue
+              Add {selectedSong.name} to Queue
             </Text>
             <View
               style={{
@@ -560,18 +648,29 @@ const HomeCheckedIn = () => {
             setSearchPhrase={setSearchPhrase}
           />
           <ScrollView style={{ height: '100%', marginBottom: 100 }}>
-            {songList.map((song) => (
-              <Pressable
-                key={song.id}
-                onPress={() => handleSongPress(song.id, song.name)}
+            {songListFiltered.length === 0 ? (
+              <Text
+                style={{
+                  fontFamily: 'Inter-Regular',
+                  fontSize: 18,
+                  color: '#7C757E',
+                  paddingLeft: 8,
+                }}
               >
-                <ListItem
-                  key={song.id}
-                  topText={song.name}
-                  subText={song.artist ? song.artist : 'No Artist'}
-                />
-              </Pressable>
-            ))}
+                {'No songs found'}
+              </Text>
+            ) : (
+              songListFiltered.map((song) => (
+                <Pressable key={song.id} onPress={() => handleSongPress(song)}>
+                  <ListItem
+                    key={song.id}
+                    profilePic={song.link}
+                    topText={song.name}
+                    subText={song.artist ? song.artist : 'No Artist'}
+                  />
+                </Pressable>
+              ))
+            )}
           </ScrollView>
         </>
       ) : (

@@ -15,7 +15,11 @@ import * as Font from 'expo-font';
 import moment from 'moment';
 import { FontAwesome } from '@expo/vector-icons';
 import StyledButton from '../../../components/HomePage/StyledButton';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import axios from 'axios';
 import axiosConfig from '../../../constants/axiosConfig';
 
@@ -37,10 +41,7 @@ function NotificationCard(data: NotificationCardProps) {
           </View>
         </View>
         <View style={styles.time}>
-          <Text style={styles.timeText}>
-            {Math.abs(moment(data.time).diff(moment(), 'minutes')) +
-              ' minutes ago'}
-          </Text>
+          <Text style={styles.timeText}>{data.time}</Text>
         </View>
       </View>
     </View>
@@ -58,65 +59,111 @@ interface VenueDetails {
   comments: Comment[];
 }
 
-const data: VenueDetails = {
-  id: 1,
-  title: 'Federal Coffee',
-  location: 'Bilkent, Ankara',
-  currentlyPlaying: 'Gunes - Suclarimdan Biri',
-  image: require('../../../assets/fedo2.png'),
-  rating: 4.65,
-  reviews: 100,
-  comments: [
-    {
-      id: 1,
-      user: 'Mehmet Berk Türkçapar',
-      description: 'Awesome place!',
-      time: new Date(),
-    },
-    {
-      id: 2,
-      user: 'Mehmet Berk Türkçapar',
-      description: 'Awesome place!',
-      time: new Date(),
-    },
-    {
-      id: 3,
-      user: 'Mehmet Berk Türkçapar',
-      description: 'Music are too loud!',
-      time: new Date(),
-    },
-    {
-      id: 4,
-      user: 'Mehmet Berk Türkçapar',
-      description: 'Music are too loud!',
-      time: new Date(),
-    },
-  ],
-};
+//const data: VenueDetails = {
+//  id: 1,
+//  title: 'Federal Coffee',
+//  location: 'Bilkent, Ankara',
+//  currentlyPlaying: 'Gunes - Suclarimdan Biri',
+//  image: require('../../../assets/fedo2.png'),
+//  rating: 4.65,
+//  reviews: 100,
+//  comments: [
+//    {
+//      id: 1,
+//      user: 'Mehmet Berk Türkçapar',
+//      description: 'Awesome place!',
+//      time: new Date(),
+//    },
+//    {
+//      id: 2,
+//      user: 'Mehmet Berk Türkçapar',
+//      description: 'Awesome place!',
+//      time: new Date(),
+//    },
+//    {
+//      id: 3,
+//      user: 'Mehmet Berk Türkçapar',
+//      description: 'Music are too loud!',
+//      time: new Date(),
+//    },
+//    {
+//      id: 4,
+//      user: 'Mehmet Berk Türkçapar',
+//      description: 'Music are too loud!',
+//      time: new Date(),
+//    },
+//  ],
+//};
 
 const VenueDetails = () => {
+  const isFocused = useIsFocused();
   const instanceToken = axiosConfig();
-  const takeAvg = (arr) => {
-    const sum = arr.reduce((acc, curr) => acc + curr, 0);
-    const avg = sum / arr.length;
-    return avg;
-  };
+  //const takeAvg = (arr) => {
+  //  const sum = arr.reduce((acc, curr) => acc + curr, 0);
+  //  const avg = sum / arr.length;
+  //  return avg;
+  //};
 
   const [fontsLoaded] = Font.useFonts({
     'Inter-Bold': require('../../../assets/fonts/Inter/static/Inter-Bold.ttf'),
     'Inter-Regular': require('../../../assets/fonts/Inter/static/Inter-Regular.ttf'),
   });
   const [venue, setVenue] = useState({});
+  const [comments, setComments] = useState([]);
+  const [avgRating, setAvgRating] = useState(0);
   const navigation = useNavigation();
   const route = useRoute();
   // @ts-ignore
   const { id } = route.params;
   console.log(id);
   useEffect(() => {
-    instanceToken.get(`/api/venues/${id}`).then((res) => {
-      setVenue(res.data);
-    });
-  }, []);
+    //async () => {
+    instanceToken
+      .get(`/api/venues/${id}`)
+      .then((res) => {
+        setVenue(res.data);
+      })
+      .catch((err) => {
+        console.log(err.message, 'venue fetch');
+      });
+    instanceToken
+      .get(`/api/venues/${id}/ratings/average`)
+      .then((res) => {
+        setAvgRating(res.data);
+      })
+      .catch((err) => {
+        console.log(err.message, 'avg rating fetch');
+      });
+    instanceToken
+      .get(`/api/venues/${id}/comments`)
+      .then((res) => {
+        setComments(res.data);
+      })
+      .catch((err) => {
+        console.log(err.message, 'comments fetch');
+      });
+    //const options = {
+    //  method: 'GET',
+    //  url: 'https://address-from-to-latitude-longitude.p.rapidapi.com/geolocationapi',
+    //  params: {
+    //    lat: '39.87066498564842',
+    //    lng: '32.750627715340116',
+    //  },
+    //  headers: {
+    //    'X-RapidAPI-Key':
+    //      '3a2ea1c421mshfb68cbd83cb9fe5p143cf3jsn199135afa1e7',
+    //    'X-RapidAPI-Host':
+    //      'address-from-to-latitude-longitude.p.rapidapi.com',
+    //  },
+    //};
+    //try {
+    //  const response = await axios.request(options);
+    //  console.log(response.data);
+    //} catch (error) {
+    //  console.error(error);
+    //}
+    //};
+  }, [isFocused]);
 
   return fontsLoaded ? (
     <View style={styles.Topcontainer}>
@@ -128,25 +175,23 @@ const VenueDetails = () => {
         />
       </View>
       <View style={styles.topContentContainer}>
-        <View style={styles.topContentInnerContainer}>
+        {/*<View style={styles.topContentInnerContainer}>
           <Image
             source={require('../../../assets/fedo2.png')}
             style={styles.venueImg}
             resizeMode='cover'
           />
-        </View>
+        </View>*/}
         <View style={styles.ph20}>
           <View style={styles.venueInfo}>
             <Text style={styles.venueName}>{venue?.name}</Text>
             <View style={{ flexDirection: 'row' }}>
               <Entypo name='location-pin' size={16} color={Colors.gray.muted} />
               <Text style={[styles.smallText, { marginLeft: 5 }]}>
-                {venue.location}
+                {venue.description}
               </Text>
             </View>
-            <Text style={styles.smallText}>
-              {`Currently Playing:\n${data.currentlyPlaying}`}
-            </Text>
+            <Text style={styles.smallText}>{`Currently Playing: anan`}</Text>
           </View>
         </View>
       </View>
@@ -161,29 +206,25 @@ const VenueDetails = () => {
                 size={16}
                 color={'#f1c40f'}
               />
-              <Text style={styles.boldText}>
-                {/*{venue.ratings?.length !== 0
-                  ? takeAvg(venue.ratings)
-                  : 'Loading'}*/}
-              </Text>
+              <Text style={styles.boldText}>{avgRating.toFixed(2)}</Text>
             </View>
           </View>
         </View>
         <ScrollView style={styles.mh_240}>
-          {venue.comments?.map((comment) => (
+          {comments.map((comment) => (
             <NotificationCard
               id={comment.id}
               key={comment.id}
-              user={comment.user}
-              description={comment.description}
-              time={comment.time}
+              user={comment.customerUsername}
+              description={comment.text}
+              time={moment(comment.date).format('DD/MM/YYYY HH:mm')}
             />
           ))}
         </ScrollView>
         <View style={styles.alignCenter}>
           <StyledButton
             buttonText='Make a Review'
-            onPress={(e) => {
+            onPress={() => {
               navigation.navigate('AddVenueReview', { id: id });
             }}
           />
@@ -228,7 +269,7 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row' },
   boldText: { color: '#fff', fontSize: 16, fontFamily: 'Inter-Bold' },
   mh_240: { maxHeight: 240 },
-  alignCenter: { alignItems: 'center' },
+  alignCenter: { alignItems: 'center', marginBottom: 90, marginTop: -10 },
   ph20: { paddingHorizontal: 20 },
   venueImg: {
     width: '100%',
