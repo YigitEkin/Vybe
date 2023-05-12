@@ -220,7 +220,7 @@ public class BackendApplication {
 			}
 
 			// test adding a playlist
-			VenueCreationDTO venueCreationDTO2 = new VenueCreationDTO("testname2", "testdescription2", "40.1, 20.23", "U291bmRab25lLCwxZXB1NDM3OGJuay9Mb2NhdGlvbiwsMWZlbHNmMGFkcTgvQWNjb3VudCwsMW96ZDN6dGk0ZzAv","WkxnTVI0RW9YRWdPRWVsOEZ5TzZJZFBtSzFzOWpUQ0c6aVlxcVdIVXY3NGFLaXREQVFFQ2V3WmJHUHVxeVRNMlpybUo4Ulp3R3BQS2N3NEZpWGczT2FnUTFFVGtudGlPZQ==");
+			VenueCreationDTO venueCreationDTO2 = new VenueCreationDTO("Fameo Cafe", "Üniversiteler, 1597. Cd. No:3 D:3, 06800 Çankaya/Ankara", "39.883241251952455, 32.75711146158583", "U291bmRab25lLCwxZXB1NDM3OGJuay9Mb2NhdGlvbiwsMWZlbHNmMGFkcTgvQWNjb3VudCwsMW96ZDN6dGk0ZzAv","WkxnTVI0RW9YRWdPRWVsOEZ5TzZJZFBtSzFzOWpUQ0c6aVlxcVdIVXY3NGFLaXREQVFFQ2V3WmJHUHVxeVRNMlpybUo4Ulp3R3BQS2N3NEZpWGczT2FnUTFFVGtudGlPZQ==");
 			venueDTO2 = venueService. addVenue(venueCreationDTO2);
 			PlaylistCreationDTO playlistCreationDTO = new PlaylistCreationDTO(venueDTO2.getId(), "Q29sbGVjdGlvbiwsMXBsNmFpYzVjMDAvU291bmRab25lLCwxZXB1NDM3OGJuay9Mb2NhdGlvbiwsMWZlbHNmMGFkcTgvQWNjb3VudCwsMW96ZDN6dGk0ZzAv", "Q29sbGVjdGlvbiwsMXBsNmFpYzVjMDAvU291bmRab25lLCwxZXB1NDM3OGJuay9Mb2NhdGlvbiwsMWZlbHNmMGFkcTgvQWNjb3VudCwsMW96ZDN6dGk0ZzAv");
 
@@ -388,8 +388,8 @@ public class BackendApplication {
 			VenueCreationDTO venueCreationDTO1 = new VenueCreationDTO("Cafe-In", " Cafe İn adres Üniversiteler Mah., 1609. Sok., No:13, Çankaya, Ankara, Türkiye", "39.87066498564842, 32.750627715340116", "dummySounzoneId", "dummyToken");
 			venueCreationDTO2 = new VenueCreationDTO("Express Cafe", "Bilkent Üniversitesi merkez kampüs Güzelsanatlar Fakültesi", "39.86645603831937, 32.74941298353142", "dummySounzoneId", "dummyToken");
 			VenueCreationDTO venueCreationDTO3 = new VenueCreationDTO("Keffçe", "Üniversiteler, Real-Praktiker Bilkent Station Avm 3/77, 06800 Çankaya/Ankara", "39.8839923932251, 32.75919199712163", "dummySounzoneId", "dummyToken");
-			VenueCreationDTO venueCreationDTO4 = new VenueCreationDTO("Federal Coffe Bilkent", "Üniversiteler, Ankuva AVM No:12 D:30, 06800 Çankaya/Ankara", "39.8834821708473, 32.75638623924946", "dummySounzoneId", "dummyToken");
-			VenueCreationDTO venueCreationDTO5 = new VenueCreationDTO("Fameo Caffe", "Üniversiteler, 1597. Cd. No:3 D:3, 06800 Çankaya/Ankara", "39.883241251952455, 32.75711146158583", "dummySounzoneId", "dummyToken");
+			VenueCreationDTO venueCreationDTO4 = new VenueCreationDTO("Federal Coffee Bilkent", "Üniversiteler, Ankuva AVM No:12 D:30, 06800 Çankaya/Ankara", "39.8834821708473, 32.75638623924946", "dummySounzoneId", "dummyToken");
+			VenueCreationDTO venueCreationDTO5 = new VenueCreationDTO("Fameo Cafe", "Üniversiteler, 1597. Cd. No:3 D:3, 06800 Çankaya/Ankara", "39.883241251952455, 32.75711146158583", "dummySounzoneId", "dummyToken");
 
 			VenueDTO resultVenue1 = venueService.addVenue(venueCreationDTO1);
 			VenueDTO resultVenue2 = venueService.addVenue(venueCreationDTO2);
