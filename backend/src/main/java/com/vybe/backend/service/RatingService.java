@@ -42,7 +42,10 @@ public class RatingService {
         rating.setDate(new Date());
         rating.setVenue(venue);
         rating.setRatedBy(customer);
-        return new RatingDTO(ratingRepository.save(rating));
+        RatingDTO ratingDTO = new RatingDTO(ratingRepository.save(rating));
+        venue.setRating(ratingRepository.getAverageRatingForVenue(ratingDTO.getVenueId()));
+        venueRepository.save(venue);
+        return ratingDTO;
     }
 
     // get all ratings
@@ -90,9 +93,17 @@ public class RatingService {
         if(!ratingRepository.existsById(ratingId)) {
             throw new RatingNotFoundException("Rating with id: " + ratingId + " not found");
         }
+        if(!venueRepository.existsById(ratingUpdateDTO.getVenueId())) {
+            throw new VenueNotFoundException("Venue with id: " + ratingUpdateDTO.getVenueId() + " not found");
+        }
         Rating rating = ratingRepository.findById(ratingId).get();
         rating.setRating(ratingUpdateDTO.getRating());
-        return new RatingDTO(ratingRepository.save(rating));
+        RatingDTO ratingDTO = new RatingDTO(ratingRepository.save(rating));
+        double newAverageRating = ratingRepository.getAverageRatingForVenue(ratingDTO.getVenueId());
+        Venue venue = venueRepository.findById(ratingDTO.getVenueId()).get();
+        venue.setRating(newAverageRating);
+        venueRepository.save(venue);
+        return ratingDTO;
     }
 
     // delete rating

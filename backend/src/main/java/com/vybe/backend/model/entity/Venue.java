@@ -116,6 +116,8 @@ public class Venue {
     @ManyToOne
     private Song currentSong;
 
+    private Double rating;
+
     /**
      * Called when coins are spent on the venue
      * @param points the amount of points to be added to the venue
