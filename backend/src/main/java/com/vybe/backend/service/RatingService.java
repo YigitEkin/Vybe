@@ -111,7 +111,10 @@ public class RatingService {
         if(!ratingRepository.existsById(ratingId)) {
             throw new RatingNotFoundException("Rating with id: " + ratingId + " not found");
         }
+        Venue v = ratingRepository.findById(ratingId).get().getVenue();
         ratingRepository.deleteById(ratingId);
+        v.setRating(ratingRepository.getAverageRatingForVenue(v.getId()));
+        venueRepository.save(v);
     }
 
     // delete all ratings for a venue
