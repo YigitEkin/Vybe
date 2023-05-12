@@ -20,6 +20,9 @@ import {
   AdEventType,
   TestIds,
 } from 'react-native-google-mobile-ads';
+import { useLoginStore } from '../../../stores/LoginStore';
+import axiosConfig from '../../../constants/axiosConfig';
+import moment from 'moment';
 
 const adUnitId = __DEV__
   ? TestIds.REWARDED
@@ -33,35 +36,47 @@ const data = [
   },
   {
     method: 'Credit Card',
-    date: '12 Apr 2023',
-    price: 500.0,
+    date: '8 Apr 2023',
+    price: 300.0,
   },
   {
     method: 'Credit Card',
-    date: '12 Apr 2023',
-    price: 500.0,
+    date: '3 Apr 2023',
+    price: 200.0,
   },
   {
     method: 'Credit Card',
-    date: '12 Apr 2023',
-    price: 500.0,
+    date: '28 Mar 2023',
+    price: 100.0,
   },
   {
     method: 'Credit Card',
-    date: '12 Apr 2023',
-    price: 500.0,
+    date: '21 Mar 2023',
+    price: 50.0,
   },
 ];
 const rewarded = RewardedAd.createForAdRequest(adUnitId);
 
 const CoinDetails = () => {
   const navigation = useNavigation();
+  const isFocused = navigation.isFocused();
   const [loaded, setLoaded] = React.useState(false);
   const [amount, setAmount] = React.useState(0);
   const [fontsLoaded] = Font.useFonts({
     'Inter-Medium': require('../../../assets/fonts/Inter/static/Inter-Medium.ttf'),
     'Inter-Bold': require('../../../assets/fonts/Inter/static/Inter-Bold.ttf'),
   });
+  const [transactions, setTransactions] = React.useState([]);
+  const { phoneNumber, selectedCode } = useLoginStore((state: any) => {
+    return {
+      phoneNumber: state.phoneNumber,
+      selectedCode: state.selectedCode,
+    };
+  });
+
+  const dbUserName = selectedCode.dial_code.replace('+', '') + phoneNumber;
+
+  const instanceToken = axiosConfig();
 
   useEffect(() => {
     rewarded.load();
@@ -78,19 +93,37 @@ const CoinDetails = () => {
       (reward) => {
         console.log('User earned reward of ', reward.amount);
         setAmount(reward.amount);
+        instanceToken
+          .post(`/api/transactions/${dbUserName}`, {
+            transactionType: 'ADVERTISEMENT',
+            receivedCoins: '100',
+            date: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
+            name: '',
+            surname: '',
+            cardNumber: '',
+            expirationMonth: '',
+            expirationYear: '',
+            cvc: '',
+          })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     );
     const unsubscribeClosed = rewarded.addAdEventListener(
       AdEventType.CLOSED,
       (reward) => {
-        console.log('Ad closed');
-        setLoaded(false);
-        rewarded.load();
+        //console.log(reward);
         Toast.show({
           type: 'success',
           text1: 'Congratulations',
-          text2: `You earned 10 coins 💰`,
+          text2: `You earned 100 coins 💰`,
         });
+        setLoaded(false);
+        rewarded.load();
       }
     );
 
@@ -103,7 +136,21 @@ const CoinDetails = () => {
       unsubscribeEarned();
       unsubscribeClosed();
     };
-  }, []);
+  }, [isFocused]);
+
+  useEffect(() => {
+    //instanceToken
+    //  .get(`/api/transactions/${dbUserName}`)
+    //  .then((res) => {
+    //    console.log(res.data);
+    //    setTransactions(res.data);
+    //  })
+    //  .catch((err) => {
+    //    console.log(err);
+    //  });
+    setTransactions(data);
+  }, [isFocused]);
+
   if (!loaded) {
     return (
       <View style={styles.container}>
@@ -145,7 +192,7 @@ const CoinDetails = () => {
         </View>
         <Text style={styles.headerText}>{'Payments'}</Text>
         <ScrollView style={styles.scrollView}>
-          {data.map((item, index) => {
+          {transactions.map((item, index) => {
             return (
               <View style={styles.scrollItem} key={index}>
                 <View style={styles.mainTextContainer}>
@@ -205,7 +252,7 @@ const CoinDetails = () => {
       </View>
       <Text style={styles.headerText}>{'Payments'}</Text>
       <ScrollView style={styles.scrollView}>
-        {data.map((item, index) => {
+        {transactions.map((item, index) => {
           return (
             <View style={styles.scrollItem} key={index}>
               <View style={styles.mainTextContainer}>

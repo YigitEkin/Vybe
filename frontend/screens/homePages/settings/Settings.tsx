@@ -147,6 +147,14 @@ const SettingsPage = () => {
       ];
       setSection(section);
     });
+    instanceToken
+      .get(`api/wallet?username=${dbUserName}`)
+      .then((res) => {
+        setCoinBalance(res.data.balance);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, [isFocused]);
   return fontsLoaded ? (
     <>
@@ -191,7 +199,11 @@ const SettingsPage = () => {
           {
             //TODO: this will be converted into a picture component
           }
-          <View style={styles.profilePicture} />
+          <Image
+            style={styles.profilePicture}
+            source={require('../../../assets/appIcon.png')}
+            resizeMode='cover'
+          />
           <StyledButton
             buttonText='Change'
             onPress={() => {

@@ -15,6 +15,7 @@ import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 
 import Router from './navigation/Router';
 import { useLoginStore } from './stores/LoginStore';
+import { LogBox } from 'react-native';
 
 //SplashScreen.preventAutoHideAsync();
 const toastConfig = {
@@ -63,6 +64,9 @@ export default function App() {
     'Inter-SemiBold': require('./assets/fonts/Inter/static/Inter-SemiBold.ttf'),
     'Inter-Thin': require('./assets/fonts/Inter/static/Inter-Thin.ttf'),
   });
+
+  LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+  LogBox.ignoreAllLogs(); //Ignore all log notifications
 
   const [isLoading, setIsLoading] = useState(true);
   const onLayoutRootView = useCallback(async () => {

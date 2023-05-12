@@ -9,14 +9,46 @@ import { useNavigation } from '@react-navigation/native';
 import StyledButton from '../../../components/HomePage/StyledButton';
 import { setGoogleApiKey } from 'expo-location';
 import Toast from 'react-native-toast-message';
+import { useLoginStore } from '../../../stores/LoginStore';
+import moment from 'moment';
+import axiosConfig from '../../../constants/axiosConfig';
 
 const CreditCardForm = ({ route }) => {
+  const { phoneNumber, selectedCode } = useLoginStore((state: any) => {
+    return {
+      phoneNumber: state.phoneNumber,
+      selectedCode: state.selectedCode,
+    };
+  });
+
+  const dbUserName = selectedCode.dial_code.replace('+', '') + phoneNumber;
+
+  const instanceToken = axiosConfig();
   const { amount, price } = route.params;
   const navigation = useNavigation();
   const [formData, setFormData] = useState({});
   const validateCard = (formData) => {
+    console.log(formData);
     if (formData.valid) {
-      navigation.navigate('CoinDetails');
+      instanceToken
+        .post(`/api/transactions/${dbUserName}`, {
+          transactionType: 'CARD',
+          receivedCoins: amount,
+          date: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
+          name: formData.values.name,
+          surname: '',
+          cardNumber: formData.values.number,
+          expirationMonth: formData.values.expiry.split('/')[0],
+          expirationYear: formData.values.expiry.split('/')[1],
+          cvc: formData.values.cvc,
+        })
+        .then((res) => {
+          console.log(res);
+          navigation.navigate('CoinDetails');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
       Toast.show({
         type: 'success',

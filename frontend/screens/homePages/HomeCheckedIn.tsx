@@ -34,6 +34,7 @@ import InputSpinner from 'react-native-input-spinner';
 import { useLoginStore } from '../../stores/LoginStore';
 import axios from 'axios';
 import axiosConfig from '../../constants/axiosConfig';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 const HomeCheckedIn = () => {
   const instanceToken = axiosConfig();
@@ -271,6 +272,7 @@ const HomeCheckedIn = () => {
       fetchQueue();
       fetchUsers();
     }
+
     //fetchQueue();
   }, [checkedInVenueId]);
   useEffect(() => {
@@ -286,6 +288,17 @@ const HomeCheckedIn = () => {
     fetchSongs();
     setAddSong(true);
   };
+
+  useEffect(() => {
+    instanceToken
+      .get(`api/wallet?username=${dbUserName}`)
+      .then((res) => {
+        setCoinBalance(res.data.balance);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [addSong, addingSongToQueue]);
 
   const __checkout = () => {
     setModalVisible(true);
@@ -312,12 +325,25 @@ const HomeCheckedIn = () => {
       .post(`/api/songRequests`, data)
       .then((res) => {
         console.log(res.data);
+        Toast.show({
+          type: 'success',
+          position: 'top',
+          text1: 'Success',
+          text2: 'Song added to queue',
+        });
         fetchQueue();
       })
       .catch((e) => {
         console.log(e);
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Error',
+          text2: 'Something went wrong',
+        });
       });
 
+    //setAddSong(false);
     setAddingSongToQueue(false);
   };
 
@@ -336,6 +362,12 @@ const HomeCheckedIn = () => {
       .post(`/api/songRequests`, data)
       .then((res) => {
         console.log(res.data);
+        Toast.show({
+          type: 'success',
+          position: 'top',
+          text1: 'Success',
+          text2: 'Song added to queue',
+        });
         fetchQueue();
       })
       .catch((e) => {
@@ -531,10 +563,20 @@ const HomeCheckedIn = () => {
                 fontSize: 24,
                 textAlign: 'center',
                 color: 'white',
+                marginBottom: 20,
               }}
             >
               Add {selectedSong.name} to Queue
             </Text>
+            <Image
+              style={styles.profilePicture}
+              source={
+                selectedSong.link
+                  ? { uri: selectedSong.link }
+                  : require('../../assets/appIcon.png')
+              }
+              resizeMode='cover'
+            />
             <View
               style={{
                 flex: 1,
@@ -571,7 +613,7 @@ const HomeCheckedIn = () => {
                         fontSize: 20,
                       }}
                     >
-                      Default Request (100 Coins)
+                      {'Default Request (100 Coins)'}
                     </Text>
                   </Pressable>
                 </>
@@ -608,13 +650,14 @@ const HomeCheckedIn = () => {
                         fontSize: 20,
                       }}
                     >
-                      Enhanced Request
+                      {'Enhanced Request'}
                     </Text>
                   </Pressable>
                 </>
               )}
               <Text style={styles.modalTextStylePrimary}>
-                {'Coin Balance: ' + coinBalance}
+                {'Coin Balance: ' + coinBalance + ' '}
+                <Image source={CoinIcon} style={{ width: 15, height: 15 }} />
               </Text>
               <Pressable onPress={() => setAddingSongToQueue(false)}>
                 <Text style={styles.modalTextStyle}>{'I changed my mind'}</Text>
@@ -790,7 +833,7 @@ const styles = StyleSheet.create({
   modalAddToQueueView: {
     margin: 20,
     width: '98%',
-    height: 400,
+    height: 500,
     backgroundColor: '#202325',
     borderRadius: 20,
     padding: 35,
@@ -809,6 +852,7 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
     alignItems: 'center',
+    marginVertical: 10,
   },
 
   buttonClose: {
@@ -828,6 +872,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Regular',
     fontSize: 17,
     textAlign: 'center',
+    alignItems: 'center',
+    marginBottom: 5,
   },
   modalText: {
     marginBottom: 15,
@@ -835,6 +881,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: 'center',
     color: 'white',
+  },
+  profilePicture: {
+    borderRadius: 40,
+    width: 100,
+    height: 100,
+    backgroundColor: '#fff',
   },
 });
 export default HomeCheckedIn;

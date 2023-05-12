@@ -22,9 +22,9 @@ public class TransactionController {
     @Resource
     public TransactionService transactionService;
 
-    @PostMapping("/{wallet}")
-    public WalletDTO newTransaction(@PathVariable Integer wallet, @RequestBody IncomingTransactionDTO transaction) {
-        return transactionService.executeNewTransaction(transaction, wallet);
+    @PostMapping("/{username}")
+    public WalletDTO newTransaction(@PathVariable String username, @RequestBody IncomingTransactionDTO transaction) {
+        return transactionService.executeNewTransaction(transaction, username);
     }
     @GetMapping("/id")
     public TransactionDTO getById( @RequestParam Integer id) {
