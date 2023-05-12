@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
@@ -27,6 +28,8 @@ public class VenueDTO {
     private String soundzoneId;
     private String token;
     private SongDTO currentSong;
+    @Nullable
+    private Double rating;
 
     public VenueDTO(Venue venue) {
         if (venue != null) {
@@ -43,10 +46,11 @@ public class VenueDTO {
             this.currentSong = null;
             if (venue.getCurrentSong() != null)
                 this.currentSong = new SongDTO(venue.getCurrentSong());
+            this.rating = venue.getRating();
         }
     }
 
     public Venue toVenue() {
-      return new Venue(id, name, description, location, analytics, photos, playlist, null, null, null, qrCode, token, soundzoneId, null);
+      return new Venue(id, name, description, location, analytics, photos, playlist, null, null, null, qrCode, token, soundzoneId, null, rating);
     }
 }
