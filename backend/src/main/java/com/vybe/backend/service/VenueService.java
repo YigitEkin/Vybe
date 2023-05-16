@@ -187,16 +187,6 @@ public class VenueService {
         return venue.getCheckedInCustomers().stream().map(CustomerDTO::new).collect(Collectors.toList());
     }
 
-    // helper method
-    private boolean isFloat(String s) {
-        try {
-            Float.parseFloat(s);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
     public Boolean uploadVenuePhoto(ImageDTO dto, Integer venueId) {
         String data = dto.getImage();
         if(!venueRepository.existsById(venueId)) {
