@@ -9,10 +9,10 @@ spring:
       ddl-auto: create-drop
 
 two-factor-auth:
-  account-sid:
-  auth-token:
-  service-id:
-  channel:
+  account-sid: AC05c1b101a257d7fc4771a566469415ab
+  auth-token: 319a2858cfdb45912082703898e98155
+  service-id: VA514853402f129ba2a86b9a23c5ba0e2f
+  channel: sms
 
 soundtrackyourbrand:
   api:
