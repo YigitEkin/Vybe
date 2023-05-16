@@ -191,7 +191,9 @@ const VenueDetails = () => {
                 {venue.description}
               </Text>
             </View>
-            <Text style={styles.smallText}>{`Currently Playing: anan`}</Text>
+            <Text
+              style={styles.smallText}
+            >{`Currently Playing: No Song Playing`}</Text>
           </View>
         </View>
       </View>

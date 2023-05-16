@@ -184,7 +184,7 @@ const HomeNotCheckedIn = () => {
       console.log('venueLocation', venueLocation);
 
       console.log('distance', distance);
-      if (distance < 10000) {
+      if (distance > 10000) {
         Alert.alert('Out of range', 'You are not in the range of the venue', [
           { text: 'OK' },
         ]);
@@ -413,12 +413,12 @@ const HomeNotCheckedIn = () => {
           </ScrollView>
         ) : (
           <>
-            <FlatList
+            {/*<FlatList
               data={data}
               renderItem={({ item }) => <GroupItem text={item.text} />}
               horizontal={true}
               style={{ flexGrow: 0, marginBottom: 100 }}
-            />
+            />*/}
             {friendList.length > 0 ? (
               <>
                 <Text style={[styles.textStyle]}>

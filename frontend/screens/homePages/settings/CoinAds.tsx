@@ -51,7 +51,7 @@ function CoinAds() {
   return (
     <View style={{ flex: 1, alignItems: 'center' }}>
       <StyledButton
-        buttonText='Show Anan'
+        buttonText='Show Rewarded Ad'
         onPress={() => {
           rewarded.show();
         }}
