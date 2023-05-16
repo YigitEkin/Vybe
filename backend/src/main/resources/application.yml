@@ -9,19 +9,19 @@ spring:
       ddl-auto: create-drop
 
 two-factor-auth:
-  account-sid:
-  auth-token:
-  service-id:
-  channel:
+  account-sid: 
+  auth-token: 
+  service-id: 
+  channel: sms
 
 soundtrackyourbrand:
   api:
     url: https://api.soundtrackyourbrand.com/v2
 
 iyzico:
-  apiKey: sandbox-YJJvqvClgk65pKRLE8bcQweizGI1VEM4
-  privateKey: sandbox-fcxJPWZJXajEBJKkkt3O4v6clCINRlKq
-  baseUrl: https://sandbox-api.iyzipay.com
+  apiKey: 
+  privateKey: 
+  baseUrl: 
 
 security:
   jwt:
