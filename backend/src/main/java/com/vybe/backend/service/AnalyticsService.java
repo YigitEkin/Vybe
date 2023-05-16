@@ -33,9 +33,6 @@ public class AnalyticsService {
 
     // count of checkin in a year, returns an array of 12 integers (Jan - Dec)
     public Integer[] getCheckinCountInAYear(Integer venueId) {
-        if( venueRepository.findById(venueId).isEmpty() )
-            throw new VenueNotFoundException("Venue with id " + venueId + " not found");
-
         List<Visit> visits = visitRepository.findAllByVenueId(venueId);
 
         Integer[] checkinCount = new Integer[12];
@@ -49,9 +46,6 @@ public class AnalyticsService {
 
     // count of checkin in a month, returns an array of 31 integers (1 - 31)
     public Integer[] getCheckinCountInAMonth(Integer venueId) {
-        if( venueRepository.findById(venueId).isEmpty() )
-            throw new VenueNotFoundException("Venue with id " + venueId + " not found");
-
         List<Visit> visits = visitRepository.findAllByVenueId(venueId);
 
         Integer[] checkinCount = new Integer[31];
@@ -65,9 +59,6 @@ public class AnalyticsService {
 
     // count of checkin in a day, returns an array of 24 integers (0 - 23)
     public Integer[] getCheckinCountInADay(Integer venueId) {
-        if( venueRepository.findById(venueId).isEmpty() )
-            throw new VenueNotFoundException("Venue with id " + venueId + " not found");
-
         List<Visit> visits = visitRepository.findAllByVenueId(venueId);
 
         Integer[] checkinCount = new Integer[24];
@@ -81,9 +72,6 @@ public class AnalyticsService {
 
     // count of checkin in 4 hours, returns an array of 6 integers (0 - 5)
     public Integer[] getCheckinCountIn4Hours(Integer venueId) {
-        if( venueRepository.findById(venueId).isEmpty() )
-            throw new VenueNotFoundException("Venue with id " + venueId + " not found");
-
         List<Visit> visits = visitRepository.findAllByVenueId(venueId);
 
         Integer[] checkinCount = new Integer[6];
