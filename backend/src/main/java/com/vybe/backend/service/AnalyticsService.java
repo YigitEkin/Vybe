@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class AnalyticsService {
     private SongRepository songRepository;
 
     // count of checkin in a year, returns an array of 12 integers (Jan - Dec)
-    public Integer[] getCheckinCountInAYear(Integer venueId) {
+    private Integer[] getCheckinCountInAYear(Integer venueId) {
         List<Visit> visits = visitRepository.findAllByVenueId(venueId);
 
         Integer[] checkinCount = new Integer[12];
@@ -45,7 +46,7 @@ public class AnalyticsService {
     }
 
     // count of checkin in a month, returns an array of 31 integers (1 - 31)
-    public Integer[] getCheckinCountInAMonth(Integer venueId) {
+    private Integer[] getCheckinCountInAMonth(Integer venueId) {
         List<Visit> visits = visitRepository.findAllByVenueId(venueId);
 
         Integer[] checkinCount = new Integer[31];
@@ -58,7 +59,7 @@ public class AnalyticsService {
     }
 
     // count of checkin in a day, returns an array of 24 integers (0 - 23)
-    public Integer[] getCheckinCountInADay(Integer venueId) {
+    private Integer[] getCheckinCountInADay(Integer venueId) {
         List<Visit> visits = visitRepository.findAllByVenueId(venueId);
 
         Integer[] checkinCount = new Integer[24];
@@ -71,7 +72,7 @@ public class AnalyticsService {
     }
 
     // count of checkin in 4 hours, returns an array of 6 integers (0 - 5)
-    public Integer[] getCheckinCountIn4Hours(Integer venueId) {
+    private Integer[] getCheckinCountIn4Hours(Integer venueId) {
         List<Visit> visits = visitRepository.findAllByVenueId(venueId);
 
         Integer[] checkinCount = new Integer[6];
@@ -138,29 +139,212 @@ public class AnalyticsService {
             return index1 - index2;
         });
 
-
         return songs.stream().map(SongDTO::new).toList();
     }
 
 
 
-    // songs requested per artist per venue
+    // songs requested per artist per venue returns a list of artist names and the number of songs requested by that artist
+    // might take a lot of time
+    public List<String> getSongsRequestedPerArtist(Integer venueId) {
+        if(venueId == null)
+            return null;
+        if( venueRepository.findById(venueId).isEmpty() )
+            throw new VenueNotFoundException("Venue with id " + venueId + " not found");
 
-    // number of songs requested per day per venue
+        List<SongRequest> songRequests = songRequestRepository.findAllByRequestedInVenueId(venueId);
 
-    // number of songs requested per week per venue
+        if(songRequests.isEmpty())
+            return null;
 
-    // number of songs requested per month per venue
+        // a song can have more than one artist seperated by a space
+        List<String> artists = new ArrayList<>();
+        for(SongRequest songRequest : songRequests) {
+            String[] songArtists = songRequest.getSong().getArtist().split(", ");
+            artists.addAll(Arrays.asList(songArtists));
+        }
 
-    // total checkins per day per venue
+        List<String> uniqueArtists = artists.stream().distinct().toList();
 
-    // total checkins per week per venue
+        return uniqueArtists.parallelStream().map(artist -> artist + ": " + artists.parallelStream().filter(a -> a.equals(artist)).count()).toList();
+    }
 
-    // total checkins per month per venue
+    // number of songs requested in a month per venue
+    private Integer[] getSongRequestCountInAMonth(Integer venueId) {
+        if(venueId == null)
+            return null;
+        if( venueRepository.findById(venueId).isEmpty() )
+            throw new VenueNotFoundException("Venue with id " + venueId + " not found");
 
-    // total coins spent on song requests per day per venue
+        List<SongRequest> songRequests = songRequestRepository.findAllByRequestedInVenueId(venueId);
 
-    // total coins spent on song requests per week per venue
+        Integer[] songRequestsPerDay = new Integer[31];
+        Arrays.fill(songRequestsPerDay, 0);
 
-    // total coins spent on song requests per month per venue
+        for(SongRequest songRequest : songRequests)
+            songRequestsPerDay[songRequest.getRequestDate().getDate()-1]++;
+
+        return songRequestsPerDay;
+    }
+
+
+    // number of songs requested in a day per venue
+    private Integer[] getSongRequestCountInADay(Integer venueId) {
+        if(venueId == null)
+            return null;
+        if( venueRepository.findById(venueId).isEmpty() )
+            throw new VenueNotFoundException("Venue with id " + venueId + " not found");
+
+        List<SongRequest> songRequests = songRequestRepository.findAllByRequestedInVenueId(venueId);
+
+        Integer[] songRequestsPerDay = new Integer[24];
+        Arrays.fill(songRequestsPerDay, 0);
+
+        for(SongRequest songRequest : songRequests)
+            songRequestsPerDay[songRequest.getRequestDate().getHours()]++;
+
+        return songRequestsPerDay;
+    }
+
+    // number of songs requested in 4 hours per venue
+    private Integer[] getSongRequestCountIn4Hours(Integer venueId) {
+        if(venueId == null)
+            return null;
+        if( venueRepository.findById(venueId).isEmpty() )
+            throw new VenueNotFoundException("Venue with id " + venueId + " not found");
+
+        List<SongRequest> songRequests = songRequestRepository.findAllByRequestedInVenueId(venueId);
+
+        Integer[] songRequestsPerDay = new Integer[6];
+        Arrays.fill(songRequestsPerDay, 0);
+
+        for(SongRequest songRequest : songRequests)
+            songRequestsPerDay[songRequest.getRequestDate().getHours()/4]++;
+
+        return songRequestsPerDay;
+    }
+
+    // number of songs requested in a year
+    private Integer[] getSongRequestCountInAYear(Integer venueId) {
+        if(venueId == null)
+            return null;
+        if( venueRepository.findById(venueId).isEmpty() )
+            throw new VenueNotFoundException("Venue with id " + venueId + " not found");
+
+        List<SongRequest> songRequests = songRequestRepository.findAllByRequestedInVenueId(venueId);
+
+        Integer[] songRequestsPerDay = new Integer[12];
+        Arrays.fill(songRequestsPerDay, 0);
+
+        for(SongRequest songRequest : songRequests)
+            songRequestsPerDay[songRequest.getRequestDate().getMonth()]++;
+
+        return songRequestsPerDay;
+    }
+
+    public Integer[] getSongRequestCounts(Integer venueId, String inAYear, String inAMonth, String inADay, String in4Hours) {
+        if( venueRepository.findById(venueId).isEmpty() )
+            throw new VenueNotFoundException("Venue with id " + venueId + " not found");
+
+        if (inAYear != null) {
+            return getSongRequestCountInAYear(venueId);
+        } else if (inAMonth != null) {
+            return getSongRequestCountInAMonth(venueId);
+        } else if (inADay != null) {
+            return getSongRequestCountInADay(venueId);
+        } else if (in4Hours != null) {
+            return getSongRequestCountIn4Hours(venueId);
+        } else {
+            return getSongRequestCountInAMonth(venueId);
+        }
+    }
+
+    // total coins spent on song requests in a day per venue
+    private Double[] getCoinsSpentOnSongRequestsInADay(Integer venueId) {
+        if(venueId == null)
+            return null;
+        if( venueRepository.findById(venueId).isEmpty() )
+            throw new VenueNotFoundException("Venue with id " + venueId + " not found");
+
+        List<SongRequest> songRequests = songRequestRepository.findAllByRequestedInVenueId(venueId);
+
+        Double[] coinsSpentPerDay = new Double[24];
+        Arrays.fill(coinsSpentPerDay, 0.0);
+
+        for(SongRequest songRequest : songRequests)
+            coinsSpentPerDay[songRequest.getRequestDate().getHours()] += songRequest.getCoinCost();
+
+        return coinsSpentPerDay;
+    }
+
+    // total coins spent on song requests in a month per venue
+    private Double[] getCoinsSpentOnSongRequestsInAMonth(Integer venueId) {
+        if(venueId == null)
+            return null;
+        if( venueRepository.findById(venueId).isEmpty() )
+            throw new VenueNotFoundException("Venue with id " + venueId + " not found");
+
+        List<SongRequest> songRequests = songRequestRepository.findAllByRequestedInVenueId(venueId);
+
+        Double[] coinsSpentPerDay = new Double[31];
+        Arrays.fill(coinsSpentPerDay, 0.0);
+
+        for(SongRequest songRequest : songRequests)
+            coinsSpentPerDay[songRequest.getRequestDate().getDate()-1] += songRequest.getCoinCost();
+
+        return coinsSpentPerDay;
+    }
+
+    // total coins spent on song requests in 4 hours per venue
+    private Double[] getCoinsSpentOnSongRequestsIn4Hours(Integer venueId) {
+        if(venueId == null)
+            return null;
+        if( venueRepository.findById(venueId).isEmpty() )
+            throw new VenueNotFoundException("Venue with id " + venueId + " not found");
+
+        List<SongRequest> songRequests = songRequestRepository.findAllByRequestedInVenueId(venueId);
+
+        Double[] coinsSpentPerDay = new Double[6];
+        Arrays.fill(coinsSpentPerDay, 0.0);
+
+        for(SongRequest songRequest : songRequests)
+            coinsSpentPerDay[songRequest.getRequestDate().getHours()/4] += songRequest.getCoinCost();
+
+        return coinsSpentPerDay;
+    }
+
+    // total coins spent on song requests in a year per venue
+    private Double[] getCoinsSpentOnSongRequestsInAYear(Integer venueId) {
+        if(venueId == null)
+            return null;
+        if( venueRepository.findById(venueId).isEmpty() )
+            throw new VenueNotFoundException("Venue with id " + venueId + " not found");
+
+        List<SongRequest> songRequests = songRequestRepository.findAllByRequestedInVenueId(venueId);
+
+        Double[] coinsSpentPerDay = new Double[12];
+        Arrays.fill(coinsSpentPerDay, 0.0);
+
+        for(SongRequest songRequest : songRequests)
+            coinsSpentPerDay[songRequest.getRequestDate().getMonth()] += songRequest.getCoinCost();
+
+        return coinsSpentPerDay;
+    }
+
+    public Double[] getCoinsSpentOnSongRequests(Integer venueId, String inAYear, String inAMonth, String inADay, String in4Hours) {
+        if( venueRepository.findById(venueId).isEmpty() )
+            throw new VenueNotFoundException("Venue with id " + venueId + " not found");
+
+        if (inAYear != null) {
+            return getCoinsSpentOnSongRequestsInAYear(venueId);
+        } else if (inAMonth != null) {
+            return getCoinsSpentOnSongRequestsInAMonth(venueId);
+        } else if (inADay != null) {
+            return getCoinsSpentOnSongRequestsInADay(venueId);
+        } else if (in4Hours != null) {
+            return getCoinsSpentOnSongRequestsIn4Hours(venueId);
+        } else {
+            return getCoinsSpentOnSongRequestsInAMonth(venueId);
+        }
+    }
 }
