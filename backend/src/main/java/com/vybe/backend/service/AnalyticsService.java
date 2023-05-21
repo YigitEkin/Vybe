@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -103,7 +104,7 @@ public class AnalyticsService {
     }
 
     // top 10 requested songs per venue
-    public List<SongDTO> getTop10RequestedSongs(Integer venueId) {
+    public List<List<Object>> getTop10RequestedSongs(Integer venueId) {
         if(venueId == null)
             return null;
         if( venueRepository.findById(venueId).isEmpty() )
@@ -119,7 +120,15 @@ public class AnalyticsService {
             return index1 - index2;
         });
 
-        return songs.stream().map(SongDTO::new).toList();
+        List<List<Object>> songRequestCount = new ArrayList<>();
+        for(Song song : songs) {
+            List<Object> songRequest = new ArrayList<>();
+            songRequest.add(new SongDTO(song));
+            songRequest.add(songRequestRepository.countRequestsBySongId(song.getId()));
+            songRequestCount.add(songRequest);
+        }
+
+        return songRequestCount;
     }
 
     // recently requested 20 songs per venue

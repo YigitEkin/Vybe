@@ -24,5 +24,9 @@ public interface SongRequestRepository extends JpaRepository<SongRequest, Intege
     @Query(value = "SELECT * FROM song_request WHERE requested_in_venue_id = ?1 ORDER BY request_date DESC LIMIT 20", nativeQuery = true)
     List<SongRequest> findTop20RecentRequestsByVenueId(Integer venueId);
 
+    // calculate the number of requests for a song by songId
+    @Query(value = "SELECT COUNT(song_id) FROM song_request WHERE song_id = ?1", nativeQuery = true)
+    Integer countRequestsBySongId(Integer songId);
+
     List<SongRequest> findAllByRequestedInVenueId(Integer venueId);
 }
