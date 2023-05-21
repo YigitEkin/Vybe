@@ -59,7 +59,7 @@ public class CommentServiceTests {
         comment.setCommentedBy(customer);
         comment.setVenue(venue);
 
-        CommentDTO commentDTO = new CommentDTO("This is a test comment.", "test_date", "testusername", 1);
+        CommentDTO commentDTO = new CommentDTO("This is a test comment.", "test_date", "testusername", "test name", "test surname", 1);
         when(venueRepository.existsById(commentDTO.getVenueId())).thenReturn(true);
         when(customerRepository.existsById(commentDTO.getCustomerUsername())).thenReturn(true);
         when(venueRepository.findById(commentDTO.getVenueId())).thenReturn(Optional.of(venue));
@@ -82,7 +82,7 @@ public class CommentServiceTests {
     @Test
     void should_throw_VenueNotFoundException_when_venue_does_not_exist() {
         // Arrange
-        CommentDTO commentDTO = new CommentDTO("This is a test comment.", "test_date", "testusername", 1);
+        CommentDTO commentDTO = new CommentDTO("This is a test comment.", "test_date", "testusername", "test name", "test surname", 1);
         when(venueRepository.existsById(commentDTO.getVenueId())).thenReturn(false);
 
         // Act & Assert
@@ -94,7 +94,7 @@ public class CommentServiceTests {
     @Test
     void should_throw_CustomerNotFoundException_when_customer_does_not_exist() {
         // Arrange
-        CommentDTO commentDTO = new CommentDTO("This is a test comment.", "test_date", "testusername", 1);
+        CommentDTO commentDTO = new CommentDTO("This is a test comment.", "test_date", "testusername", "test name", "test surname", 1);
         when(venueRepository.existsById(commentDTO.getVenueId())).thenReturn(true);
         when(customerRepository.existsById(commentDTO.getCustomerUsername())).thenReturn(false);
 
