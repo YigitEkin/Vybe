@@ -195,14 +195,17 @@ public class UserService {
 
     // ********** VENUE ADMIN **********
     public VenueAdminDTO addVenueAdmin(VenueAdminCreationDTO venueAdminCreationDTO) {
-        if (userRepository.existsByUsername(venueAdminCreationDTO.getUsername())) {
+        if (userRepository.existsByUsername(venueAdminCreationDTO.getUsername()))
             throw new UsernameTakenException("Username already exists");
-        }
-        if (userRepository.existsByPhoneNumber(venueAdminCreationDTO.getPhoneNumber())) {
+        if (userRepository.existsByPhoneNumber(venueAdminCreationDTO.getPhoneNumber()))
             throw new PhoneNumberTakenException("Phone number already exists");
-        }
-        // TODO: hash the password
-        return new VenueAdminDTO(venueAdminRepository.save(venueAdminCreationDTO.toVenueAdmin()));
+        if (!venueRepository.existsByName(venueAdminCreationDTO.getVenueName())) 
+            throw new VenueNotFoundException("Venue with name: " + venueAdminCreationDTO.getVenueName() + " not found");
+
+        VenueAdmin venueAdmin = venueAdminCreationDTO.toVenueAdmin();
+        venueAdmin.setVenue(venueRepository.findByName(venueAdminCreationDTO.getVenueName()));
+        
+        return new VenueAdminDTO(venueAdminRepository.save(venueAdmin));
     }
 
     // get all venue admins

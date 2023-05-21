@@ -27,6 +27,16 @@ public class AuthService {
            return false;
        }
     }
+
+    public Boolean authorizeVenueAdminUsernameAndPassword(String username, String password) {
+        try {
+            User user = userService.authorizeCustomer(username, password);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public CustomerDTO authorizeCustomer2FA(String code, String username) {
         CustomerDTO customer = userService.getCustomer(username);
         if(username.equals("admin"))

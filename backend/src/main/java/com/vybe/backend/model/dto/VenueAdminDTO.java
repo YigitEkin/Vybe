@@ -16,12 +16,21 @@ public class VenueAdminDTO {
     private String surname;
     private String phoneNumber;
     private String venueName;
+    private Integer venueId;
 
     public VenueAdminDTO(VenueAdmin venueAdmin) {
         this.username = venueAdmin.getUsername();
         this.phoneNumber = venueAdmin.getPhoneNumber();
         this.name = venueAdmin.getName();
         this.surname = venueAdmin.getSurname();
+        if (venueAdmin.getVenue() == null){
+            this.venueName = null;
+            this.venueId = null;
+        }
+        else{
+            this.venueName = venueAdmin.getVenue().getName();
+            this.venueId = venueAdmin.getVenue().getId();
+        }
         //this.venueName = venueAdmin.getVenue().getName();
     }
 }

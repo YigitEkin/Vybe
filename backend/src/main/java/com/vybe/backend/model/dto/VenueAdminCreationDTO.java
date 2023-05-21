@@ -21,16 +21,17 @@ public class VenueAdminCreationDTO {
     private String venueName;
 
     private String code;
-    public VenueAdminCreationDTO(String username, String name, String surname, String password, String email, String phoneNumber) {
+    public VenueAdminCreationDTO(String username, String name, String surname, String password, String email, String phoneNumber, String venueName) {
         this.username = username;
         this.name = name;
         this.surname = surname;
         this.password = password;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.venueName = venueName;
     }
 
     public VenueAdmin toVenueAdmin() {
-        return new VenueAdmin(username, name, surname, password, phoneNumber, null, null, null, true);
+        return new VenueAdmin(username, name, surname, password, phoneNumber, null, null, null, true, null);
     }
 }

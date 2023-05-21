@@ -56,9 +56,12 @@ public class BackendApplication {
 	public CommandLineRunner lineRunner(CustomerRepository customerRepository, SongRepository songRepository, UserRepository userRepository,
 										UserService userService, VenueService venueService, SongService songService, PlaylistService playlistService, FriendshipService friendshipService, IyzicoUtil iyzicoUtil) {
 		return args -> {
+			VenueCreationDTO venueCreationDTO = new VenueCreationDTO("testname1", "testdescription1", "40.1, 20.23", "testtoken", "testsoundzoneID");
+			VenueDTO venueDTO = venueService.addVenue(venueCreationDTO);
+
 			// test user service class using assert statements to check if the methods work
 			CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO( "testpass1", "testname1","name", "surname", "testphone1", "testdate1", "testdate1", "000000");
-			VenueAdminCreationDTO venueAdminCreationDTO = new VenueAdminCreationDTO("testname3", "name", "surname", "testpass3", "testmail3", "testphone3");
+			VenueAdminCreationDTO venueAdminCreationDTO = new VenueAdminCreationDTO("testname3", "name", "surname", "testpass3", "testmail3", "testphone3", "testname1");
 			AdminCreationDTO adminCreationDTO = new AdminCreationDTO("testname5", "testpass5");
 			System.out.println("Testing");
 
@@ -105,7 +108,7 @@ public class BackendApplication {
 			}
 
 			// test adding a venue admin with an existing username
-			VenueAdminCreationDTO venueAdminCreationDTO3 = new VenueAdminCreationDTO("testname3", "name", "surname", "testpass3", "testmail3", "testphone3");
+			VenueAdminCreationDTO venueAdminCreationDTO3 = new VenueAdminCreationDTO("testname3", "name", "surname", "testpass3", "testmail3", "testphone3", "testname1");
 			try {
 				VenueAdminDTO venueAdminDTO3 = userService.addVenueAdmin(venueAdminCreationDTO3);
 			} catch (Exception e) {
@@ -145,8 +148,6 @@ public class BackendApplication {
 			}
 
 			// test adding a venue
-			VenueCreationDTO venueCreationDTO = new VenueCreationDTO("testname1", "testdescription1", "40.1, 20.23", "testtoken", "testsoundzoneID");
-			VenueDTO venueDTO = venueService.addVenue(venueCreationDTO);
 			assert venueDTO.getName().equals("testname1");
 			assert venueDTO.getDescription().equals("testdescription1");
 			assert venueDTO.getLocation().equals("testlocation1");
@@ -541,6 +542,12 @@ public class BackendApplication {
 			userService.checkIn("905332346981", 3);
 			userService.checkIn("2", 4);
 			userService.checkIn("905076011168", 5);
+
+			// ------------------------ Venue Admins ------------------------
+			VenueAdminCreationDTO venueAdminCreationDTO1 = new VenueAdminCreationDTO( "mehmet.yilmaz@fameo.com", "Mehmet", "Yılmaz", "12345678", "mehmet.yilmaz@fameo.com", "+905086023982", "Fameo Cafe");
+			VenueAdminDTO venueAdminResult = userService.addVenueAdmin(venueAdminCreationDTO1);
+
+
 
 
 
