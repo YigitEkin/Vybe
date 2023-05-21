@@ -4,9 +4,7 @@ import com.vybe.backend.model.dto.CustomerCreationDTO;
 import com.vybe.backend.model.dto.CustomerDTO;
 import com.vybe.backend.model.dto.VenueAdminCreationDTO;
 import com.vybe.backend.model.dto.VenueAdminDTO;
-import com.vybe.backend.model.entity.Customer;
 import com.vybe.backend.model.entity.User;
-import com.vybe.backend.repository.UserRepository;
 import com.vybe.backend.util.TwoFactorUtil;
 import org.springframework.stereotype.Service;
 

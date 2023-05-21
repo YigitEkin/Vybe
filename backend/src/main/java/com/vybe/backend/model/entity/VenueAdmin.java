@@ -1,12 +1,8 @@
 package com.vybe.backend.model.entity;
 
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import java.util.Collection;
 import java.util.Stack;
 
 /**

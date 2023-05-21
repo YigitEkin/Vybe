@@ -1,6 +1,5 @@
 package com.vybe.backend.model.entity;
 
-import com.sun.istack.NotNull;
 import com.vybe.backend.repository.SongNodeRepository;
 import lombok.*;
 

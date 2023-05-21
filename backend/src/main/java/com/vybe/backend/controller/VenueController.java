@@ -1,7 +1,6 @@
 package com.vybe.backend.controller;
 
 import com.vybe.backend.model.dto.*;
-import com.vybe.backend.model.entity.Image;
 import com.vybe.backend.util.SchedulerUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import com.vybe.backend.model.entity.Visit;

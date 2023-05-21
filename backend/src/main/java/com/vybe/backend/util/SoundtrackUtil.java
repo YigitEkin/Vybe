@@ -1,12 +1,7 @@
 package com.vybe.backend.util;
 
-
-import com.fasterxml.jackson.core.JsonFactory;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.graphql.client.HttpGraphQlClient;
-import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;

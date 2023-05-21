@@ -1,6 +1,5 @@
 package com.vybe.backend.repository;
 
-import com.vybe.backend.model.entity.Song;
 import com.vybe.backend.model.entity.SongRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

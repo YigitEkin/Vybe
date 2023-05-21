@@ -1,12 +1,10 @@
 package com.vybe.backend.repository;
 
-import com.vybe.backend.model.entity.Comment;
 import com.vybe.backend.model.entity.Rating;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Repository

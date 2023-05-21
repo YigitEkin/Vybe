@@ -1,6 +1,5 @@
 package com.vybe.backend.exception;
 
-import com.vybe.backend.model.entity.Venue;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
