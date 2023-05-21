@@ -1,3 +1,4 @@
+//@ts-nocheck
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import React, { useState } from "react";

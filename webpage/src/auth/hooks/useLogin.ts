@@ -1,5 +1,7 @@
-import axios from "axios";
+
 import { useMutation } from "react-query";
+import { fetchData } from "../../admin/config/request";
+import { useLocalStorage } from "../../core/hooks/useLocalStorage";
 
 const login = async ({
   email,
@@ -8,7 +10,19 @@ const login = async ({
   email: string;
   password: string;
 }): Promise<string> => {
-  const { data } = await axios.post("/api/login", { email, password });
+  console.log(email, password);
+  const data = await fetchData("/api/auth/signIn/venueAdmin", "POST", {
+    username: email,
+    password: password,
+    code: ''
+  });
+  if (!data) {
+    throw new Error("Invalid credentials");
+  }
+  localStorage.setItem("username", email);
+  const userData = await fetchData(`/api/auth/venueAdmin/${email}`, 'GET')
+  localStorage.setItem("venueInfo", JSON.stringify(userData));
+  console.log(userData);
   return data;
 };
 

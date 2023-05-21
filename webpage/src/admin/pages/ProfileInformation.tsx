@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -33,6 +34,7 @@ const ProfileInformation = () => {
 
   const formik = useFormik({
     initialValues: {
+      // @ts-ignore
       email: data ? data.email : '',
       firstName: data ? data.firstName : '',
       //gender: data ? data.gender : undefined,

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import Fab from '@material-ui/core/Fab';
@@ -7,7 +8,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonIcon from '@material-ui/icons/Person';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../../auth/contexts/AuthProvider';
@@ -16,7 +17,7 @@ import { useSnackbar } from '../../core/contexts/SnackbarProvider';
 import AdminAppBar from '../components/AdminAppBar';
 import AdminToolbar from '../components/AdminToolbar';
 import QRCode from 'react-qr-code';
-import CircleProgressWidget from '../widgets/CircleProgressWidget';
+import { fetchData } from '../config/request';
 
 const profileMenuItems = [
   {
@@ -30,15 +31,25 @@ const profileMenuItems = [
 ];
 
 const Profile = () => {
-  const { isLoggingOut, logout, userInfo } = useAuth();
+  const { isLoggingOut, logout } = useAuth();
+  const userInfo = JSON.parse(localStorage.getItem('venueInfo'));
+  const [username, setUsername] = useState(localStorage.getItem('username'));
   const snackbar = useSnackbar();
   const { t } = useTranslation();
+  const [base64, setBase64] = useState('')
 
   const handleLogout = () => {
     logout().catch(() =>
       snackbar.error(t('common.errors.unexpected.subTitle'))
     );
   };
+
+  //@ts-ignore
+  useEffect(async () => {
+    const data = await fetchData(`/api/venues/${userInfo.venueId}/images`, 'GET')
+    console.log(data[0].image);
+    setBase64(data[0].image)
+  }, []);
 
   return (
     <React.Fragment>
@@ -55,7 +66,7 @@ const Profile = () => {
         </AdminToolbar>
       </AdminAppBar>
       <Grid container spacing={12}>
-        <Grid item xs={12} md={4} marginTop={3}>
+        <Grid item xs={12} md={12} marginTop={3}>
           <Box
             sx={{
               display: 'flex',
@@ -69,11 +80,15 @@ const Profile = () => {
               sx={{
                 bgcolor: 'background.paper',
                 mb: 3,
-                height: 160,
-                width: 160,
+                height: 220,
+                width: 220,
               }}
             >
-              <PersonIcon sx={{ fontSize: 120 }} />
+              <img
+                width={'auto'}
+                height={220}
+                src={`data:image/jpg;base64, ${base64}`}
+              />
             </Avatar>
             <Typography
               component='div'
@@ -96,12 +111,12 @@ const Profile = () => {
             }}
           >
             <QRCode
-              value={userInfo ? userInfo.venueName : 'QR Failed'}
+              value={userInfo ? String(userInfo.venueId) : 'QR Failed'}
               size={256}
             />
           </Box>
         </Grid>
-        <Grid item xs={12} md={8} marginTop={3}>
+        {/* <Grid item xs={12} md={8} marginTop={3}>
           <Box sx={{ mb: 4 }}>
             <Tabs aria-label='profile nav tabs' value={false}>
               {profileMenuItems.map((item) => (
@@ -119,7 +134,7 @@ const Profile = () => {
           <QueryWrapper>
             <Outlet />
           </QueryWrapper>
-        </Grid>
+        </Grid> */}
       </Grid>
     </React.Fragment>
   );

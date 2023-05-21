@@ -11,43 +11,51 @@ import {
   Tooltip,
 } from 'recharts';
 
-const data = [
+const data3 = [
   {
-    subject: '10:00-14:00',
+    subject: '00:00-04:00',
     A: 110,
   },
   {
-    subject: '14:00-18:00',
+    subject: '04:00-08:00',
     A: 98,
   },
   {
-    subject: '18:00-22:00',
+    subject: '08:00-12:00',
     A: 86,
   },
   {
-    subject: '22:00-02:00',
+    subject: '12:00-16:00',
     A: 99,
   },
   {
-    subject: '02:00-06:00',
+    subject: '16:00-20:00',
     A: 85,
   },
   {
-    subject: '06:00-10:00',
+    subject: '20:00-00:00',
     A: 65,
   },
 ];
-
-const BudgetWidget = () => {
+interface BudgetWidgetProps {
+  data: number[];
+}
+const BudgetWidget = (data: BudgetWidgetProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const data2: any = data.data.map((item: any, index: number) => {
+    return {
+      subject: data3[index].subject,
+      A: item,
+    };
+  });
 
   return (
     <Card>
       <CardHeader title={t('dashboard.budget.title')} />
       <CardContent>
         <ResponsiveContainer width='99%' height={244}>
-          <RadarChart cx='50%' cy='50%' outerRadius='80%' data={data}>
+          <RadarChart cx='50%' cy='50%' outerRadius='80%' data={data2}>
             <PolarAngleAxis
               dataKey='subject'
               tick={{ fill: theme.palette.text.secondary, fontSize: 14 }}

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import Drawer from '@material-ui/core/Drawer';
@@ -5,17 +6,11 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
-import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import BarChartIcon from '@material-ui/icons/BarChart';
-import EventIcon from '@material-ui/icons/Event';
-import HelpCenterIcon from '@material-ui/icons/HelpCenter';
 import HomeIcon from '@material-ui/icons/Home';
-import PeopleIcon from '@material-ui/icons/People';
 import PersonIcon from '@material-ui/icons/Person';
-import SettingsIcon from '@material-ui/icons/Settings';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
-import { useAuth } from '../../auth/contexts/AuthProvider';
 import Logo from '../../core/components/Logo';
 import { drawerCollapsedWidth, drawerWidth } from '../../core/config/layout';
 
@@ -37,11 +32,11 @@ export const menuItems = [
     key: 'admin.drawer.menu.dashboard',
     path: '/admin/dashboard',
   },
-  {
-    icon: PeopleIcon,
-    key: 'admin.drawer.menu.userManagement',
-    path: '/admin/user-management',
-  },
+  // {
+  //   icon: PeopleIcon,
+  //   key: 'admin.drawer.menu.userManagement',
+  //   path: '/admin/user-management',
+  // },
   //{
   //  icon: EventIcon,
   //  key: "admin.drawer.menu.calendar",
@@ -52,11 +47,11 @@ export const menuItems = [
   //  key: "admin.drawer.menu.projects",
   //  path: "/admin/projects",
   //},
-  {
-    icon: HelpCenterIcon,
-    key: 'admin.drawer.menu.help',
-    path: '/admin/help',
-  },
+  // {
+  //   icon: HelpCenterIcon,
+  //   key: 'admin.drawer.menu.help',
+  //   path: '/admin/help',
+  // },
 ];
 
 const AdminDrawer = ({
@@ -65,7 +60,7 @@ const AdminDrawer = ({
   onDrawerToggle,
   onSettingsToggle,
 }: AdminDrawerProps) => {
-  const { userInfo } = useAuth();
+  const userInfo = JSON.parse(localStorage.getItem('venueInfo'));
   const { t } = useTranslation();
 
   const width = collapsed ? drawerCollapsedWidth : drawerWidth;

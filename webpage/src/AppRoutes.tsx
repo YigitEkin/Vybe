@@ -9,7 +9,6 @@ const Faq = lazy(() => import('./admin/pages/Faq'));
 const HelpCenter = lazy(() => import('./admin/pages/HelpCenter'));
 const Home = lazy(() => import('./admin/pages/Home'));
 const Profile = lazy(() => import('./admin/pages/Profile'));
-const ProfileActivity = lazy(() => import('./admin/pages/ProfileActivity'));
 const ProfileInformation = lazy(
   () => import('./admin/pages/ProfileInformation')
 );
