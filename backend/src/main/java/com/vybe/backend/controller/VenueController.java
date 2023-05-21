@@ -43,6 +43,9 @@ public class VenueController {
     @Resource
     private SchedulerUtil schedulerUtil;
 
+    @Resource
+    private AnalyticsService analyticsService;
+
 
     // ************* Venue Endpoints ************* //
     @GetMapping("/{venueId}")
@@ -183,6 +186,45 @@ public class VenueController {
     public Boolean deleteImage(@PathVariable Integer venueId, @PathVariable Long imageId) {
         return venueService.deleteVenuePhoto(venueId, imageId);
     }
+
+    // ************* Analytics Endpoints ************* //
+    // with query params of per moth, per week, per day
+    @GetMapping("/{venueId}/analytics/checkIns")
+    public Integer[] getCheckIns(@PathVariable Integer venueId, @RequestParam(required = false) String inAYear, @RequestParam(required = false) String inAMonth,
+                                     @RequestParam(required = false) String inADay, @RequestParam(required = false) String inADayPer4Hours) {
+        return analyticsService.getCheckIns(venueId, inAYear, inAMonth, inADay, inADayPer4Hours);
+    }
+
+    @GetMapping("/{venueId}/analytics/topRequests")
+    public List<SongDTO> getTopRequests(@PathVariable Integer venueId) {
+        return analyticsService.getTop10RequestedSongs(venueId);
+    }
+
+    @GetMapping("/{venueId}/analytics/recentRequests")
+    public List<SongDTO> getRecentlyPlayed(@PathVariable Integer venueId) {
+        return analyticsService.getRecentlyRequestedSongs(venueId);
+    }
+
+    @GetMapping("/{venueId}/analytics/requestsPerArtist")
+    public List<String> getSongsPerArtist(@PathVariable Integer venueId) {
+        return analyticsService.getSongsRequestedPerArtist(venueId);
+    }
+
+    @GetMapping("/{venueId}/analytics/requests")
+    public Integer[] getRequests(@PathVariable Integer venueId, @RequestParam(required = false) String inAYear, @RequestParam(required = false) String inAMonth,
+    @RequestParam(required = false) String inADay, @RequestParam(required = false) String inADayPer4Hours) {
+        return analyticsService.getSongRequestCounts(venueId, inAYear, inAMonth, inADay, inADayPer4Hours);
+    }
+
+    @GetMapping("/{venueId}/analytics/coinsSpent")
+    public Double[] getCoinsSpent(@PathVariable Integer venueId, @RequestParam(required = false) String inAYear, @RequestParam(required = false) String inAMonth,
+    @RequestParam(required = false) String inADay, @RequestParam(required = false) String inADayPer4Hours) {
+        return analyticsService.getCoinsSpentOnSongRequests(venueId, inAYear, inAMonth, inADay, inADayPer4Hours);
+    }
+
+
+
+
 
 
 

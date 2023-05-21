@@ -462,14 +462,16 @@ public class BackendApplication {
 			SongRequestDTO songRequestDTO5 = new SongRequestDTO(92, customerResult1.getUsername(), 2, new Date(), 0, 1.0);
 			SongRequestDTO songRequestDTO6 = new SongRequestDTO(213, customerResult1.getUsername(), 2, new Date(), 0, 1.0);
 			SongRequestDTO songRequestDTO7 = new SongRequestDTO(421, customerResult3.getUsername(), 2, new Date(), 0, 2.0);
+			SongRequestDTO songRequestDTO8 = new SongRequestDTO(421, customerResult3.getUsername(), 2, new Date(), 0, 2.0);
 
-			SongNodeDTO resultRequest1 = songService.addSongRequest(songRequestDTO1);
 			SongNodeDTO resultRequest2 = songService.addSongRequest(songRequestDTO2);
+			SongNodeDTO resultRequest1 = songService.addSongRequest(songRequestDTO1);
 			SongNodeDTO resultRequest3 = songService.addSongRequest(songRequestDTO3);
 			SongNodeDTO resultRequest4 = songService.addSongRequest(songRequestDTO4);
 			SongNodeDTO resultRequest5 = songService.addSongRequest(songRequestDTO5);
 			SongNodeDTO resultRequest6 = songService.addSongRequest(songRequestDTO6);
 			SongNodeDTO resultRequest7 = songService.addSongRequest(songRequestDTO7);
+			SongNodeDTO resultRequest8 = songService.addSongRequest(songRequestDTO8);
 
 			// ------------------------ Comments ------------------------
 			CommentDTO commentDTO1 = new CommentDTO("This is a comment", "date", customerResult1.getUsername(), resultVenue1.getId());

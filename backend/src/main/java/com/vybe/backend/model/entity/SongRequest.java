@@ -49,4 +49,7 @@ public class SongRequest {
 
     private Double coinCost;
 
+    public Integer getSongId() {
+        return song.getId();
+    }
 }
