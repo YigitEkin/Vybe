@@ -1,7 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import EnterPhoneNumber from '../../components/phoneCodePicker/PhoneCodePicker';
 import { useSignUpStore } from '../../stores/SignUpStore';
 import { Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import axiosConfig from '../../constants/axiosConfig';
 
@@ -14,6 +15,7 @@ const DismissKeyboard = ({ children }: any) => (
 const EnterPhoneNumberSignUp = ({ navigation }: any) => {
   const instanceToken = axiosConfig();
   const baseUrl = process.env.BASE_URL;
+  const [loading, setLoading] = useState(false);
   const {
     phoneNumber,
     setPhoneNumber,
@@ -37,6 +39,7 @@ const EnterPhoneNumberSignUp = ({ navigation }: any) => {
   });
 
   const onPress = useCallback(() => {
+    setLoading(true);
     let phoneNo =
       phoneNumber && phoneNumber.trim() !== ''
         ? selectedCode.dial_code.replace('+', '') + phoneNumber
@@ -50,17 +53,21 @@ const EnterPhoneNumberSignUp = ({ navigation }: any) => {
     instanceToken
       .get(`/api/auth/2FA?phoneNumber=${phoneNo}`)
       .then((res) => {
+        setLoading(false);
         if (res.data) {
           navigation.navigate('SignupVerification');
         }
       })
-      .catch((e) => console.log(e.message));
+      .catch((e) => {
+        console.log(e.message);
+        setLoading(false);
+      });
   }, [phoneNumber, setPhoneNumber, navigation]);
 
   return (
     <DismissKeyboard>
       <EnterPhoneNumber
-        buttonText='Sign Up'
+        buttonText={loading ? <ActivityIndicator /> : 'Sign Up'}
         headerText='Welcome to Vybe'
         subHeaderText='Start Vybing'
         mutedText='You will receive an SMS verification that may apply message and data rates.'

@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/venues")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+//@PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
 
 // TODO: restrict origins
 public class VenueController {
