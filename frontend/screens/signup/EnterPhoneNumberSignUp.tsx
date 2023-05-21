@@ -67,7 +67,7 @@ const EnterPhoneNumberSignUp = ({ navigation }: any) => {
   return (
     <DismissKeyboard>
       <EnterPhoneNumber
-        buttonText={loading ? <ActivityIndicator /> : 'Sign Up'}
+        buttonText={loading ? <ActivityIndicator color='#EA34C9' /> : 'Sign Up'}
         headerText='Welcome to Vybe'
         subHeaderText='Start Vybing'
         mutedText='You will receive an SMS verification that may apply message and data rates.'

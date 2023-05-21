@@ -387,9 +387,12 @@ const MapPage = () => {
             title: venue.name,
             description: venue.description,
             image: Images[0].image,
-            rating: 4,
+            rating: venue.rating,
             reviews: 99,
             id: venue.id,
+            currentSong: venue.currentSong
+              ? venue.currentSong
+              : 'No song playing',
           };
         });
         //console.log(markersRes);
@@ -673,7 +676,7 @@ const MapPage = () => {
                   }}
                 >
                   <Text style={styles.cardDescription}>
-                    🎧 {marker.description}
+                    🎧 {marker.currentSong}
                   </Text>
                   <FontAwesome
                     style={{ marginLeft: 'auto' }}
@@ -695,7 +698,7 @@ const MapPage = () => {
                       fontWeight: 'bold',
                     }}
                   >
-                    4.65
+                    {marker.rating.toFixed(2)}
                   </Text>
                 </View>
               </View>
@@ -830,9 +833,11 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   cardDescription: {
+    flexWrap: 'wrap',
+    width: '70%',
     fontSize: 12,
     color: Colors.gray.muted,
-    textAlign: 'center',
+    //textAlign: 'center',
     paddingTop: 5,
   },
   markerWrap: {

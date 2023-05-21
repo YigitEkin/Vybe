@@ -5,6 +5,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   TouchableHighlight,
+  ActivityIndicator,
 } from 'react-native';
 import * as Font from 'expo-font';
 import StyledButton from '../../components/HomePage/StyledButton';
@@ -20,6 +21,7 @@ import { useCheckedInStore } from '../../stores/CheckedInStore';
 const LoginVerification = ({ navigation }: any) => {
   const instanceToken = axiosConfig();
   const [OTPCode, setOTPCode] = useState(0);
+  const [loading, setLoading] = useState(false);
   const { setIsCheckIn } = useCheckedInStore((state: any) => ({
     setIsCheckIn: state.setIsCheckIn,
   }));
@@ -36,16 +38,44 @@ const LoginVerification = ({ navigation }: any) => {
   const handleChange = (e) => {
     setOTPCode(e);
   };
+  const resendCode = () => {
+    instanceToken
+      .post('/api/auth/signIn', {
+        username: selectedCode.dial_code.replace('+', '') + phoneNumber,
+        password: password,
+        code: '',
+      })
+      .then((res) => {
+        setLoading(false);
+        if (res.data) {
+          console.log(res.data);
+          setToken(res.data);
+          navigation.navigate('LoginVerification');
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: 'Error validating',
+            text2: 'Please check your credentials',
+          });
+        }
+      })
+      .catch((e) => {
+        console.log(e.message);
+        setLoading(false);
+      });
+  };
   const data = {
     username: selectedCode.dial_code.replace('+', '') + phoneNumber,
     password: password,
     code: String(OTPCode),
   };
   const handleSubmit = () => {
+    setLoading(true);
     String(OTPCode).length === 4 &&
       instanceToken
         .post('/api/auth/customer/2FA', data)
         .then((res) => {
+          setLoading(false);
           if (res.data) {
             //setPhoneNumber(null);
             setIsLogin(true);
@@ -58,7 +88,10 @@ const LoginVerification = ({ navigation }: any) => {
             });
           }
         })
-        .catch((e) => console.log(e));
+        .catch((e) => {
+          console.log(e);
+          setLoading(false);
+        });
   };
   const [fontsLoaded] = Font.useFonts({
     'Inter-Bold': require('../../assets/fonts/Inter/static/Inter-Bold.ttf'),
@@ -74,7 +107,8 @@ const LoginVerification = ({ navigation }: any) => {
               {'Enter authentication code.'}
             </Text>
             <Text style={styles.subHeaderText}>
-              Enter the 4-digit that we have sent via the phone number{' '}
+              Enter the 4-digit that we have sent via the phone number
+              {' ' + `${selectedCode.dial_code}`}
               {phoneNumber}
             </Text>
           </View>
@@ -92,10 +126,12 @@ const LoginVerification = ({ navigation }: any) => {
         <View style={styles.StyledButton}>
           <StyledButton
             style={styles.StyledButton}
-            buttonText='Continue'
+            buttonText={
+              loading ? <ActivityIndicator color='#EA34C9' /> : 'Continue'
+            }
             onPress={handleSubmit}
           />
-          <TouchableHighlight onPress={() => console.log('Pressed')}>
+          <TouchableHighlight onPress={() => resendCode()}>
             <Text style={styles.resendText}>{'Resend Code'}</Text>
           </TouchableHighlight>
         </View>

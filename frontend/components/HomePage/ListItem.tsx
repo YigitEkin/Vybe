@@ -27,7 +27,7 @@ const ListItem = ({ topText, subText, profilePic }: any) => {
           source={
             profilePic
               ? { uri: profilePic }
-              : require('../../assets/appIcon.png')
+              : require('../../assets/avatarPlaceholder.png')
           }
           resizeMode='cover'
         />

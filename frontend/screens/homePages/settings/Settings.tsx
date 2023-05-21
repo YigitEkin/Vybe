@@ -85,7 +85,14 @@ const EditProfileSection = (
             {section.notificationCount}
           </Text>
         </Pressable>
-      ) : null}
+      ) : (
+        <View
+          style={styles.notificationContainer2}
+          //onPress={() => navigation.navigate('Notifications' as never)}
+        >
+          <Text style={styles.notificationText}>{'-'}</Text>
+        </View>
+      )}
     </View>
   ) : null;
 };
@@ -201,8 +208,8 @@ const SettingsPage = () => {
           }
           <Image
             style={styles.profilePicture}
-            source={require('../../../assets/appIcon.png')}
-            resizeMode='cover'
+            source={require('../../../assets/avatarPlaceholder.png')}
+            resizeMode='contain'
           />
           <StyledButton
             buttonText='Change'
@@ -260,6 +267,17 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     backgroundColor: 'red',
+    borderRadius: 15,
+    marginTop: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 0,
+    flexDirection: 'row',
+  },
+  notificationContainer2: {
+    width: 30,
+    height: 30,
+    //backgroundColor: 'red',
     borderRadius: 15,
     marginTop: 0,
     justifyContent: 'center',

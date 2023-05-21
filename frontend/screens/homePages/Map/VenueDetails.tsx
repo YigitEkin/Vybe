@@ -191,9 +191,9 @@ const VenueDetails = () => {
                 {venue.description}
               </Text>
             </View>
-            <Text
-              style={styles.smallText}
-            >{`Currently Playing: No Song Playing`}</Text>
+            <Text style={styles.smallText}>{`Currently Playing: ${
+              venue.currentSong ? venue.currentSong : 'No song playing'
+            }`}</Text>
           </View>
         </View>
       </View>
@@ -212,17 +212,34 @@ const VenueDetails = () => {
             </View>
           </View>
         </View>
-        <ScrollView style={styles.mh_240}>
-          {comments.map((comment) => (
-            <NotificationCard
-              id={comment.id}
-              key={comment.id}
-              user={comment.customerUsername}
-              description={comment.text}
-              time={moment(comment.date).format('DD/MM/YYYY HH:mm')}
-            />
-          ))}
-        </ScrollView>
+        {comments.length !== 0 ? (
+          <ScrollView style={styles.mh_240}>
+            {comments.map((comment) => (
+              <NotificationCard
+                id={comment.id}
+                key={comment.id}
+                user={comment.customerUsername}
+                description={comment.text}
+                time={moment(comment.date).format('DD/MM/YYYY HH:mm')}
+              />
+            ))}
+          </ScrollView>
+        ) : (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              //height: '100%',
+              //backgroundColor: 'white',
+              height: 220,
+            }}
+          >
+            <Text style={{ color: 'white', fontSize: 25, textAlign: 'center' }}>
+              No comments yet, Be the first to comment!
+            </Text>
+          </View>
+        )}
+
         <View style={styles.alignCenter}>
           <StyledButton
             buttonText='Make a Review'

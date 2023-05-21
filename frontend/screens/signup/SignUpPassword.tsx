@@ -37,13 +37,13 @@ const SignUpPassword = () => {
               }}
               style={styles.textInput}
             />
-            <Pressable onPress={handlePasswordVisibility}>
+            {/*<Pressable onPress={handlePasswordVisibility}>
               <MaterialCommunityIcons
                 name={rightIcon}
                 size={22}
                 color='white'
               />
-            </Pressable>
+            </Pressable>*/}
           </>
         ),
       },

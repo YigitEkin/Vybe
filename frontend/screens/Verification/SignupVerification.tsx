@@ -5,6 +5,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   TouchableHighlight,
+  ActivityIndicator,
 } from 'react-native';
 import * as Font from 'expo-font';
 import StyledButton from '../../components/HomePage/StyledButton';
@@ -18,6 +19,7 @@ import axiosConfig from '../../constants/axiosConfig';
 
 const SignupVerification = ({ navigation }: any) => {
   const instanceToken = axiosConfig();
+  const [loading, setLoading] = useState(false);
   const baseUrl = process.env.BASE_URL;
   const [OTPCode, setOTPCode] = useState(0);
   const {
@@ -43,6 +45,7 @@ const SignupVerification = ({ navigation }: any) => {
     setOTPCode(e);
   };
   const handleSubmit = () => {
+    setLoading(true);
     const data = {
       username: selectedCode.dial_code.replace('+', '') + phoneNumber,
       name: firstName,
@@ -59,11 +62,15 @@ const SignupVerification = ({ navigation }: any) => {
       ? instanceToken
           .post(`/api/auth/customer`, data)
           .then((res) => {
+            setLoading(false);
             if (res.data) {
               navigation.navigate('SignUpCompletedScreen');
             }
           })
-          .catch((e) => console.log(e.message))
+          .catch((e) => {
+            console.log(e.message);
+            setLoading(false);
+          })
       : null;
   };
   const [fontsLoaded] = Font.useFonts({
@@ -81,8 +88,8 @@ const SignupVerification = ({ navigation }: any) => {
               {'Enter authentication code.'}
             </Text>
             <Text style={styles.subHeaderText}>
-              Enter the 4-digit that we have sent via the phone number{' '}
-              {phoneNumber}
+              Enter the 4-digit that we have sent via the phone number
+              {' ' + `${selectedCode.dial_code}` + `${phoneNumber}`}
             </Text>
           </View>
           <View style={styles.inputContainer}>
@@ -99,7 +106,9 @@ const SignupVerification = ({ navigation }: any) => {
         <View style={styles.StyledButton}>
           <StyledButton
             style={styles.StyledButton}
-            buttonText='Continue'
+            buttonText={
+              loading ? <ActivityIndicator color='#EA34C9' /> : 'Continue'
+            }
             onPress={handleSubmit}
           />
           <TouchableHighlight onPress={() => console.log('Pressed')}>

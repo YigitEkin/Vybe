@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Pressable,
   FlatList,
+  Image,
   ScrollView,
 } from 'react-native';
 import * as Font from 'expo-font';
@@ -14,6 +15,7 @@ import { Colors } from '../../../constants/Colors';
 import { useLoginStore } from '../../../stores/LoginStore';
 import axiosConfig from '../../../constants/axiosConfig';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
+import noNotification from '../../../assets/noNotifications.png';
 
 export interface NotificationCardProps {
   id: number;
@@ -41,6 +43,7 @@ function NotificationCard(
     'Inter-Bold': require('../../../assets/fonts/Inter/static/Inter-Bold.ttf'),
     'Inter-Regular': require('../../../assets/fonts/Inter/static/Inter-Regular.ttf'),
   });
+  const navigation = useNavigation();
   const handleRequest = (isAccept: string) => {
     console.log(data.username);
     console.log(notifications);
@@ -53,6 +56,9 @@ function NotificationCard(
         data.setNotifications(
           data.notifications.filter((x) => x.username !== data.data.username)
         );
+        //if (data.notifications.length === 0) {
+        //  navigation.navigate('Profile');
+        //}
       })
       .catch((err) => {
         console.log(err.message);
@@ -129,7 +135,32 @@ const Notifications = ({ navigation }) => {
       });
   }, [isFocused]);
 
-  return (
+  return notifications.length === 0 ? (
+    <View
+      style={{
+        alignItems: 'center',
+        //justifyContent: 'center',
+        height: '100%',
+      }}
+    >
+      <Image
+        source={noNotification}
+        style={{ width: 300, height: 356, marginVertical: 50 }}
+      />
+      <Text style={{ color: 'white', fontSize: 30 }}>{'No notifications'}</Text>
+      <Text
+        style={{
+          fontSize: 20,
+          textAlign: 'center',
+          color: Colors.gray.muted,
+          width: '60%',
+          paddingTop: 20,
+        }}
+      >
+        {'No one sent you a friend request yet!'}
+      </Text>
+    </View>
+  ) : (
     <ScrollView horizontal={false} style={{ flex: 1 }}>
       {notifications.map((item) => {
         console.log('item', item);
@@ -144,6 +175,20 @@ const Notifications = ({ navigation }) => {
       })}
     </ScrollView>
   );
+
+  //<ScrollView horizontal={false} style={{ flex: 1 }}>
+  //  {notifications.map((item) => {
+  //    console.log('item', item);
+  //    return (
+  //      <NotificationCard
+  //        key={item.username}
+  //        data={item}
+  //        setNotifications={setNotifications}
+  //        notifications={notifications}
+  //      />
+  //    );
+  //  })}
+  //</ScrollView>
 };
 
 const styles = StyleSheet.create({

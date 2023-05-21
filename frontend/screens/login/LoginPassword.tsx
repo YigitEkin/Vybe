@@ -10,6 +10,7 @@ import axiosConfig from '../../constants/axiosConfig';
 const LoginPassword = () => {
   const instanceToken = axiosConfig();
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
   const { password, setPassword, phoneNumber, selectedCode, setToken, token } =
     useLoginStore((state: any) => {
       return {
@@ -53,7 +54,8 @@ const LoginPassword = () => {
   const navigateRoute = 'LoginVerification' as never;
   return (
     <Form
-      cb={() =>
+      cb={() => {
+        setLoading(true);
         instanceToken
           .post('/api/auth/signIn', {
             username: selectedCode.dial_code.replace('+', '') + phoneNumber,
@@ -61,6 +63,7 @@ const LoginPassword = () => {
             code: '',
           })
           .then((res) => {
+            setLoading(false);
             if (res.data) {
               console.log(res.data);
               setToken(res.data);
@@ -73,8 +76,11 @@ const LoginPassword = () => {
               });
             }
           })
-          .catch((e) => console.log(e.message))
-      }
+          .catch((e) => {
+            console.log(e.message);
+            setLoading(false);
+          });
+      }}
       items={formItems}
       currentStep={1}
       totalSteps={1}
