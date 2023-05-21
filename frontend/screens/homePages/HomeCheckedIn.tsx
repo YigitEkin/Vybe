@@ -41,6 +41,7 @@ const HomeCheckedIn = () => {
   const [checkedInVenue, setCheckedInVenue] = useState({});
   const [songQueue, setSongQueue] = useState([]);
   const [songListFiltered, setSongListFiltered] = useState([]);
+  const [loading, setLoading] = useState(false);
   const { phoneNumber, selectedCode } = useLoginStore((state: any) => {
     return {
       phoneNumber: state.phoneNumber,
@@ -61,6 +62,7 @@ const HomeCheckedIn = () => {
   const dbUserName = selectedCode.dial_code.replace('+', '') + phoneNumber;
   const [checkedInVenueId, setCheckedInVenueId] = useState();
   useEffect(() => {
+    setLoading(true);
     instanceToken
       .get(`/api/customers/${dbUserName}`)
       .then((res) => {
@@ -70,8 +72,10 @@ const HomeCheckedIn = () => {
         //fetchQueue();
         //fetchSongs();
         console.log('checkedInVenue', res.data.checkedInVenue.id);
+        setLoading(false);
       })
       .catch((e) => {
+        setLoading(false);
         console.log(e.message, 'get venue');
       });
   }, []);
@@ -386,7 +390,11 @@ const HomeCheckedIn = () => {
     return null;
   }
 
-  return !addSong ? (
+  return loading ? (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <ActivityIndicator size={'large'} color='#EA34C9' />
+    </View>
+  ) : !addSong ? (
     <>
       {/*<Modal
         animationType='fade'

@@ -25,16 +25,23 @@ const LoginVerification = ({ navigation }: any) => {
   const { setIsCheckIn } = useCheckedInStore((state: any) => ({
     setIsCheckIn: state.setIsCheckIn,
   }));
-  const { phoneNumber, password, setIsLogin, selectedCode, setPhoneNumber } =
-    useLoginStore((state: any) => {
-      return {
-        password: state.password,
-        phoneNumber: state.phoneNumber,
-        setIsLogin: state.setIsLogin,
-        selectedCode: state.selectedCode,
-        setPhoneNumber: state.setPhoneNumber,
-      };
-    });
+  const {
+    phoneNumber,
+    password,
+    setIsLogin,
+    selectedCode,
+    setPhoneNumber,
+    setWalletId,
+  } = useLoginStore((state: any) => {
+    return {
+      password: state.password,
+      phoneNumber: state.phoneNumber,
+      setIsLogin: state.setIsLogin,
+      selectedCode: state.selectedCode,
+      setPhoneNumber: state.setPhoneNumber,
+      setWalletId: state.setWalletId,
+    };
+  });
   const handleChange = (e) => {
     setOTPCode(e);
   };
@@ -77,6 +84,7 @@ const LoginVerification = ({ navigation }: any) => {
         .then((res) => {
           setLoading(false);
           if (res.data) {
+            setWalletId(res.data.walletID);
             //setPhoneNumber(null);
             setIsLogin(true);
             setIsCheckIn(res.data.checkedInVenue !== null);

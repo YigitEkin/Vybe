@@ -7,16 +7,21 @@ import {
   Pressable,
   ScrollView,
   Modal,
+  Button,
 } from 'react-native';
 import StyledButton from '../../../components/HomePage/StyledButton';
+import * as ImagePicker from 'expo-image-picker';
 import { Colors } from '../../../constants/Colors';
 import * as Font from 'expo-font';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 // @ts-ignore
 import CoinIcon from '../../../assets/coin.png';
 import { useNavigation } from '@react-navigation/native';
 import { useLoginStore } from '../../../stores/LoginStore';
 import { useIsFocused } from '@react-navigation/native';
 import axiosConfig from '../../../constants/axiosConfig';
+import avatarPlaceholder from '../../../assets/avatarPlaceholder.png';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 type editSectionArea = {
   name: string;
@@ -107,18 +112,65 @@ const SettingsPage = () => {
   const dbUserName = selectedCode.dial_code.replace('+', '') + phoneNumber;
   const instanceToken = axiosConfig();
   const navigation = useNavigation();
+  const [image, setImage] = useState(null);
   const openModal = () => {
     setModalVisible(true);
   };
   const [notificationCount, setNotificationCount] = useState(0);
+  const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [fontsLoaded] = Font.useFonts({
     'Inter-Regular': require('../../../assets/fonts/Inter/static/Inter-Regular.ttf'),
   });
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      //quality: 0.1,
+      base64: true,
+    });
+    if (!result.canceled) {
+      setImage(result.assets[0].base64);
+      instanceToken
+        .post(`/api/customers/${dbUserName}/profilePicture`, {
+          image: result.assets[0].base64,
+        })
+        .then((res) => {
+          console.log(res.data);
+          Toast.show({
+            type: 'success',
+            text1: 'Profile picture updated',
+            text2: 'Your profile picture has been updated successfully',
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          Toast.show({
+            type: 'error',
+            text1: 'Error',
+            text2: 'An error occured while updating your profile picture',
+          });
+        });
+    }
+
+    //console.log(result);
+  };
+
+  //  console.log(result);
+
+  //  if (!result.canceled) {
+  //    setImage(result.assets[0].uri);
+  //  }
+  //};
+
   const { isLogin, setIsLogin } = useLoginStore();
   const [coinBalance, setCoinBalance] = useState(200);
   const [section, setSection] = useState(editSections);
   const isFocused = useIsFocused();
+
   useEffect(() => {
     //console.log(isFocused);
 
@@ -154,6 +206,11 @@ const SettingsPage = () => {
       ];
       setSection(section);
     });
+    instanceToken
+      .get(`/api/customers/${dbUserName}/profilePicture`)
+      .then((res) => {
+        setImage(res.data.image);
+      });
     instanceToken
       .get(`api/wallet?username=${dbUserName}`)
       .then((res) => {
@@ -203,19 +260,27 @@ const SettingsPage = () => {
       </Modal>
       <ScrollView>
         <View style={styles.container}>
-          {
-            //TODO: this will be converted into a picture component
-          }
-          <Image
+          {image === null ? (
+            <Image
+              style={styles.profilePicture}
+              source={avatarPlaceholder}
+              resizeMode='contain'
+            />
+          ) : (
+            <Image
+              style={styles.profilePicture}
+              source={{ uri: 'data:image/png;base64,' + image }}
+              resizeMode='contain'
+            />
+          )}
+          {/*<Image
             style={styles.profilePicture}
-            source={require('../../../assets/avatarPlaceholder.png')}
+            source={{ uri: 'data:image/png;base64,' + image }}
             resizeMode='contain'
-          />
+          />*/}
           <StyledButton
             buttonText='Change'
-            onPress={() => {
-              console.log('pressed');
-            }}
+            onPress={async () => pickImage()}
             style={styles.changeButton}
           />
           {section.map((section) => (
