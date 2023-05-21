@@ -56,9 +56,12 @@ public class BackendApplication {
 	public CommandLineRunner lineRunner(CustomerRepository customerRepository, SongRepository songRepository, UserRepository userRepository,
 										UserService userService, VenueService venueService, SongService songService, PlaylistService playlistService, FriendshipService friendshipService, IyzicoUtil iyzicoUtil) {
 		return args -> {
+			VenueCreationDTO venueCreationDTO = new VenueCreationDTO("testname1", "testdescription1", "40.1, 20.23", "testtoken", "testsoundzoneID");
+			VenueDTO venueDTO = venueService.addVenue(venueCreationDTO);
+
 			// test user service class using assert statements to check if the methods work
 			CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO( "testpass1", "testname1","name", "surname", "testphone1", "testdate1", "testdate1", "000000");
-			VenueAdminCreationDTO venueAdminCreationDTO = new VenueAdminCreationDTO("testname3", "name", "surname", "testpass3", "testmail3", "testphone3");
+			VenueAdminCreationDTO venueAdminCreationDTO = new VenueAdminCreationDTO("testname3", "name", "surname", "testpass3", "testmail3", "testphone3", "testname1");
 			AdminCreationDTO adminCreationDTO = new AdminCreationDTO("testname5", "testpass5");
 			System.out.println("Testing");
 
@@ -105,7 +108,7 @@ public class BackendApplication {
 			}
 
 			// test adding a venue admin with an existing username
-			VenueAdminCreationDTO venueAdminCreationDTO3 = new VenueAdminCreationDTO("testname3", "name", "surname", "testpass3", "testmail3", "testphone3");
+			VenueAdminCreationDTO venueAdminCreationDTO3 = new VenueAdminCreationDTO("testname3", "name", "surname", "testpass3", "testmail3", "testphone3", "testname1");
 			try {
 				VenueAdminDTO venueAdminDTO3 = userService.addVenueAdmin(venueAdminCreationDTO3);
 			} catch (Exception e) {
@@ -145,8 +148,6 @@ public class BackendApplication {
 			}
 
 			// test adding a venue
-			VenueCreationDTO venueCreationDTO = new VenueCreationDTO("testname1", "testdescription1", "40.1, 20.23", "testtoken", "testsoundzoneID");
-			VenueDTO venueDTO = venueService.addVenue(venueCreationDTO);
 			assert venueDTO.getName().equals("testname1");
 			assert venueDTO.getDescription().equals("testdescription1");
 			assert venueDTO.getLocation().equals("testlocation1");
@@ -474,21 +475,21 @@ public class BackendApplication {
 			SongNodeDTO resultRequest8 = songService.addSongRequest(songRequestDTO8);
 
 			// ------------------------ Comments ------------------------
-			CommentDTO commentDTO1 = new CommentDTO("This is a comment", "date", customerResult1.getUsername(), resultVenue1.getId());
-			CommentDTO commentDTO2 = new CommentDTO("This is a comment", "date", customerResult2.getUsername(), resultVenue1.getId());
-			CommentDTO commentDTO3 = new CommentDTO("This is a comment", "date", customerResult3.getUsername(), resultVenue1.getId());
+			CommentDTO commentDTO1 = new CommentDTO("This is a comment", "date", customerResult1.getUsername(), customerResult1.getUsername(), customerResult1.getSurname(), resultVenue1.getId());
+			CommentDTO commentDTO2 = new CommentDTO("This is a comment", "date", customerResult2.getUsername(), customerResult2.getUsername(), customerResult2.getUsername(), resultVenue1.getId());
+			CommentDTO commentDTO3 = new CommentDTO("This is a comment", "date", customerResult3.getUsername(), customerResult3.getUsername(), customerResult3.getUsername(), resultVenue1.getId());
 
-			CommentDTO commentDTO4 = new CommentDTO("This is a comment", "date", customerResult1.getUsername(), resultVenue2.getId());
-			CommentDTO commentDTO5 = new CommentDTO("This is a comment", "date", customerResult2.getUsername(), resultVenue2.getId());
-			CommentDTO commentDTO6 = new CommentDTO("This is a comment", "date", customerResult3.getUsername(), resultVenue2.getId());
+			CommentDTO commentDTO4 = new CommentDTO("This is a comment", "date", customerResult1.getUsername(), customerResult1.getUsername(), customerResult1.getUsername(), resultVenue2.getId());
+			CommentDTO commentDTO5 = new CommentDTO("This is a comment", "date", customerResult2.getUsername(), customerResult2.getUsername(), customerResult2.getUsername(), resultVenue2.getId());
+			CommentDTO commentDTO6 = new CommentDTO("This is a comment", "date", customerResult3.getUsername(), customerResult3.getUsername(), customerResult3.getUsername(), resultVenue2.getId());
 
-			CommentDTO commentDTO7 = new CommentDTO("This is a comment", "date", customerResult1.getUsername(), resultVenue3.getId());
-			CommentDTO commentDTO8 = new CommentDTO("This is a comment", "date", customerResult2.getUsername(), resultVenue3.getId());
-			CommentDTO commentDTO9 = new CommentDTO("This is a comment", "date", customerResult3.getUsername(), resultVenue3.getId());
+			CommentDTO commentDTO7 = new CommentDTO("This is a comment", "date", customerResult1.getUsername(), customerResult1.getUsername(), customerResult1.getUsername(), resultVenue3.getId());
+			CommentDTO commentDTO8 = new CommentDTO("This is a comment", "date", customerResult2.getUsername(), customerResult2.getUsername(), customerResult2.getUsername(), resultVenue3.getId());
+			CommentDTO commentDTO9 = new CommentDTO("This is a comment", "date", customerResult3.getUsername(), customerResult3.getUsername(), customerResult3.getUsername(), resultVenue3.getId());
 
-			CommentDTO commentDTO10 = new CommentDTO("This is a comment", "date", customerResult1.getUsername(), resultVenue4.getId());
-			CommentDTO commentDTO11 = new CommentDTO("This is a comment", "date", customerResult2.getUsername(), resultVenue4.getId());
-			CommentDTO commentDTO12 = new CommentDTO("This is a comment", "date", customerResult3.getUsername(), resultVenue4.getId());
+			CommentDTO commentDTO10 = new CommentDTO("This is a comment", "date", customerResult1.getUsername(), customerResult1.getUsername(), customerResult1.getUsername(), resultVenue4.getId());
+			CommentDTO commentDTO11 = new CommentDTO("This is a comment", "date", customerResult2.getUsername(), customerResult2.getUsername(), customerResult2.getUsername(), resultVenue4.getId());
+			CommentDTO commentDTO12 = new CommentDTO("This is a comment", "date", customerResult3.getUsername(), customerResult3.getUsername(), customerResult3.getUsername(), resultVenue4.getId());
 
 			commentService.addComment(commentDTO1);
 			commentService.addComment(commentDTO2);
@@ -504,19 +505,19 @@ public class BackendApplication {
 			commentService.addComment(commentDTO12);
 
 			// ------------------------ Ratings ------------------------
-			RatingDTO ratingDTO1 = new RatingDTO(0, 5.0, "date", customerResult1.getUsername(), resultVenue1.getId());
-			RatingDTO ratingDTO2 = new RatingDTO(0, 3.0, "date", customerResult2.getUsername(), resultVenue1.getId());
-			RatingDTO ratingDTO3 = new RatingDTO(0, 4.0, "date", customerResult3.getUsername(), resultVenue1.getId());
+			RatingDTO ratingDTO1 = new RatingDTO(0, 5.0, "date", customerResult1.getUsername(), customerResult1.getUsername(), customerResult1.getUsername(), resultVenue1.getId());
+			RatingDTO ratingDTO2 = new RatingDTO(0, 3.0, "date", customerResult2.getUsername(), customerResult2.getUsername(), customerResult2.getUsername(), resultVenue1.getId());
+			RatingDTO ratingDTO3 = new RatingDTO(0, 4.0, "date", customerResult3.getUsername(), customerResult3.getUsername(), customerResult3.getUsername(), resultVenue1.getId());
 
-			RatingDTO ratingDTO4 = new RatingDTO(0, 5.0, "date", customerResult1.getUsername(), resultVenue2.getId());
-			RatingDTO ratingDTO5 = new RatingDTO(0, 2.0, "date", customerResult2.getUsername(), resultVenue2.getId());
-			RatingDTO ratingDTO6 = new RatingDTO(0, 4.0, "date", customerResult3.getUsername(), resultVenue2.getId());
+			RatingDTO ratingDTO4 = new RatingDTO(0, 5.0, "date", customerResult1.getUsername(), customerResult1.getUsername(), customerResult1.getUsername(), resultVenue2.getId());
+			RatingDTO ratingDTO5 = new RatingDTO(0, 2.0, "date", customerResult2.getUsername(), customerResult2.getUsername(), customerResult2.getUsername(), resultVenue2.getId());
+			RatingDTO ratingDTO6 = new RatingDTO(0, 4.0, "date", customerResult3.getUsername(),  customerResult3.getUsername(), customerResult3.getUsername(),resultVenue2.getId());
 
-			RatingDTO ratingDTO7 = new RatingDTO(0, 5.0, "date", customerResult1.getUsername(), resultVenue3.getId());
-			RatingDTO ratingDTO8 = new RatingDTO(0, 3.0, "date", customerResult2.getUsername(), resultVenue3.getId());
-			RatingDTO ratingDTO9 = new RatingDTO(0, 4.0, "date", customerResult3.getUsername(), resultVenue3.getId());
+			RatingDTO ratingDTO7 = new RatingDTO(0, 5.0, "date", customerResult1.getUsername(), customerResult1.getUsername(), customerResult1.getUsername(), resultVenue3.getId());
+			RatingDTO ratingDTO8 = new RatingDTO(0, 3.0, "date", customerResult2.getUsername(), customerResult2.getUsername(), customerResult2.getUsername(), resultVenue3.getId());
+			RatingDTO ratingDTO9 = new RatingDTO(0, 4.0, "date", customerResult3.getUsername(), customerResult3.getUsername(), customerResult3.getUsername(), resultVenue3.getId());
 
-			RatingDTO ratingDTO10 = new RatingDTO(0, 5.0, "date", customerResult1.getUsername(), 2);
+			RatingDTO ratingDTO10 = new RatingDTO(0, 5.0, "date", customerResult1.getUsername(), customerResult1.getUsername(), customerResult1.getUsername(), 2);
 
 			ratingService.addRating(ratingDTO1);
 			ratingService.addRating(ratingDTO2);
@@ -541,6 +542,12 @@ public class BackendApplication {
 			userService.checkIn("905332346981", 3);
 			userService.checkIn("2", 4);
 			userService.checkIn("905076011168", 5);
+
+			// ------------------------ Venue Admins ------------------------
+			VenueAdminCreationDTO venueAdminCreationDTO1 = new VenueAdminCreationDTO( "mehmet.yilmaz@fameo.com", "Mehmet", "Yılmaz", "12345678", "mehmet.yilmaz@fameo.com", "+905086023982", "Fameo Cafe");
+			VenueAdminDTO venueAdminResult = userService.addVenueAdmin(venueAdminCreationDTO1);
+
+
 
 
 

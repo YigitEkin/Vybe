@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor

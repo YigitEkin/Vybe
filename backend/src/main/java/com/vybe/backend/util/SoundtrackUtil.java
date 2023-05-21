@@ -1,12 +1,7 @@
 package com.vybe.backend.util;
 
-
-import com.fasterxml.jackson.core.JsonFactory;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.graphql.client.HttpGraphQlClient;
-import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
@@ -28,8 +23,8 @@ public class SoundtrackUtil {
         HashMap<String, Object> variables = new HashMap<>();
         variables.put("playlistId", playlistId);
         variables.put("first", 1000);
-        variables.put("height", 500);
-        variables.put("width", 500);
+        variables.put("height", 100);
+        variables.put("width", 100);
         variables.put("market", "TR");
         String document = """
                 query Playlist($playlistId: ID!, $first: Int, $height: Int!, $width: Int!, $market: IsoCountry!) {
@@ -83,7 +78,7 @@ public class SoundtrackUtil {
                 imageUrl = ((LinkedHashMap<String, String>)((LinkedHashMap<String, Object>)((LinkedHashMap<String, Object>)node.get("album")).get("display")).get("image")).get("size");
             }
             catch (NullPointerException nullPointerException) {
-                imageUrl = "https://i.imgur.com/2j5ZQ9V.png";
+                imageUrl = null;
             }
             String artistNames = ((ArrayList<LinkedHashMap<String, Object>>) node.get("artists")).stream().map(artist -> (String) artist.get("name")).reduce((a, b) -> a + ", " + b).get();
             HashMap<String, String> track = new HashMap<>();

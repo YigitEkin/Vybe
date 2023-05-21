@@ -4,7 +4,6 @@ import com.vybe.backend.model.dto.IncomingTransactionDTO;
 import com.vybe.backend.model.dto.TransactionDTO;
 import com.vybe.backend.model.dto.WalletDTO;
 import com.vybe.backend.service.TransactionService;
-import com.vybe.backend.util.IyzicoUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

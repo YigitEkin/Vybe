@@ -1,8 +1,6 @@
 package com.vybe.backend.model.entity;
 
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 
 import javax.persistence.*;
 import java.util.*;
@@ -15,7 +13,6 @@ import java.util.*;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class Customer extends User {
     public Customer(String username, String name, String surname, String password, String phoneNumber, Image profilePicture, Venue currentVenue, Stack<SongRequest> requests, List<Customer> friendships,
                     String dateOfBirth, String dateOfCreation) {
@@ -24,6 +21,11 @@ public class Customer extends User {
         this.friends = friendships;
         this.dateOfBirth = dateOfBirth;
         this.dateOfCreation = dateOfCreation;
+        this.streaks =  new ArrayList<>();
+    }
+
+    public Customer() {
+        this.wallet = new Wallet(0.0,0.0);
         this.streaks =  new ArrayList<>();
     }
 

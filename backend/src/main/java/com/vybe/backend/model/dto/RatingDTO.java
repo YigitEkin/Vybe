@@ -16,6 +16,8 @@ public class RatingDTO {
     private Double rating;
     private String date;
     private String customerUsername;
+    private String customerName;
+    private String customerSurname;
     private Integer venueId;
 
     public Rating toRating() {
@@ -30,6 +32,8 @@ public class RatingDTO {
         this.date = rating.getDate().toString();
         this.customerUsername = rating.getRatedBy().getUsername();
         this.venueId = rating.getVenue().getId();
+        this.customerName = rating.getRatedBy().getName();
+        this.customerSurname = rating.getRatedBy().getSurname();
         this.id = rating.getId();
     }
 

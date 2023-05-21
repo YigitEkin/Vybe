@@ -1,6 +1,5 @@
 package com.vybe.backend.service;
 
-import com.vybe.backend.exception.CustomerNotFoundException;
 import com.vybe.backend.exception.InputException;
 import com.vybe.backend.model.dto.*;
 import com.vybe.backend.exception.VenueNotFoundException;
@@ -9,7 +8,6 @@ import com.vybe.backend.repository.*;
 import com.vybe.backend.util.SoundtrackUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;

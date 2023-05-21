@@ -1,14 +1,11 @@
 package com.vybe.backend.model.dto;
 
 import com.vybe.backend.model.entity.Playlist;
-import com.vybe.backend.model.entity.Song;
-import com.vybe.backend.model.entity.Venue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 @AllArgsConstructor

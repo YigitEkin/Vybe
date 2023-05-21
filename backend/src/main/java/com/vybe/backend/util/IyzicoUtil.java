@@ -2,11 +2,8 @@ package com.vybe.backend.util;
 
 import com.iyzipay.Options;
 import com.iyzipay.model.*;
-import com.iyzipay.request.CreateCheckoutFormInitializeRequest;
 import com.iyzipay.request.CreatePaymentRequest;
 import com.vybe.backend.model.dto.IncomingTransactionDTO;
-import com.vybe.backend.model.dto.TransactionDTO;
-import lombok.experimental.UtilityClass;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

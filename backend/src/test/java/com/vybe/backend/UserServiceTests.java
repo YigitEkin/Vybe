@@ -19,7 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.*;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,8 +55,10 @@ public class UserServiceTests {
         // Act
         final CustomerDTO actual = userService.addCustomer(customerCreationDTO);
 
+        final CustomerDTO customerDTO = new CustomerDTO(customerCreationDTO.toCustomer());
+
         // Assert
-        assertThat(actual).usingRecursiveComparison().isEqualTo(customerCreationDTO);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(customerDTO);
         verify(customerRepository, times(1)).save(any(Customer.class));
         verifyNoMoreInteractions(customerRepository);
     }
@@ -73,11 +74,13 @@ public class UserServiceTests {
         when(customerRepository.findByUsername("testname1")).thenReturn(customer);
         when(customerRepository.existsByUsername("testname1")).thenReturn(true);
 
+        CustomerDTO customerDTO = new CustomerDTO(customer);
+
         // Act
         final CustomerDTO actual = userService.getCustomer("testname1");
 
         // Assert
-        assertThat(actual).usingRecursiveComparison().isEqualTo(customer);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(customerDTO);
         verify(customerRepository, times(1)).findByUsername("testname1");
         verifyNoMoreInteractions(customerRepository);
     }
@@ -97,7 +100,7 @@ public class UserServiceTests {
     void should_not_save_customer_with_taken_username(){
         // Arrange
         when(userRepository.existsByUsername("testname1")).thenReturn(true);
-        CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO( "testpass1", "name", "surname","testname1", "testphone1", "testdate1", "testdate1", "000000");
+        CustomerCreationDTO customerCreationDTO = new CustomerCreationDTO( "testpass1", "testname1", "surname","testname1", "testphone1", "testdate1", "testdate1", "000000");
 
         // Act & Assert
         Assertions.assertThrows(UsernameTakenException.class, () -> userService.addCustomer(customerCreationDTO));

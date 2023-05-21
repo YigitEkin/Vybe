@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -20,6 +18,8 @@ public class CommentDTO {
     private String text;
     private String date;
     private String customerUsername;
+    private String customerName;
+    private String customerSurname;
     private Integer venueId;
 
     public Comment toComment() {
@@ -29,19 +29,26 @@ public class CommentDTO {
         return comment;
     }
 
-    public CommentDTO( String text, String date, String customerUsername, Integer venueId) {
+    public CommentDTO( String text, String date, String customerUsername, String customerName, String customerSurname, Integer venueId) {
         this.text = text;
         this.date = date;
         this.customerUsername = customerUsername;
         this.venueId = venueId;
+        this.customerName = customerName;
+        this.customerSurname = customerSurname;
     }
 
     public CommentDTO(Comment comment) {
         this.text = comment.getText();
-        this.date = comment.getDate().toString();
+        if (comment.getDate() == null)
+            this.date = null;
+        else
+            this.date = comment.getDate().toString();
         this.customerUsername = comment.getCommentedBy().getUsername();
         this.venueId = comment.getVenue().getId();
         this.id = comment.getId();
+        this.customerName = comment.getCommentedBy().getName();
+        this.customerSurname = comment.getCommentedBy().getSurname();
     }
 
     public static Set<CommentDTO> toCommentDTOSet(Set<Comment> comments) {

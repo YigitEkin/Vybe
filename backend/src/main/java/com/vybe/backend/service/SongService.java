@@ -7,14 +7,11 @@ import com.vybe.backend.model.dto.SongNodeDTO;
 import com.vybe.backend.model.dto.SongRequestDTO;
 import com.vybe.backend.model.entity.*;
 import com.vybe.backend.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.net.http.HttpTimeoutException;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

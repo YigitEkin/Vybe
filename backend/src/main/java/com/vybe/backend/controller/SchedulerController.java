@@ -1,7 +1,6 @@
 package com.vybe.backend.controller;
 
 import com.vybe.backend.service.VenueService;
-import com.vybe.backend.util.SchedulerUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

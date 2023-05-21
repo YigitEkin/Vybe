@@ -4,9 +4,7 @@ import com.vybe.backend.model.dto.CustomerCreationDTO;
 import com.vybe.backend.model.dto.CustomerDTO;
 import com.vybe.backend.model.dto.VenueAdminCreationDTO;
 import com.vybe.backend.model.dto.VenueAdminDTO;
-import com.vybe.backend.model.entity.Customer;
 import com.vybe.backend.model.entity.User;
-import com.vybe.backend.repository.UserRepository;
 import com.vybe.backend.util.TwoFactorUtil;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +28,16 @@ public class AuthService {
            return false;
        }
     }
+
+    public Boolean authorizeVenueAdminUsernameAndPassword(String username, String password) {
+        try {
+            User user = userService.authorizeCustomer(username, password);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public CustomerDTO authorizeCustomer2FA(String code, String username) {
         CustomerDTO customer = userService.getCustomer(username);
         if(username.equals("admin"))

@@ -2,13 +2,9 @@ package com.vybe.backend.model.entity;
 
 import com.vybe.backend.model.enums.TransactionTypes;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
