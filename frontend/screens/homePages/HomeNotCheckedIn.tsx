@@ -29,6 +29,7 @@ import axiosConfig from '../../constants/axiosConfig';
 import { useIsFocused } from '@react-navigation/native';
 import { ActivityIndicator } from 'react-native';
 import StyledButton from '../../components/HomePage/StyledButton';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 const HomeNotCheckedIn = () => {
   const instanceToken = axiosConfig();
   const [isCamOpen, setIsCamOpen] = useState(false);
@@ -116,7 +117,7 @@ const HomeNotCheckedIn = () => {
 
   const dbUserName = selectedCode.dial_code.replace('+', '') + phoneNumber;
   //const getCurrentPositionAsync = async () => {
-  //  console.log('entered c');
+  //  //console.log('entered c');
 
   //  try {
   //    const { status } = await Location.requestForegroundPermissionsAsync();
@@ -131,7 +132,7 @@ const HomeNotCheckedIn = () => {
   //    const location = await Location.getCurrentPositionAsync();
   //    return location;
   //  } catch (e) {
-  //    console.log(e);
+  //    //console.log(e);
   //  }
   //};
   const [userLocation, setUserLocation] = useState(null);
@@ -139,85 +140,126 @@ const HomeNotCheckedIn = () => {
     return haversine(startLocation, endLocation, { unit: 'meter' });
   };
 
-  const handleScan = (res) => {
-    //let locationVenue = '';
-    //console.log(dbUserName);
-    if (!isRequested) {
-      setIsRequested(true);
-      console.log('entered func');
+  const checkInUser = (venueId) => {
+    //console.log('entered if');
+    //console.log(venueId);
 
-      console.log('userLocation', userLocation);
-      let { latitude, longitude } = userLocation?.coords;
-      let locUser = { latitude, longitude };
-      console.log('locUser', locUser);
+    //setIsRequested(true);
+    ////console.log('entered func');
 
-      instanceToken
-        .get(`/api/venues/${res}`)
-        .then((result) => {
-          console.log(result.data);
-          if (result.data) {
-            setLocationVenue(result.data.location);
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-          setIsRequested(false);
-        });
-      if (locationVenue === '') {
-        setIsRequested(false);
-        return;
-      }
-      let latitudeV = locationVenue.split(',')[0];
-      let longitudeV = locationVenue.split(',')[1];
+    ////console.log('userLocation', userLocation);
+    let { latitude, longitude } = userLocation?.coords;
+    let locUser = { latitude, longitude };
+    ////console.log('locUser', locUser);
+    let locationInfo = '';
+    instanceToken
+      .get(`/api/venues/${venueId}`)
+      .then((result) => {
+        //console.log(result.data, 'api/venues/venueId');
+        if (result.data) {
+          console.log(result.data.location, 'api/venues/venueId if');
+          setLocationVenue(result.data.location);
+          locationInfo = result.data.location;
+          console.log('locationInfo', locationInfo);
 
-      if (!userLocation) {
-        console.log('user location not found');
-
-        setIsRequested(false);
-        return;
-      }
-      const venueLocation = {
-        latitude: latitudeV,
-        longitude: longitudeV,
-      };
-      const distance = calculateDistance(locUser, venueLocation);
-      console.log('venueLocation', venueLocation);
-
-      console.log('distance', distance);
-      if (distance > 10000) {
-        Alert.alert('Out of range', 'You are not in the range of the venue', [
-          { text: 'OK' },
-        ]);
-        setIsRequested(false);
-        setStartCamera(false);
-        return;
-      }
-      instanceToken
-        .post(`/api/venues/${res}/checkIn/${dbUserName}`)
-        .then((result) => {
-          if (result.data) {
-            setIsCheckIn(true);
+          if (locationInfo == '') {
+            console.log('locationVenue not found', locationInfo);
             setIsRequested(false);
+            Toast.show({
+              type: 'error',
+              text1: 'Error',
+              text2: 'Something went wrong',
+            });
+            return;
           }
-        })
-        .catch((e) => {
-          console.log(e);
-          setIsRequested(false);
+          let latitudeV = locationInfo.split(',')[0];
+          let longitudeV = locationInfo.split(',')[1];
+
+          if (!userLocation) {
+            console.log('user location not found');
+
+            setIsRequested(false);
+            Toast.show({
+              type: 'error',
+              text1: 'Error',
+              text2: 'Something went wrong',
+            });
+            return;
+          }
+          const venueLocation = {
+            latitude: latitudeV,
+            longitude: longitudeV,
+          };
+          const distance = calculateDistance(locUser, venueLocation);
+          ////console.log('venueLocation', venueLocation);
+
+          ////console.log('distance', distance);
+          if (distance > 10000) {
+            Alert.alert(
+              'Out of range',
+              'You are not in the range of the venue',
+              [{ text: 'OK' }]
+            );
+            setIsRequested(false);
+            setStartCamera(false);
+            return;
+          }
+          instanceToken
+            .post(`/api/venues/${venueId}/checkIn/${dbUserName}`)
+            .then((result) => {
+              //console.log(result.data, 'api/venues/venueId/checkIn/username');
+              if (result.data) {
+                //console.log('entered if api/venues/venueId/checkIn/username');
+                setIsCheckIn(true);
+                setIsRequested(false);
+              }
+            })
+            .catch((e) => {
+              Toast.show({
+                type: 'error',
+                text1: 'Error',
+                text2: 'Something went wrong',
+              });
+              console.log(e);
+              setIsRequested(false);
+            });
+        }
+      })
+      .catch((e) => {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Something went wrong',
         });
-    }
+        console.log(e);
+        setIsRequested(false);
+      });
+  };
+
+  const handleScan = (res) => {
+    //console.log(
+    //  '=======================================================HANDLESCAN HANDLESCAN',
+    //  res
+    //);
+    //setStartCamera(false);
+    ////console.log('res', res);
+    //let locationVenue = '';
+
+    checkInUser(res);
+    //setStartCamera(false);
   };
 
   const fetchUsers = () => {
-    //console.log('fetching');
+    ////console.log('fetching');
     instanceToken.get(`/api/customers`).then((res) => {
-      //console.log(res.data);
+      ////console.log(res.data);
       setFilteredUserList(
         res.data.filter((user) => user.username !== dbUserName)
       );
       setUserList(res.data.filter((user) => user.username !== dbUserName));
     });
     instanceToken.get(`/api/customers/${dbUserName}/friends`).then((res) => {
-      //console.log(res.data);
+      ////console.log(res.data);
       setFriendList(res.data.filter((user) => user.checkedInVenue !== null));
     });
   };
@@ -227,13 +269,13 @@ const HomeNotCheckedIn = () => {
   }, [clicked, isFocused]);
   //useEffect(() => {
   //  instanceToken.get(`/api/customers/${dbUserName}/friends`).then((res) => {
-  //    console.log(res.data);
+  //    //console.log(res.data);
   //    setFriendList(res.data.filter((user) => user.checkedInVenue !== null));
   //  });
   //}, []);
   const __startCamera = async () => {
     //let { status } = await Location.requestForegroundPermissionsAsync();
-    //console.log(status);
+    ////console.log(status);
     //if (status !== 'granted') {
     //  Alert.alert(
     //    'Permission denied',
@@ -255,7 +297,7 @@ const HomeNotCheckedIn = () => {
       setSuccess(true);
       setIsCamOpen(false);
 
-      console.log('Error getting current location:', error);
+      //console.log('Error getting current location:', error);
       return;
     }
     //setUserLocation(location);
@@ -270,7 +312,7 @@ const HomeNotCheckedIn = () => {
   };
 
   useEffect(() => {
-    //console.log('searchPhrase', searchPhrase);
+    ////console.log('searchPhrase', searchPhrase);
     const filteredArray = userList.filter((user) => {
       return (
         user.name.toLowerCase().includes(searchPhrase.toLowerCase()) ||
@@ -406,6 +448,7 @@ const HomeNotCheckedIn = () => {
                     user.checkedInVenue
                       ? user.checkedInVenue.name
                       : 'Not checked in'
+                    //profilePic = {user.}
                   }
                 />
               </Pressable>
@@ -469,7 +512,13 @@ const HomeNotCheckedIn = () => {
         }}
         onBarCodeScanned={(result: any) => {
           //TODO: fetch data if is valid
+          //console.log(result);
+          //console.log(
+          //  '====================== QR CODE SCANNED ======================'
+          //);
+          //console.log(result.data);
           handleScan(result.data);
+          setStartCamera(false);
 
           //setIsCheckIn(true);
         }}

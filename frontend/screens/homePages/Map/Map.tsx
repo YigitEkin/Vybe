@@ -34,7 +34,11 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 // @ts-ignore
 import StarRating from '../components/StarRating';
 
-import { useNavigation, useTheme } from '@react-navigation/native';
+import {
+  useIsFocused,
+  useNavigation,
+  useTheme,
+} from '@react-navigation/native';
 import { Colors } from '../../../constants/Colors';
 import Splash from '../../Splash';
 import axios from 'axios';
@@ -54,7 +58,7 @@ const Images = [
   { image: require('../../../assets/icon.png') },
   { image: require('../../../assets/icon.png') },
 ];
-
+const defaultImage = '../../../assets/icon.png';
 export type MapItem = {
   coordinate: {
     latitude: number;
@@ -360,6 +364,7 @@ const DismissKeyboard = ({ children }) => (
   </TouchableWithoutFeedback>
 );
 const MapPage = () => {
+  const isFocused = useIsFocused();
   const instanceToken = axiosConfig();
   const theme = useTheme();
 
@@ -386,7 +391,10 @@ const MapPage = () => {
             },
             title: venue.name,
             description: venue.description,
-            image: Images[0].image,
+            image:
+              venue.photos.length === 0
+                ? Images[0].image
+                : { uri: venue.photos[0].data },
             rating: venue.rating,
             reviews: 99,
             id: venue.id,
@@ -404,7 +412,7 @@ const MapPage = () => {
         setState(apiMapState);
       })
       .catch((e) => e.message);
-  }, []);
+  }, [isFocused]);
 
   useEffect(() => {
     (async () => {
@@ -419,7 +427,7 @@ const MapPage = () => {
       setLocation(location);
       setSuccess(true);
     })();
-  }, []);
+  }, [isFocused]);
 
   const initialMapState = {
     markersRes,
