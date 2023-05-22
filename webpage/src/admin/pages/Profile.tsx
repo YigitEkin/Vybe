@@ -3,8 +3,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
+import { Button } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonIcon from '@material-ui/icons/Person';
@@ -47,9 +46,28 @@ const Profile = () => {
   //@ts-ignore
   useEffect(async () => {
     const data = await fetchData(`/api/venues/${userInfo.venueId}/images`, 'GET')
+    if (data === null || data.length === 0) {
+      setBase64('')
+      return
+    }
     console.log(data[0].image);
     setBase64(data[0].image)
   }, []);
+
+  const uploadImage = async (base64ToUpload: String) => {
+    // console.log(base64ToUpload);
+    const data = await fetchData(`/api/venues/${userInfo.venueId}/images`, 'POST', {
+      image: String(base64ToUpload),
+      id: userInfo.venueId,
+    });
+    console.log(data);
+    if (data) {
+      setBase64(base64ToUpload)
+    }
+    else {
+      snackbar.error(t('common.errors.unexpected.subTitle'))
+    }
+  };
 
   return (
     <React.Fragment>
@@ -84,16 +102,50 @@ const Profile = () => {
                 width: 220,
               }}
             >
-              <img
-                width={'auto'}
-                height={220}
-                src={`data:image/jpg;base64, ${base64}`}
-              />
+              {(base64 === '' || base64 === null) ? (
+                <PersonIcon
+                  sx={{
+                    fontSize: 160,
+                  }} />
+              ) : (
+                <img
+                  width={'auto'}
+                  height={220}
+                  src={`${base64}`}
+                />
+              )}
             </Avatar>
+
             <Typography
               component='div'
               variant='h4'
             >{`${userInfo?.venueName} `}</Typography>
+            <label htmlFor="upload-photo">
+              <input
+                style={{ display: 'none' }}
+                id="upload-photo"
+                name="upload-photo"
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (!file) return;
+                  const reader = new FileReader();
+                  reader.readAsDataURL(file);
+                  reader.onload = () => {
+                    console.log(reader.result);
+                    uploadImage(reader.result);
+                  }
+                }}
+              />
+              <Button
+                color="secondary"
+                variant="contained"
+                component="span"
+                sx={{ mt: 4 }}>
+                {`Update Venue Image`}
+              </Button>
+            </label>
             {/*<Typography variant='body2'>{userInfo?.role}</Typography>*/}
           </Box>
           {/*<CircleProgressWidget

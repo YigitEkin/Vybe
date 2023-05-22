@@ -50,7 +50,7 @@ const Dashboard = () => {
   //@ts-ignore
   useEffect(async () => {
     const data = await fetchData(`/api/venues/${venueId}/analytics/topRequests`, 'GET')
-    // console.log(data);
+    console.log(data);
     setTopSongsData(data);
   }, []);
   //@ts-ignore
@@ -73,6 +73,13 @@ const Dashboard = () => {
   }
   function getTotalCoins(): string {
     return String(coinsData.reduce((a, b) => a + b, 0));
+  }
+  function getTotalSongData(): number {
+    let sum = 0;
+    topSongsData.forEach((item) => {
+      sum += item[1];
+    });
+    return sum;
   }
 
   return (
@@ -109,7 +116,7 @@ const Dashboard = () => {
           <UsersWidget data={songsData} />
         </Grid>
         <Grid item xs={12} md={8}>
-          <TeamProgressWidget />
+          <TeamProgressWidget data={topSongsData} count={getTotalSongData()} />
         </Grid>
         <Grid item xs={12} md={4}>
           <SalesByCategoryWidget data={artistData} />

@@ -9,6 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import HomeIcon from '@material-ui/icons/Home';
 import PersonIcon from '@material-ui/icons/Person';
+import SettingsIcon from "@material-ui/icons/Settings";
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 import Logo from '../../core/components/Logo';
@@ -100,8 +101,8 @@ const AdminDrawer = ({
           to={`/${process.env.PUBLIC_URL}/admin/profile`}
         >
           <ListItemAvatar>
-            <Avatar>
-              <PersonIcon />
+            <Avatar sx={{ color: 'inherit', bgcolor: 'transparent' }}>
+              <SettingsIcon />
             </Avatar>
           </ListItemAvatar>
           {userInfo && (
