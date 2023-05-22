@@ -5,27 +5,38 @@ import { useTheme } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
-const SalesByCategoryWidget = () => {
+interface SalesByCategoryWidgetProps {
+  data: any[];
+}
+const SalesByCategoryWidget = (props: SalesByCategoryWidgetProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const data = [
+  const colors = [
     {
-      name: t('dashboard.salesByCategory.legend.pop'),
-      fill: theme.palette.primary.main,
-      value: 400,
+      fill: '#EA34C9',
     },
     {
-      name: t('dashboard.salesByCategory.legend.rock'),
-      fill: theme.palette.warning.main,
-      value: 300,
+      fill: '#9F4AD7',
     },
     {
-      name: t('dashboard.salesByCategory.legend.rap'),
-      fill: theme.palette.error.main,
-      value: 300,
+      fill: '#6386E6',
+    },
+    {
+      fill: '#5BC8FA',
     },
   ];
+
+  const data = props.data.map((item, index) => {
+    // console.log(item);
+    // console.log(index);
+    return {
+      name: item.name,
+      fill: colors[index].fill,
+      value: Number(item.value),
+    };
+  }
+  );
 
   return (
     <Card>

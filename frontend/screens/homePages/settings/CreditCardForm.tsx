@@ -30,6 +30,8 @@ const CreditCardForm = ({ route }) => {
   const validateCard = (formData) => {
     console.log(formData);
     if (formData.valid) {
+      //console.log(formData.values.number.split(' ').join(''));
+
       instanceToken
         .post(`/api/transactions/${dbUserName}`, {
           transactionType: 'CARD',
@@ -37,24 +39,23 @@ const CreditCardForm = ({ route }) => {
           date: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
           name: formData.values.name,
           surname: '',
-          cardNumber: formData.values.number,
+          cardNumber: formData.values.number.split(' ').join(''),
           expirationMonth: formData.values.expiry.split('/')[0],
           expirationYear: formData.values.expiry.split('/')[1],
           cvc: formData.values.cvc,
         })
         .then((res) => {
           console.log(res);
+          Toast.show({
+            type: 'success',
+            text1: 'Succesful',
+            text2: `You have purchased ${amount} coins 💰`,
+          });
           navigation.navigate('CoinDetails');
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err.response.data);
         });
-
-      Toast.show({
-        type: 'success',
-        text1: 'Succesful',
-        text2: `You have purchased ${amount} coins 💰`,
-      });
     } else {
       Toast.show({
         type: 'error',

@@ -38,7 +38,11 @@ const users = [
   },
 ];
 
-const UsersWidget = () => {
+interface UserWidgetProps {
+  data: any[];
+}
+
+const UsersWidget = (props: UserWidgetProps) => {
   const theme = useTheme();
   const { t } = useTranslation();
 
@@ -47,19 +51,21 @@ const UsersWidget = () => {
       <CardHeader title={t("dashboard.users.title")} />
       <CardContent>
         <List>
-          {users.map((user) => (
-            <ListItem disableGutters key={user.id}>
+          {props.data.map((song) => (
+            <ListItem disableGutters key={song.id}>
               <ListItemAvatar>
                 <Avatar>
-                  <PersonIcon />
+                  <img
+                    style={{ contain: "cover", width: "100%", height: "100%" }}
+                    src={song.link} />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={`${user.lastName} ${user.firstName}`}
+                primary={`${song.name}`}
                 primaryTypographyProps={{
                   fontWeight: theme.typography.fontWeightMedium,
                 }}
-                secondary={user.role}
+                secondary={song.artist}
               />
               <ListItemSecondaryAction>
                 <IconButton

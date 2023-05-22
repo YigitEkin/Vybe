@@ -1,43 +1,79 @@
 import Grid from '@material-ui/core/Grid';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AdminAppBar from '../components/AdminAppBar';
 import AdminToolbar from '../components/AdminToolbar';
 import ActivityWidget from '../widgets/ActivityWidget';
 import BudgetWidget from '../widgets/BudgetWidget';
-import CircleProgressWidget from '../widgets/CircleProgressWidget';
 import OverviewWidget from '../widgets/OverviewWidget';
-import ProgressWidget from '../widgets/ProgressWidget';
-import SalesByAgeWidget from '../widgets/SalesByAgeWidget';
 import SalesByCategoryWidget from '../widgets/SalesByCategoryWidget';
-import SalesHistoryWidget from '../widgets/SalesHistoryWidget';
 import TeamProgressWidget from '../widgets/TeamProgressWidget';
 import UsersWidget from '../widgets/UsersWidget';
-
-const overviewItems = [
-  {
-    unit: 'dashboard.overview.visits',
-    value: '20 700',
-  },
-  {
-    unit: 'dashboard.overview.songsPlayed',
-    value: '1 550',
-  },
-  //{
-  //  unit: 'dashboard.overview.orders',
-  //  value: '149',
-  //},
-  {
-    unit: 'dashboard.overview.coinsCollected',
-    value: '657',
-  },
-];
+import { fetchData } from '../config/request';
 
 const Dashboard = () => {
   const { t } = useTranslation();
+  const userInfo = JSON.parse(localStorage.getItem('venueInfo'));
+  const venueId = userInfo.venueId;
+
+  const [checkInData, setCheckInData] = useState<number[]>([]);
+  const [requestsData, setRequestsData] = useState<number[]>([]);
+  const [coinsData, setCoinsData] = useState<number[]>([]);
+  const [songsData, setSongsData] = useState<any[]>([]);
+  const [topSongsData, setTopSongsData] = useState<any[]>([]);
+  const [artistData, setArtistData] = useState<any[]>([]);
+
+  //@ts-ignore
+  useEffect(async () => {
+    const data: number[] = await fetchData(`/api/venues/${venueId}/analytics/checkIns?inADayPer4Hours=true`, 'GET')
+    // console.log(data);
+    setCheckInData(data);
+  }, []);
+  //@ts-ignore
+  useEffect(async () => {
+    const data = await fetchData(`/api/venues/${venueId}/analytics/requests?inADay=true`, 'GET')
+    // console.log(data);
+    setRequestsData(data);
+  }, []);
+  //@ts-ignore
+  useEffect(async () => {
+    const data = await fetchData(`/api/venues/${venueId}/analytics/coinsSpent?inADay=true`, 'GET')
+    // console.log(data);
+    setCoinsData(data);
+  }, []);
+  //@ts-ignore
+  useEffect(async () => {
+    const data = await fetchData(`/api/venues/${venueId}/analytics/recentRequests`, 'GET')
+    // console.log(data);
+    setSongsData(data);
+  }, []);
+  //@ts-ignore
+  useEffect(async () => {
+    const data = await fetchData(`/api/venues/${venueId}/analytics/topRequests`, 'GET')
+    // console.log(data);
+    setTopSongsData(data);
+  }, []);
+  //@ts-ignore
+  useEffect(async () => {
+    const data = await fetchData(`/api/venues/${venueId}/analytics/requestsPerArtist`, 'GET')
+    // console.log(data);
+    setArtistData(
+      data.slice(0, 4).map((item: any) => {
+        const [name, value] = item.split(":").map((part: any) => part.trim());
+        return { name, value };
+      })
+    );
+  }, []);
+
+  function getTotalVisits(): string {
+    return String(checkInData.reduce((a, b) => a + b, 0));
+  }
+  function getTotalRequests(): string {
+    return String(requestsData.reduce((a, b) => a + b, 0));
+  }
+  function getTotalCoins(): string {
+    return String(coinsData.reduce((a, b) => a + b, 0));
+  }
 
   return (
     <React.Fragment>
@@ -45,58 +81,39 @@ const Dashboard = () => {
         <AdminToolbar title={t('dashboard.title')} />
       </AdminAppBar>
       <Grid container spacing={2}>
-        {overviewItems.map((item, index) => (
-          <Grid key={index} item xs={8} md={4}>
-            <OverviewWidget description={t(item.unit)} title={item.value} />
-          </Grid>
-        ))}
+        <Grid item xs={12} md={4}>
+          <OverviewWidget
+            description={t('dashboard.overview.visits')}
+            title={getTotalVisits()} />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <OverviewWidget
+            description={t('dashboard.overview.songsPlayed')}
+            title={getTotalRequests()} />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <OverviewWidget
+            description={t('dashboard.overview.coinsCollected')}
+            title={getTotalCoins()} />
+        </Grid>
         <Grid item xs={12} md={8}>
           <ActivityWidget />
         </Grid>
         <Grid item xs={12} md={4}>
-          <BudgetWidget />
+          {
+            //@ts-ignore  
+          }
+          <BudgetWidget data={checkInData} />
         </Grid>
-        {/*<Grid item xs={12} md={4}>
-          <SalesHistoryWidget value={567} />
-        </Grid>*/}
-        {/*<Grid item xs={12} md={4}>
-          <ProgressWidget
-            avatar={<SupervisorAccountIcon />}
-            mb={2}
-            title={t("dashboard.visitProgress.title")}
-            value={75}
-          />
-          <ProgressWidget
-            avatar={<ShoppingBasketIcon />}
-            mb={2}
-            title={t("dashboard.orderProgress.title")}
-            value={50}
-          />
-          <ProgressWidget
-            avatar={<AttachMoneyIcon />}
-            title={t("dashboard.salesProgress.title")}
-            value={25}
-          />
-        </Grid>*/}
-        {/*<Grid item xs={12} md={4}>
-          <CircleProgressWidget
-            height={204}
-            title={t("dashboard.progress.title")}
-            value={75}
-          />
-        </Grid>*/}
-        <Grid item xs={12} md={4}>
-          <UsersWidget />
+        <Grid item xs={12} md={12}>
+          <UsersWidget data={songsData} />
         </Grid>
         <Grid item xs={12} md={8}>
           <TeamProgressWidget />
         </Grid>
         <Grid item xs={12} md={4}>
-          <SalesByCategoryWidget />
+          <SalesByCategoryWidget data={artistData} />
         </Grid>
-        {/*<Grid item xs={12} md={8}>
-          <SalesByAgeWidget />
-        </Grid>*/}
       </Grid>
     </React.Fragment>
   );

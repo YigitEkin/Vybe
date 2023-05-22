@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 export type LoginStore = {
+  walletId: any | null;
   isLogin: boolean;
   password: string | null;
   token: string | null;
@@ -10,9 +11,12 @@ export type LoginStore = {
   setPhoneNumber: (phoneNumber: string | null) => void;
   setSelectedCode: (selectedCode: any | null) => void;
   setPassword: (password: string | null) => void;
+  setWalletId: (walletId: any | null) => void;
 };
 
 export const useLoginStore = create<LoginStore>((set) => ({
+  walletId: null,
+  setWalletId: (walletId: any | null) => set({ walletId }),
   phoneNumber: null,
   password: null,
   token: null,

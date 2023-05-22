@@ -7,6 +7,7 @@ import {
   Pressable,
   ScrollView,
   Modal,
+  ActivityIndicator,
 } from 'react-native';
 import StyledButton from '../../components/HomePage/StyledButton';
 import { Colors } from '../../constants/Colors';
@@ -19,6 +20,7 @@ import { useLoginStore } from '../../stores/LoginStore';
 import axiosConfig from '../../constants/axiosConfig';
 
 const ProfileDetails = () => {
+  const [loading, setLoading] = useState(false);
   const instanceToken = axiosConfig();
   const [friendStatus, setFriendStatus] = useState('');
   const route = useRoute();
@@ -78,15 +80,19 @@ const ProfileDetails = () => {
     'Inter-Regular': require('../../assets/fonts/Inter/static/Inter-Regular.ttf'),
   });
   useEffect(() => {
+    setLoading(true);
     instanceToken.get(`/api/customers/${id}`).then((res) => {
       setUser(res.data);
+      setLoading(false);
     });
   }, []);
   useEffect(() => {
+    setLoading(true);
     instanceToken.get(`/api/customers/${dbUserName}/friends`).then((res) => {
       const friends = res.data;
       if (friends.filter((friend: any) => friend.username === id).length > 0) {
         setFriendStatus('Friend');
+        setLoading(false);
       } else {
         instanceToken
           .get(`/api/customers/${dbUserName}/friends/outgoing_requests`)
@@ -97,15 +103,21 @@ const ProfileDetails = () => {
                 .length > 0
             ) {
               setFriendStatus('Requested');
+              setLoading(false);
             } else {
               setFriendStatus('NotFriend');
+              setLoading(false);
             }
           });
       }
     });
   }, []);
 
-  return fontsLoaded ? (
+  return loading ? (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <ActivityIndicator size={'large'} color='#EA34C9' />
+    </View>
+  ) : fontsLoaded ? (
     <>
       <ScrollView>
         <View style={styles.container}>
@@ -132,6 +144,8 @@ const ProfileDetails = () => {
                 ? 'Remove Friend'
                 : friendStatus === 'NotFriend'
                 ? 'Send Friend Request'
+                : friendStatus === ''
+                ? 'Loading...'
                 : 'Cancel Friend Request'
             }
             style={

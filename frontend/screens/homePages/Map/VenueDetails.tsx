@@ -192,7 +192,9 @@ const VenueDetails = () => {
               </Text>
             </View>
             <Text style={styles.smallText}>{`Currently Playing: ${
-              venue.currentSong ? venue.currentSong : 'No song playing'
+              venue.currentSong
+                ? venue.currentSong.artist + '-' + venue.currentSong.name
+                : 'No song playing'
             }`}</Text>
           </View>
         </View>
@@ -218,7 +220,7 @@ const VenueDetails = () => {
               <NotificationCard
                 id={comment.id}
                 key={comment.id}
-                user={comment.customerUsername}
+                user={comment.customerName + ' ' + comment.customerSurname}
                 description={comment.text}
                 time={moment(comment.date).format('DD/MM/YYYY HH:mm')}
               />

@@ -391,7 +391,7 @@ const MapPage = () => {
             reviews: 99,
             id: venue.id,
             currentSong: venue.currentSong
-              ? venue.currentSong
+              ? venue.currentSong.artist + '-' + venue.currentSong.name
               : 'No song playing',
           };
         });

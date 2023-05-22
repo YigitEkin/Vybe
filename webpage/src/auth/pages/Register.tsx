@@ -1,3 +1,4 @@
+//@ts-nocheck
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";

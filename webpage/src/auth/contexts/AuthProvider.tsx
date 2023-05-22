@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { createContext, useContext } from "react";
 import { useLocalStorage } from "../../core/hooks/useLocalStorage";
 import { useLogin } from "../hooks/useLogin";

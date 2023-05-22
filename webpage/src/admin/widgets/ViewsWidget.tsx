@@ -11,31 +11,73 @@ import { useTranslation } from "react-i18next";
 import { Link as RouterLink } from "react-router-dom";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 
-const data = [
+const monthData = [
   {
     name: "Jan",
-    fb: 2.5,
+    pv: 2400,
   },
   {
     name: "Feb",
-    fb: 1.4,
+    pv: 1398,
   },
   {
     name: "Mar",
-    fb: 6,
+    pv: 9800,
   },
   {
-    name: "Avr",
-    fb: 4,
+    name: "Apr",
+    pv: 3908,
+  },
+  {
+    name: "May",
+    pv: 4800,
+  },
+  {
+    name: "Jun",
+    pv: 3800,
+  },
+  {
+    name: "Jul",
+    pv: 4300,
+  },
+  {
+    name: "Aug",
+    pv: 4300,
+  },
+  {
+    name: "Sep",
+    pv: 4300,
+  },
+  {
+    name: "Oct",
+    pv: 4300,
+  },
+  {
+    name: "Nov",
+    pv: 4300,
+  },
+  {
+    name: "Dec",
+    pv: 4300,
   },
 ];
 
 const views = "6.967.431";
 
-const ViewsWidget = () => {
+interface ViewsWidgetProps {
+  data: any[];
+  totalCount?: number;
+}
+
+const ViewsWidget = (props: ViewsWidgetProps) => {
   const theme = useTheme();
   const { t } = useTranslation();
-
+  const modData = props.data.map((item, index) => {
+    return {
+      fb: item,
+      name: monthData[index].name,
+    };
+  });
   return (
     <Card>
       <CardContent>
@@ -48,14 +90,14 @@ const ViewsWidget = () => {
           {t("admin.home.views.unit")}
         </Typography>
         <Typography align="center" component="div" variant="h2">
-          {views}
+          {props.data.reduce((a, b) => a + b, 0)}
         </Typography>
         <Box sx={{ height: 224 }}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               width={500}
               height={400}
-              data={data}
+              data={modData}
               margin={{
                 top: 0,
                 right: 0,
