@@ -2,6 +2,8 @@ package com.vybe.backend.model.dto;
 
 
 import com.vybe.backend.model.entity.Comment;
+import com.vybe.backend.model.entity.Image;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +22,7 @@ public class CommentDTO {
     private String customerUsername;
     private String customerName;
     private String customerSurname;
+    private ImageDTO customerProfilePicture;
     private Integer venueId;
 
     public Comment toComment() {
@@ -49,6 +52,7 @@ public class CommentDTO {
         this.id = comment.getId();
         this.customerName = comment.getCommentedBy().getName();
         this.customerSurname = comment.getCommentedBy().getSurname();
+        this.customerProfilePicture = new ImageDTO(comment.getCommentedBy().getProfilePicture());
     }
 
     public static Set<CommentDTO> toCommentDTOSet(Set<Comment> comments) {

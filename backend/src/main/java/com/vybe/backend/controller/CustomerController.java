@@ -136,6 +136,8 @@ public class CustomerController {
     public StreakDTO getStreak(@PathVariable String username, @PathVariable Integer venueId) {
         return userService.getStreak(username, venueId);
     }
+
+    // ************** Profile Picture Endpoints ************** //
     @PostMapping("{username}/profilePicture")
     public boolean uploadProfilePicture(@PathVariable String username, @RequestBody ImageDTO imageDTO) {
         return userService.uploadCustomerPhoto(username, imageDTO);

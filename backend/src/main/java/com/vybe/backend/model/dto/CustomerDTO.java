@@ -20,6 +20,7 @@ public class CustomerDTO {
     private String dateOfCreation;
     private VenueDTO checkedInVenue;
     private Integer walletID;
+    private ImageDTO profilePicture;
 
     public CustomerDTO(Customer customer) {
         this.username = customer.getUsername();
@@ -31,5 +32,6 @@ public class CustomerDTO {
         if (customer.getCheckedInVenue() != null)
             this.checkedInVenue = new VenueDTO(customer.getCheckedInVenue());
         this.walletID = customer.getWallet().getId();
+        this.profilePicture = new ImageDTO(customer.getProfilePicture());
     }
 }

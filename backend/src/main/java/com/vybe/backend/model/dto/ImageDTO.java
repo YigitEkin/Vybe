@@ -15,7 +15,13 @@ public class ImageDTO {
     private Long id;
 
     public ImageDTO(Image image) {
-        this.id = image.getId();
-        this.image = image.getData();
+        if (image == null || image.getId() == null || image.getData() == null) {
+            this.id = null;
+            this.image = null;
+        } else{
+            this.id = image.getId();
+            this.image = image.getData();
+        }
+        
     }
 }
