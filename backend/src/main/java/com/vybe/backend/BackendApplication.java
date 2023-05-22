@@ -549,9 +549,11 @@ public class BackendApplication {
 
 
 
-
-
-
+			// song requests 
+			playlistService.createDummySongRequests(800);
+			playlistService.createBiasedDummySongRequests(200);
+			venueService.createDummyVisits(10000, false);
+			venueService.createDummyVisits(1000, true);
 
 		};
 	}

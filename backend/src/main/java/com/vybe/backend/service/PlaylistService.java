@@ -10,9 +10,12 @@ import com.vybe.backend.exception.SongNotFoundException;
 import com.vybe.backend.exception.VenueNotFoundException;
 import com.vybe.backend.model.entity.Playlist;
 import com.vybe.backend.model.entity.Song;
+import com.vybe.backend.model.entity.SongRequest;
 import com.vybe.backend.model.entity.Venue;
+import com.vybe.backend.repository.CustomerRepository;
 import com.vybe.backend.repository.PlaylistRepository;
 import com.vybe.backend.repository.SongRepository;
+import com.vybe.backend.repository.SongRequestRepository;
 import com.vybe.backend.repository.VenueRepository;
 import com.vybe.backend.util.SoundtrackUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,23 +23,33 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
 
 @Service
 @Transactional
 public class PlaylistService {
+    @Resource
     PlaylistRepository playlistRepository;
+
+    @Resource
     VenueRepository venueRepository;
+
+    @Resource
     SongRepository songRepository;
 
-    @Autowired
-    public PlaylistService(PlaylistRepository playlistRepository, VenueRepository venueRepository, SongRepository songRepository) {
-        this.playlistRepository = playlistRepository;
-        this.venueRepository = venueRepository;
-        this.songRepository = songRepository;
-    }
+    @Resource
+    CustomerRepository customerRepository;
+
+    @Resource
+    SongRequestRepository songRequestRepository;
 
     // create playlist
     public PlaylistDTO createPlaylist(PlaylistCreationDTO playlistCreationDTO) {
@@ -167,8 +180,47 @@ public class PlaylistService {
         return playlist.getDefaultPlaylist().stream().map(SongDTO::new).collect(Collectors.toList());
     }
 
+    public void createDummySongRequests(int count) {
+        String[] usernames = {"905076011168", "2", "905309510454", "905332346981", "905387866001"};
+        List<SongDTO> defaultPlaylist = getDefaultPlaylistOfVenue(2);
+        Random random = new Random();
+        for (int i = 0; i < count; i++) {
+            SongRequest songRequest = new SongRequest();
+            venueRepository.findById(2).ifPresent(songRequest::setRequestedInVenue);
+            customerRepository.findById(usernames[random.nextInt(usernames.length)]).ifPresent(songRequest::setRequestedBy);
+            songRepository.findById(defaultPlaylist.get(random.nextInt(defaultPlaylist.size())).getId()).ifPresent(songRequest::setSong);
+            songRequest.setRequestDate(getRandomDateInThisMonth());
+            songRequestRepository.save(songRequest);
+        }
+    }
 
-    // TODO: add get next music method
+    public void createBiasedDummySongRequests(int count) {
+    String[] usernames = {"905076011168", "2", "905309510454", "905332346981", "905387866001"};
+    List<SongDTO> defaultPlaylist = getDefaultPlaylistOfVenue(2);
+    Random random = new Random();
+    for (int i = 0; i < count; i++) {
+        SongRequest songRequest = new SongRequest();
+        venueRepository.findById(2).ifPresent(songRequest::setRequestedInVenue);
+        customerRepository.findById(usernames[random.nextInt(usernames.length)]).ifPresent(songRequest::setRequestedBy);
+        int songIndex = random.nextInt(defaultPlaylist.size());
+        if (songIndex < 50) {
+            songIndex = random.nextInt(50);
+        }
+        songRepository.findById(defaultPlaylist.get(songIndex).getId()).ifPresent(songRequest::setSong);
+        songRequest.setRequestDate(getRandomDateInThisMonth());
+        songRequestRepository.save(songRequest);
+    }
+}
+
+    private Date getRandomDateInThisMonth() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        long startOfMonth = calendar.getTimeInMillis();
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        long endOfMonth = calendar.getTimeInMillis();
+        long randomTimeInMillis = ThreadLocalRandom.current().nextLong(startOfMonth, endOfMonth);
+        return new Date(randomTimeInMillis);
+    }
 
 
 }

@@ -6,30 +6,23 @@ import com.vybe.backend.exception.VenueNotFoundException;
 import com.vybe.backend.model.entity.*;
 import com.vybe.backend.repository.*;
 import com.vybe.backend.util.SoundtrackUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
 
 @Service
 public class VenueService {
 
-    VenueRepository venueRepository;
-    SongNodeRepository songNodeRepository;
-    PlaylistRepository playlistRepository;
-    CustomerRepository customerRepository;
-    CommentRepository commentRepository;
-
-
-    @Autowired
-    public VenueService(VenueRepository venueRepository, SongNodeRepository songNodeRepository, PlaylistRepository playlistRepository, CustomerRepository customerRepository, CommentRepository commentRepository){
-        this.playlistRepository = playlistRepository;
-        this.venueRepository = venueRepository;
-        this.songNodeRepository = songNodeRepository;
-        this.customerRepository = customerRepository;
-        this.commentRepository = commentRepository;
-    }
+    @Resource VenueRepository venueRepository;
+    @Resource SongNodeRepository songNodeRepository;
+    @Resource PlaylistRepository playlistRepository;
+    @Resource CustomerRepository customerRepository;
+    @Resource CommentRepository commentRepository;
+    @Resource VisitRepository visitRepository;
 
     // add venue
     public VenueDTO addVenue(VenueCreationDTO venueCreationDTO) {
@@ -222,4 +215,42 @@ public class VenueService {
         venueRepository.save(venue);
         return true;
     }
+
+    
+    public void createDummyVisits(int count, boolean thisMonth) {
+        String[] usernames = {"905076011168", "2", "905309510454", "905332346981", "905387866001"};
+        Random random = new Random();
+        for (int i = 0; i < count; i++) {
+            Visit visit = new Visit();
+            visit.setCustomerUsername(usernames[random.nextInt(usernames.length)]);
+            visit.setVenueId(2);
+            visit.setVenueName("Fameo Cafe");
+            if (thisMonth)
+                visit.setVisitDate(getRandomDateInThisMonth());
+            else
+                visit.setVisitDate(getRandomDateInThisYear());
+            visitRepository.save(visit);
+        }
+    }
+
+    private Date getRandomDateInThisMonth() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        long startOfMonth = calendar.getTimeInMillis();
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        long endOfMonth = calendar.getTimeInMillis();
+        long randomTimeInMillis = ThreadLocalRandom.current().nextLong(startOfMonth, endOfMonth);
+        return new Date(randomTimeInMillis);
+    }
+
+    private Date getRandomDateInThisYear() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_YEAR, 1);
+        long startOfYear = calendar.getTimeInMillis();
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.getActualMaximum(Calendar.DAY_OF_YEAR));
+        long endOfYear = calendar.getTimeInMillis();
+        long randomTimeInMillis = ThreadLocalRandom.current().nextLong(startOfYear, endOfYear);
+        return new Date(randomTimeInMillis);
+    }
+
 }
