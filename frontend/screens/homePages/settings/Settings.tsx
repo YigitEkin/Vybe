@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -7,17 +7,25 @@ import {
   Pressable,
   ScrollView,
   Modal,
+  Button,
 } from 'react-native';
 import StyledButton from '../../../components/HomePage/StyledButton';
+import * as ImagePicker from 'expo-image-picker';
 import { Colors } from '../../../constants/Colors';
 import * as Font from 'expo-font';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 // @ts-ignore
 import CoinIcon from '../../../assets/coin.png';
 import { useNavigation } from '@react-navigation/native';
 import { useLoginStore } from '../../../stores/LoginStore';
+import { useIsFocused } from '@react-navigation/native';
+import axiosConfig from '../../../constants/axiosConfig';
+import avatarPlaceholder from '../../../assets/avatarPlaceholder.png';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 type editSectionArea = {
   name: string;
+  value: any;
   editability: boolean;
   borderBottomless?: boolean;
   marginTop?: number;
@@ -28,26 +36,28 @@ type editSectionArea = {
 const editSections: editSectionArea[] = [
   {
     name: 'First Name',
-    editability: true,
+    value: 'First Name',
+    editability: false,
     marginTop: 20,
   },
   {
     name: 'Last Name',
-    editability: true,
+    value: 'Last Name',
+    editability: false,
   },
-  {
-    name: 'Location',
-    editability: true,
-  },
+  //{
+  //  name: 'Location',
+  //  editability: true,
+  //},
   {
     name: 'Notfications',
+    value: 'Notifications',
     editability: false,
     borderBottomless: true,
     notificationCount: 0,
     onPress: () => {},
   },
 ];
-
 const EditProfileSection = (
   section: editSectionArea,
   notificationCount: number
@@ -67,11 +77,10 @@ const EditProfileSection = (
         },
       ]}
     >
-      <Text style={styles.sectionName}>{section.name}</Text>
+      <Text style={styles.sectionName}>{section.name}:</Text>
+      <Text style={styles.sectionName}>{section.value}</Text>
       {section.editability ? (
-        <Pressable>
-          <Text style={styles.editText}>Edit</Text>
-        </Pressable>
+        <></>
       ) : section.notificationCount ? (
         <Pressable
           style={styles.notificationContainer}
@@ -81,24 +90,136 @@ const EditProfileSection = (
             {section.notificationCount}
           </Text>
         </Pressable>
-      ) : null}
+      ) : (
+        <View
+          style={styles.notificationContainer2}
+          //onPress={() => navigation.navigate('Notifications' as never)}
+        >
+          <Text style={styles.notificationText}>{'-'}</Text>
+        </View>
+      )}
     </View>
   ) : null;
 };
 
 const SettingsPage = () => {
+  const { phoneNumber, selectedCode } = useLoginStore((state: any) => {
+    return {
+      phoneNumber: state.phoneNumber,
+      selectedCode: state.selectedCode,
+    };
+  });
+  const dbUserName = selectedCode.dial_code.replace('+', '') + phoneNumber;
+  const instanceToken = axiosConfig();
   const navigation = useNavigation();
+  const [image, setImage] = useState(null);
   const openModal = () => {
     setModalVisible(true);
   };
-  const [notificationCount, setNotificationCount] = useState(1);
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [fontsLoaded] = Font.useFonts({
     'Inter-Regular': require('../../../assets/fonts/Inter/static/Inter-Regular.ttf'),
   });
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      //quality: 0.1,
+      base64: true,
+    });
+    if (!result.canceled) {
+      setImage(result.assets[0].base64);
+      instanceToken
+        .post(`/api/customers/${dbUserName}/profilePicture`, {
+          image: result.assets[0].base64,
+        })
+        .then((res) => {
+          console.log(res.data);
+          Toast.show({
+            type: 'success',
+            text1: 'Profile picture updated',
+            text2: 'Your profile picture has been updated successfully',
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          Toast.show({
+            type: 'error',
+            text1: 'Error',
+            text2: 'An error occured while updating your profile picture',
+          });
+        });
+    }
+
+    //console.log(result);
+  };
+
+  //  console.log(result);
+
+  //  if (!result.canceled) {
+  //    setImage(result.assets[0].uri);
+  //  }
+  //};
+
   const { isLogin, setIsLogin } = useLoginStore();
   const [coinBalance, setCoinBalance] = useState(200);
+  const [section, setSection] = useState(editSections);
+  const isFocused = useIsFocused();
 
+  useEffect(() => {
+    //console.log(isFocused);
+
+    instanceToken
+      .get(`/api/customers/${dbUserName}/friends/incoming_requests`)
+      .then((res) => {
+        //console.log(res.data, res.data.length);
+        setNotificationCount(res.data.length);
+      });
+
+    instanceToken.get(`/api/customers/${dbUserName}/`).then((res) => {
+      let section = [
+        {
+          name: 'First Name',
+          value: res.data.name,
+          editability: true,
+          marginTop: 20,
+        },
+        {
+          name: 'Last Name',
+          value: res.data.surname,
+          editability: true,
+        },
+        {
+          name: 'Notfications',
+          value: '',
+          editability: false,
+          borderBottomless: true,
+          notificationCount: notificationCount,
+
+          onPress: () => {},
+        },
+      ];
+      setSection(section);
+    });
+    instanceToken
+      .get(`/api/customers/${dbUserName}/profilePicture`)
+      .then((res) => {
+        setImage(res.data.image);
+      });
+    instanceToken
+      .get(`api/wallet?username=${dbUserName}`)
+      .then((res) => {
+        setCoinBalance(res.data.balance);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [isFocused]);
   return fontsLoaded ? (
     <>
       <Modal
@@ -139,18 +260,30 @@ const SettingsPage = () => {
       </Modal>
       <ScrollView>
         <View style={styles.container}>
-          {
-            //TODO: this will be converted into a picture component
-          }
-          <View style={styles.profilePicture} />
+          {image === null ? (
+            <Image
+              style={styles.profilePicture}
+              source={avatarPlaceholder}
+              resizeMode='contain'
+            />
+          ) : (
+            <Image
+              style={styles.profilePicture}
+              source={{ uri: 'data:image/png;base64,' + image }}
+              resizeMode='contain'
+            />
+          )}
+          {/*<Image
+            style={styles.profilePicture}
+            source={{ uri: 'data:image/png;base64,' + image }}
+            resizeMode='contain'
+          />*/}
           <StyledButton
             buttonText='Change'
-            onPress={() => {
-              console.log('pressed');
-            }}
+            onPress={async () => pickImage()}
             style={styles.changeButton}
           />
-          {editSections.map((section) => (
+          {section.map((section) => (
             <EditProfileSection
               {...section}
               key={section.name}
@@ -168,7 +301,7 @@ const SettingsPage = () => {
           <View style={styles.paymentMethodsContainer}>
             <View>
               <Text style={styles.mutedText}>Payment Methods</Text>
-              <Text style={styles.whiteText}>Content is Here</Text>
+              <Text style={styles.whiteText}>Earn Coins</Text>
             </View>
             <Pressable
               style={styles.rightArrowContainer}
@@ -199,6 +332,17 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     backgroundColor: 'red',
+    borderRadius: 15,
+    marginTop: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 0,
+    flexDirection: 'row',
+  },
+  notificationContainer2: {
+    width: 30,
+    height: 30,
+    //backgroundColor: 'red',
     borderRadius: 15,
     marginTop: 0,
     justifyContent: 'center',

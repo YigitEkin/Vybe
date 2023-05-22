@@ -43,7 +43,27 @@ const teams = [
   },
 ];
 
-const TeamProgressWidget = () => {
+const colors = [
+  {
+    fill: '#EA34C9',
+  },
+  {
+    fill: '#9F4AD7',
+  },
+  {
+    fill: '#6386E6',
+  },
+  {
+    fill: '#5BC8FA',
+  },
+];
+
+interface TeamProgressWidgetProps {
+  data: any[];
+  count: number;
+}
+
+const TeamProgressWidget = (props: TeamProgressWidgetProps) => {
   const { t } = useTranslation();
 
   return (
@@ -70,21 +90,21 @@ const TeamProgressWidget = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {teams.map((team) => (
-                <TableRow key={team.id}>
+              {props.data.slice(0, 4).map((song, index) => (
+                <TableRow key={song[0].id}>
                   <TableCell>
                     <Typography color='text.secondary' component='div'>
-                      {team.name}
+                      {song[0].name}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <Box sx={{ width: '100%', mr: 3 }}>
                         <LinearProgress
-                          aria-label={`${team.name} progress`}
+                          aria-label={`${song[0].name} progress`}
                           color='inherit'
-                          sx={{ color: team.color }}
-                          value={team.progress}
+                          sx={{ color: colors[index].fill }}
+                          value={(song[1] * (100)) / (props.count)}
                           variant='determinate'
                         />
                       </Box>
@@ -92,12 +112,12 @@ const TeamProgressWidget = () => {
                         <Typography
                           component='span'
                           variant='h6'
-                          color={team.color}
-                        >{`${team.progress}%`}</Typography>
+                          color={colors[index].fill}
+                        >{`${(song[1] * (100)) / (props.count)}%`}</Typography>
                       </Box>
                     </Box>
                   </TableCell>
-                  <TableCell align='center'>{team.value}</TableCell>
+                  <TableCell align='center'>{song[1]}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

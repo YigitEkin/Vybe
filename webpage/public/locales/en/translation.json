@@ -43,7 +43,7 @@
       },
       "views": {
         "action": "View Dashboard",
-        "unit": "Views"
+        "unit": "Total Check-ins (Yearly)"
       },
       "welcome": {
         "message": "This page is designed to give some important information about the application. Let's make someting together!",
@@ -191,7 +191,7 @@
         "title": "Under constructions!"
       }
     },
-    "reset": "Reset",
+    "reset": "Upload Image",
     "retry": "Try Again",
     "selected": "Selected",
     "snackbar": {
@@ -238,7 +238,7 @@
         "rap": "Rap",
         "rock": "Rock"
       },
-      "title": "Genres Played"
+      "title": "Top 4 Artists Played All Time"
     },
     "salesHistory": {
       "title": "Sales History",

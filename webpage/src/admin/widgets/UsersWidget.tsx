@@ -2,17 +2,12 @@ import Avatar from "@material-ui/core/Avatar";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
-import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import { useTheme } from "@material-ui/core/styles";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import PersonIcon from "@material-ui/icons/Person";
 import { useTranslation } from "react-i18next";
-import { Link as RouterLink } from "react-router-dom";
 
 const users = [
   {
@@ -38,7 +33,11 @@ const users = [
   },
 ];
 
-const UsersWidget = () => {
+interface UserWidgetProps {
+  data: any[];
+}
+
+const UsersWidget = (props: UserWidgetProps) => {
   const theme = useTheme();
   const { t } = useTranslation();
 
@@ -47,21 +46,23 @@ const UsersWidget = () => {
       <CardHeader title={t("dashboard.users.title")} />
       <CardContent>
         <List>
-          {users.map((user) => (
-            <ListItem disableGutters key={user.id}>
+          {props.data.map((song) => (
+            <ListItem disableGutters key={song.id}>
               <ListItemAvatar>
                 <Avatar>
-                  <PersonIcon />
+                  <img
+                    style={{ contain: "cover", width: "100%", height: "100%" }}
+                    src={song.link} />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={`${user.lastName} ${user.firstName}`}
+                primary={`${song.name}`}
                 primaryTypographyProps={{
                   fontWeight: theme.typography.fontWeightMedium,
                 }}
-                secondary={user.role}
+                secondary={song.artist}
               />
-              <ListItemSecondaryAction>
+              {/* <ListItemSecondaryAction>
                 <IconButton
                   aria-label="Go to user details"
                   component={RouterLink}
@@ -70,7 +71,7 @@ const UsersWidget = () => {
                 >
                   <ChevronRightIcon />
                 </IconButton>
-              </ListItemSecondaryAction>
+              </ListItemSecondaryAction> */}
             </ListItem>
           ))}
         </List>

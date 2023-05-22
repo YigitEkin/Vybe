@@ -1,15 +1,18 @@
 package com.vybe.backend.service;
 
+import com.vybe.backend.exception.CustomerNotFoundException;
 import com.vybe.backend.exception.TransactionNotFoundException;
 import com.vybe.backend.exception.TransactionNotValidatedException;
 import com.vybe.backend.exception.WalletNotFoundException;
 import com.vybe.backend.model.dto.IncomingTransactionDTO;
 import com.vybe.backend.model.dto.TransactionDTO;
 import com.vybe.backend.model.dto.WalletDTO;
+import com.vybe.backend.model.entity.Customer;
 import com.vybe.backend.model.entity.Transaction;
 import com.vybe.backend.model.entity.Wallet;
 import com.vybe.backend.model.enums.TransactionTypes;
 import com.vybe.backend.repository.TransactionRepository;
+import com.vybe.backend.repository.UserRepository;
 import com.vybe.backend.repository.WalletRepository;
 import com.vybe.backend.util.IyzicoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,8 @@ public class TransactionService {
     TransactionRepository transactionRepository;
     @Resource
     IyzicoUtil iyzicoUtil;
+    @Resource
+    UserRepository userRepository;
 
     @Autowired
     public TransactionService(WalletRepository walletRepository, TransactionRepository transactionRepository) {
@@ -35,11 +40,14 @@ public class TransactionService {
         this.transactionRepository = transactionRepository;
     }
 
-    public WalletDTO executeNewTransaction(IncomingTransactionDTO incomingTransaction, Integer walletId) {
-        Wallet wallet = walletRepository.findById(walletId).orElse(null);
-        if (wallet == null) {
-            throw new WalletNotFoundException("Wallet with id " + walletId + " is not found.");
+    public WalletDTO executeNewTransaction(IncomingTransactionDTO incomingTransaction, String username) {
+        if (!userRepository.existsByUsername(username)) {
+            throw new CustomerNotFoundException("Customer with username " + username + " is not found.");
         }
+
+        Customer c = (Customer) userRepository.findByUsername(username).get();
+
+        Wallet wallet = c.getWallet();
 
         if(incomingTransaction.getTransactionType().equals(TransactionTypes.CARD)) {
             if(incomingTransaction.getCardNumber() == null || incomingTransaction.getCardNumber().length() != 16) {

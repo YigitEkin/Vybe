@@ -21,6 +21,7 @@ const Login = () => {
   const { t } = useTranslation();
 
   const handleLogin = (email: string, password: string) => {
+
     login(email, password)
       .then(() =>
         navigate(`/${process.env.PUBLIC_URL}/admin`, { replace: true })
@@ -30,8 +31,8 @@ const Login = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: "demo@example.com",
-      password: "guWEK<'r/-47-XG3",
+      email: "",
+      password: "",
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -102,7 +103,7 @@ const Login = () => {
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
             />
-            <Box sx={{ textAlign: "right" }}>
+            {/* <Box sx={{ textAlign: "right" }}>
               <Link
                 component={RouterLink}
                 to={`/${process.env.PUBLIC_URL}/forgot-password`}
@@ -110,7 +111,7 @@ const Login = () => {
               >
                 {t("auth.login.forgotPasswordLink")}
               </Link>
-            </Box>
+            </Box> */}
             <LoadingButton
               type="submit"
               fullWidth
@@ -120,7 +121,7 @@ const Login = () => {
             >
               {t("auth.login.submit")}
             </LoadingButton>
-            <Button
+            {/* <Button
               component={RouterLink}
               to={`/${process.env.PUBLIC_URL}/register`}
               color="primary"
@@ -128,7 +129,7 @@ const Login = () => {
               sx={{ mt: 2 }}
             >
               {t("auth.login.newAccountLink")}
-            </Button>
+            </Button> */}
           </Box>
         </BoxedLayout>
       </Grid>

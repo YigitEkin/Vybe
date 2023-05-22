@@ -115,7 +115,7 @@ const SettingsDrawer = ({ onDrawerToggle, open }: SettingsDrawerProps) => {
             {t("settings.drawer.mode.options.dark")}
           </ToggleButton>
         </ToggleButtonGroup>
-        <Typography gutterBottom id="settings-mode" marginTop={3} variant="h6">
+        {/* <Typography gutterBottom id="settings-mode" marginTop={3} variant="h6">
           {t("settings.drawer.direction.label")}
         </Typography>
         <ToggleButtonGroup
@@ -131,7 +131,7 @@ const SettingsDrawer = ({ onDrawerToggle, open }: SettingsDrawerProps) => {
           <ToggleButton value="rtl">
             {t("settings.drawer.direction.options.rtl")}
           </ToggleButton>
-        </ToggleButtonGroup>
+        </ToggleButtonGroup> */}
         <Typography
           gutterBottom
           id="settings-sidebar"

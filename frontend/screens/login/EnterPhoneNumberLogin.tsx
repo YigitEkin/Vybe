@@ -1,6 +1,6 @@
-import React, { useCallback } from "react";
-import { useLoginStore } from "../../stores/LoginStore";
-import EnterPhoneNumber from "../../components/phoneCodePicker/PhoneCodePicker";
+import React, { useCallback } from 'react';
+import { useLoginStore } from '../../stores/LoginStore';
+import EnterPhoneNumber from '../../components/phoneCodePicker/PhoneCodePicker';
 
 const EnterPhoneNumberLogin = ({ navigation }: any) => {
   const { phoneNumber, setPhoneNumber, selectedCode, setSelectedCode } =
@@ -14,18 +14,17 @@ const EnterPhoneNumberLogin = ({ navigation }: any) => {
     });
 
   const onPress = useCallback(() => {
-    phoneNumber && phoneNumber.trim() !== ""
-      ? navigation.navigate("LoginVerification")
+    phoneNumber && phoneNumber.trim() !== ''
+      ? navigation.navigate('LoginPassword')
       : null;
   }, [phoneNumber, setPhoneNumber, navigation]);
 
-
   return (
     <EnterPhoneNumber
-      buttonText="Login"
-      headerText="Welcome back."
-      subHeaderText="Log in to your account"
-      mutedText="You will receive an SMS verification that may apply message and data rates."
+      buttonText='Login'
+      headerText='Welcome back.'
+      subHeaderText='Log in to your account'
+      mutedText='You will receive an SMS verification that may apply message and data rates.'
       onPress={onPress}
       setSelectedCallingCode={setSelectedCode}
       selectedCallingCode={selectedCode}

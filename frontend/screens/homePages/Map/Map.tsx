@@ -16,7 +16,12 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import MapView, {
+  PROVIDER_GOOGLE,
+  Marker,
+  PROVIDER_DEFAULT,
+} from 'react-native-maps';
 import SearchBarMap from '../../../components/HomePage/SearchBarMap';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
@@ -29,9 +34,16 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 // @ts-ignore
 import StarRating from '../components/StarRating';
 
-import { useNavigation, useTheme } from '@react-navigation/native';
+import {
+  useIsFocused,
+  useNavigation,
+  useTheme,
+} from '@react-navigation/native';
 import { Colors } from '../../../constants/Colors';
 import Splash from '../../Splash';
+import axios from 'axios';
+import axiosConfig from '../../../constants/axiosConfig';
+import StyledButton from '../../../components/HomePage/StyledButton';
 
 const { width, height } = Dimensions.get('window');
 const CARD_HEIGHT = 220;
@@ -46,7 +58,7 @@ const Images = [
   { image: require('../../../assets/icon.png') },
   { image: require('../../../assets/icon.png') },
 ];
-
+const defaultImage = '../../../assets/icon.png';
 export type MapItem = {
   coordinate: {
     latitude: number;
@@ -352,6 +364,8 @@ const DismissKeyboard = ({ children }) => (
   </TouchableWithoutFeedback>
 );
 const MapPage = () => {
+  const isFocused = useIsFocused();
+  const instanceToken = axiosConfig();
   const theme = useTheme();
 
   const [location, setLocation] = useState<Location.LocationObject | null>(
@@ -359,6 +373,46 @@ const MapPage = () => {
   );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+  const [markersRes, setMarkersRes] = useState([]);
+  const [allVenues, setAllVenues] = useState([]);
+  useEffect(() => {
+    instanceToken
+      .get('/api/venues')
+      .then((res) => {
+        //console.log(res.data);
+        let data = res.data;
+        let markersRes = data.map((venue) => {
+          return {
+            coordinate: {
+              latitude: parseFloat(venue.location.split(',')[0]),
+              longitude: parseFloat(venue.location.split(',')[1]),
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
+            },
+            title: venue.name,
+            description: venue.description,
+            image:
+              venue.photos.length === 0
+                ? Images[0].image
+                : { uri: venue.photos[0].data },
+            rating: venue.rating,
+            reviews: 99,
+            id: venue.id,
+            currentSong: venue.currentSong
+              ? venue.currentSong.artist + '-' + venue.currentSong.name
+              : 'No song playing',
+          };
+        });
+        //console.log(markersRes);
+        setAllVenues(markersRes);
+        setMarkersRes(markersRes);
+        let apiMapState = {
+          markersRes,
+        };
+        setState(apiMapState);
+      })
+      .catch((e) => e.message);
+  }, [isFocused]);
 
   useEffect(() => {
     (async () => {
@@ -373,10 +427,10 @@ const MapPage = () => {
       setLocation(location);
       setSuccess(true);
     })();
-  }, []);
+  }, [isFocused]);
 
   const initialMapState = {
-    markers,
+    markersRes,
   };
 
   const [state, setState] = React.useState(initialMapState);
@@ -387,18 +441,33 @@ const MapPage = () => {
   let mapAnimation = new Animated.Value(0);
   const navigation = useNavigation();
 
+  // For search bar filtering
+  useEffect(() => {
+    console.log('searchPhrase', searchPhrase);
+    let filteredArray = allVenues.filter((venue: MapItem) =>
+      venue?.title.toLowerCase().includes(searchPhrase.toLowerCase())
+    );
+    console.log(filteredArray);
+    setMarkersRes(filteredArray);
+  }, [searchPhrase]);
+  useEffect(() => {
+    setState({
+      markersRes,
+    });
+  }, [markersRes]);
+
   useEffect(() => {
     mapAnimation.addListener(({ value }) => {
       let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
-      if (index >= state.markers.length) {
-        index = state.markers.length - 1;
+      if (index >= state.markersRes.length) {
+        index = state.markersRes.length - 1;
       }
       if (index <= 0) {
         index = 0;
       }
       if (mapIndex !== index) {
         setMapIndex(index);
-        const { coordinate } = state.markers[index];
+        const { coordinate } = state.markersRes[index];
         _map.current &&
           _map.current.animateToRegion(
             {
@@ -411,7 +480,7 @@ const MapPage = () => {
       /*const regionTimeout = setTimeout(() => {
         if (mapIndex !== index) {
           setMapIndex(index);
-          const { coordinate } = state.markers[index];
+          const { coordinate } = state.markersRes[index];
           _map.current &&
             _map.current.animateToRegion(
               {
@@ -425,7 +494,7 @@ const MapPage = () => {
     });
   });
 
-  const interpolations = state.markers.map((marker: any, index: number) => {
+  const interpolations = state.markersRes.map((marker: any, index: number) => {
     const inputRange = [
       (index - 1) * CARD_WIDTH,
       index * CARD_WIDTH,
@@ -453,6 +522,17 @@ const MapPage = () => {
     _scrollView.current.scrollTo({ x: x, y: 0, animated: true });
     setMapIndex(markerID);
   };
+  const goToLocation = () => {
+    _map.current.animateToRegion(
+      {
+        latitude: location!.coords!.latitude,
+        longitude: location!.coords!.longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      },
+      ANIMATION_TIMEOUT
+    );
+  };
 
   const _map = React.useRef(null);
   const _scrollView = React.useRef(null);
@@ -460,7 +540,19 @@ const MapPage = () => {
   return success ? (
     <DismissKeyboard>
       <View style={styles.container}>
+        <Pressable
+          onPress={() => {
+            goToLocation();
+          }}
+          style={({ pressed }) =>
+            pressed ? styles.pressed : styles.notPressed
+          }
+        >
+          <Icon name='my-location' size={30} color={'#000'} />
+        </Pressable>
+
         <MapView
+          showsUserLocation={true}
           ref={_map}
           initialRegion={{
             latitude: location!.coords!.latitude,
@@ -469,12 +561,12 @@ const MapPage = () => {
             longitudeDelta: LONGITUDE_DELTA,
           }}
           style={styles.container}
-          provider={PROVIDER_GOOGLE}
+          //provider={PROVIDER_GOOGLE}
           customMapStyle={mapDarkStyle}
         >
           {
             // @ts-ignore
-            state.markers.map((marker: any, index: number) => {
+            state.markersRes.map((marker: any, index: number) => {
               const scaleStyle = {
                 transform: [
                   {
@@ -493,7 +585,7 @@ const MapPage = () => {
                 >
                   <Animated.View style={[styles.markerWrap]}>
                     <Animated.Image
-                      source={require('../../../assets/mapPin.png')}
+                      source={require('../../../assets/mapPinPurple.png')}
                       // @ts-ignore
                       style={[styles.marker, scaleStyle]}
                       resizeMode='contain'
@@ -552,7 +644,7 @@ const MapPage = () => {
             { useNativeDriver: true }
           )}
         >
-          {state.markers.map((marker: any, index: number) => (
+          {state.markersRes.map((marker: any, index: number) => (
             <Pressable
               style={styles.card}
               key={index}
@@ -592,7 +684,7 @@ const MapPage = () => {
                   }}
                 >
                   <Text style={styles.cardDescription}>
-                    🎧 {marker.description}
+                    🎧 {marker.currentSong}
                   </Text>
                   <FontAwesome
                     style={{ marginLeft: 'auto' }}
@@ -614,7 +706,7 @@ const MapPage = () => {
                       fontWeight: 'bold',
                     }}
                   >
-                    4.65
+                    {marker.rating.toFixed(2)}
                   </Text>
                 </View>
               </View>
@@ -640,6 +732,29 @@ const MapPage = () => {
 export default MapPage;
 
 const styles = StyleSheet.create({
+  pressed: {
+    backgroundColor: '#777',
+    borderRadius: 15,
+    padding: 10,
+    position: 'absolute',
+    top: '10%',
+    right: '10%',
+    zIndex: 999,
+  },
+  notPressed: {
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+
+    borderRadius: 15,
+    padding: 10,
+    position: 'absolute',
+    top: '10%',
+    right: '10%',
+    zIndex: 999,
+  },
   container: {
     flex: 1,
     backgroundColor: '#000',
@@ -726,9 +841,11 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   cardDescription: {
+    flexWrap: 'wrap',
+    width: '70%',
     fontSize: 12,
     color: Colors.gray.muted,
-    textAlign: 'center',
+    //textAlign: 'center',
     paddingTop: 5,
   },
   markerWrap: {

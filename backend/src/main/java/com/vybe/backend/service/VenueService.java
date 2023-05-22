@@ -194,6 +194,8 @@ public class VenueService {
         Set<Image> photos = venue.getPhotos();
         Image image = new Image();
         image.setData(data);
+        // Remove next line to switch to multiple photos
+        photos = new HashSet<>();
         photos.add(image);
         venue.setPhotos(photos);
         venueRepository.save(venue);

@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import HomePage from './screens/HomePage';
 import { useCallback, useState } from 'react';
@@ -11,11 +11,47 @@ import SignUpPassword from './screens/signup/SignUpPassword';
 import SignUpUsername from './screens/signup/SignupUsername';
 import EnterPhoneNumber from './components/2fa/EnterPhoneNumber';
 import Splash from './screens/Splash';
+import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 
 import Router from './navigation/Router';
+import { useLoginStore } from './stores/LoginStore';
+import { LogBox } from 'react-native';
 
 //SplashScreen.preventAutoHideAsync();
-
+const toastConfig = {
+  /*
+    Overwrite 'success' type,
+    by modifying the existing `BaseToast` component
+  */
+  success: (props) => (
+    <BaseToast
+      {...props}
+      style={{ borderLeftColor: 'green' }}
+      //contentContainerStyle={{ paddingHorizontal: 15 }}
+      text1Style={{
+        fontSize: 15,
+        fontWeight: '400',
+      }}
+      text2Style={{
+        fontSize: 15,
+        fontWeight: '400',
+      }}
+    />
+  ),
+  error: (props) => (
+    <ErrorToast
+      {...props}
+      text1Style={{
+        fontSize: 15,
+        fontWeight: '400',
+      }}
+      text2Style={{
+        fontSize: 15,
+        fontWeight: '400',
+      }}
+    />
+  ),
+};
 export default function App() {
   const [fontsLoaded] = useFonts({
     'Inter-Black': require('./assets/fonts/Inter/static/Inter-Black.ttf'),
@@ -28,6 +64,9 @@ export default function App() {
     'Inter-SemiBold': require('./assets/fonts/Inter/static/Inter-SemiBold.ttf'),
     'Inter-Thin': require('./assets/fonts/Inter/static/Inter-Thin.ttf'),
   });
+
+  LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+  LogBox.ignoreAllLogs(); //Ignore all log notifications
 
   const [isLoading, setIsLoading] = useState(true);
   const onLayoutRootView = useCallback(async () => {
@@ -54,6 +93,7 @@ export default function App() {
         <Router />
       </View>
       {/*</SafeAreaView>*/}
+      <Toast config={toastConfig} />
     </>
   );
 }

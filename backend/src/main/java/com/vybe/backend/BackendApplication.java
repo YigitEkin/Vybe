@@ -445,12 +445,12 @@ public class BackendApplication {
 			// ------------------------ Coins ------------------------
 			IncomingTransactionDTO incomingTransactionDTO1 = new IncomingTransactionDTO(TransactionTypes.ADVERTISEMENT, 1000.0, "date", "name", "surname", "card number", "expiration month", "year", "ccv");
 
-			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult1.getWalletID());
-			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult2.getWalletID());
-			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult3.getWalletID());
-			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult4.getWalletID());
-			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult5.getWalletID());
-			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult6.getWalletID());
+			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult1.getUsername());
+			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult2.getUsername());
+			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult3.getUsername());
+			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult4.getUsername());
+			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult5.getUsername());
+			transactionService.executeNewTransaction(incomingTransactionDTO1, customerResult6.getUsername());
 
 
 			// ------------------------ Song Requests ------------------------

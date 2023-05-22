@@ -1,5 +1,6 @@
 package com.vybe.backend.controller;
 
+import com.twilio.rest.chat.v1.service.User;
 import com.vybe.backend.exception.CustomerNotFoundException;
 import com.vybe.backend.model.dto.*;
 import com.vybe.backend.service.AuthService;
@@ -23,7 +24,7 @@ public class AuthorizationController {
     @Resource
     private UserService userService;
 
-    @GetMapping("/signIn")
+    @PostMapping("/signIn")
     public String authorizeUser(@RequestBody SignInDTO signInDTO ) {
         if(authService.authorizeUsernameAndPassword(signInDTO.getUsername(), signInDTO.getPassword()))
             return jwtTokenUtil.generateJwtToken(signInDTO.getUsername());
@@ -39,7 +40,7 @@ public class AuthorizationController {
             throw new CustomerNotFoundException("Username or password is incorrect");
     }
 
-    @GetMapping("/customer/2FA")
+    @PostMapping("/customer/2FA")
     public CustomerDTO signInCustomer2FA(@RequestBody SignInDTO signInDTO) {
         return authService.authorizeCustomer2FA(signInDTO.getCode(),signInDTO.getUsername());
     }

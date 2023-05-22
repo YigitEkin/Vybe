@@ -1,10 +1,10 @@
 {
   "expo": {
     "name": "Vybe",
-    "slug": "Vybe",
+    "slug": "vybe",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/appIcon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/Splash_v2.png",
@@ -16,30 +16,44 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-9712054637149885~6820288476"
+      },
+      "bundleIdentifier": "com.canonal.vybe"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/favicon.png",
         "backgroundColor": "#000000"
-      }
+      },
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-9712054637149885~9891912594"
+      },
+      "package": "com.canonal.vybe"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       [
-        "expo-location",
+        "expo-build-properties",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
-        }
-      ],
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+          "ios": {
+            "useFrameworks": "static"
+          }
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "833b892b-caed-4283-ade1-ce45b619f990"
+      }
+    },
+    "owner": "vybe"
+  },
+  "react-native-google-mobile-ads": {
+    "ios_app_id": "ca-app-pub-9712054637149885~6820288476",
+    "android_app_id": "ca-app-pub-9712054637149885~9891912594"
   }
 }

@@ -14,6 +14,10 @@ import StyledButton from '../../../components/HomePage/StyledButton';
 
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import axiosConfig from '../../../constants/axiosConfig';
+import { useLoginStore } from '../../../stores/LoginStore';
+import moment from 'moment';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 interface StarRatingProps {
   onRatingPress: (rating: number) => void;
@@ -61,15 +65,70 @@ const StarRating = ({ onRatingPress }: StarRatingProps) => {
 };
 
 const AddVenueReview = () => {
-  const [rating, setRating] = React.useState<null | number>(null);
+  const { phoneNumber, selectedCode } = useLoginStore((state: any) => {
+    return {
+      phoneNumber: state.phoneNumber,
+      selectedCode: state.selectedCode,
+    };
+  });
+  const dbUserName = selectedCode.dial_code.replace('+', '') + phoneNumber;
+
+  const instanceToken = axiosConfig();
+  const [rating, setRating] = React.useState<number>(0);
   const navigation = useNavigation();
   const route = useRoute();
   const { id } = route.params;
+  const [comment, setComment] = React.useState<string>('');
 
   const [fontsLoaded] = Font.useFonts({
     'Inter-Regular': require('../../../assets/fonts/Inter/static/Inter-Regular.ttf'),
     'Inter-Bold': require('../../../assets/fonts/Inter/static/Inter-Bold.ttf'),
   });
+
+  const handleSubmit = () => {
+    console.log('commenr', comment);
+    const ratingData = {
+      id: '',
+      rating: rating,
+      venueId: id,
+      customerUsername: dbUserName,
+      date: moment(Date.now()).format('YYYY-MM-DD'),
+    };
+
+    const commentData = {
+      id: '767676',
+      text: comment,
+      venueId: id,
+      customerUsername: dbUserName,
+      date: moment(Date.now()).format('YYYY-MM-DD'),
+    };
+
+    instanceToken
+      .post('/api/ratings', ratingData)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err.data, 'error post rating');
+      });
+    if (comment !== '') {
+      instanceToken
+        .post('/api/comments', commentData)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err.message, 'error post comment');
+        });
+    }
+    Toast.show({
+      type: 'success',
+
+      text1: 'Review Added',
+      text2: 'Your review has been added successfully',
+    });
+    navigation.navigate('MapView');
+  };
 
   return fontsLoaded ? (
     <DismissKeyboard>
@@ -81,14 +140,22 @@ const AddVenueReview = () => {
           <Text style={[styles.ratingText, { marginBottom: 20 }]}>
             Comments (Optional)
           </Text>
-          <TextInput style={styles.cardInput} multiline={true} />
+          <TextInput
+            style={styles.cardInput}
+            multiline={true}
+            onChangeText={(v) => setComment(v)}
+          />
           <StyledButton
             style={styles.submitButton}
-            onPress={() => {
+            onPress={
+              () => handleSubmit()
+
+              //handleSubmit
               //TODO: Add review to database
               //TODO: Add review to venue details page
-              rating !== null ? navigation.navigate('MapView') : null;
-            }}
+
+              //rating !== null ? navigation.navigate('MapView') : null;
+            }
             buttonText='Submit'
           />
         </View>

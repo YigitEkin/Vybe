@@ -6,8 +6,9 @@ import {
   Pressable,
   Image,
   Alert,
-  ScrollView
+  ScrollView,
 } from 'react-native';
+import haversine from 'haversine';
 import React, { useEffect, useState } from 'react';
 import GroupItem from '../../components/HomePage/GroupItem';
 import { Colors } from '../../constants/Colors';
@@ -19,10 +20,18 @@ import SearchBar from '../../components/HomePage/SearchBar';
 import SearchIcon from '../../assets/SearchIcon.png';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as Font from 'expo-font';
+import * as Location from 'expo-location';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { useCheckedInStore } from '../../stores/CheckedInStore';
-
+import { useLoginStore } from '../../stores/LoginStore';
+import axios from 'axios';
+import axiosConfig from '../../constants/axiosConfig';
+import { useIsFocused } from '@react-navigation/native';
+import { ActivityIndicator } from 'react-native';
+import StyledButton from '../../components/HomePage/StyledButton';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 const HomeNotCheckedIn = () => {
+  const instanceToken = axiosConfig();
   const [isCamOpen, setIsCamOpen] = useState(false);
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
@@ -30,6 +39,12 @@ const HomeNotCheckedIn = () => {
   const [searchPhrase, setSearchPhrase] = useState('');
   const [clicked, setClicked] = useState(false);
   const navigation = useNavigation();
+  const { phoneNumber, selectedCode } = useLoginStore((state: any) => {
+    return {
+      phoneNumber: state.phoneNumber,
+      selectedCode: state.selectedCode,
+    };
+  });
   const [userList, setUserList] = useState([
     {
       id: 1,
@@ -43,29 +58,250 @@ const HomeNotCheckedIn = () => {
     },
     {
       id: 3,
-      name: 'John Doe',
+      name: 'May Doe',
       status: 'At Federal Coffee Shop',
     },
     {
       id: 4,
-      name: 'Jane Doe',
+      name: 'Jane anan',
       status: 'At Bluejay Coffee Shop',
     },
     {
       id: 5,
-      name: 'John Doe',
+      name: 'anan baban',
       status: 'At Federal Coffee Shop',
     },
     {
       id: 6,
-      name: 'Jane Doe',
+      name: 'eben Doe',
       status: 'At Bluejay Coffee Shop',
     },
   ]);
+  const [filteredUserList, setFilteredUserList] = useState([
+    {
+      id: 1,
+      name: 'John Doe',
+      status: 'At Federal Coffee Shop',
+    },
+    {
+      id: 2,
+      name: 'Jane Doe',
+      status: 'At Bluejay Coffee Shop',
+    },
+    {
+      id: 3,
+      name: 'May Doe',
+      status: 'At Federal Coffee Shop',
+    },
+    {
+      id: 4,
+      name: 'Jane anan',
+      status: 'At Bluejay Coffee Shop',
+    },
+    {
+      id: 5,
+      name: 'anan baban',
+      status: 'At Federal Coffee Shop',
+    },
+    {
+      id: 6,
+      name: 'eben Doe',
+      status: 'At Bluejay Coffee Shop',
+    },
+  ]);
+  const [friendList, setFriendList] = useState([]);
   const { setIsCheckIn } = useCheckedInStore();
+  const [isRequested, setIsRequested] = useState(false);
+  const [locationVenue, setLocationVenue] = useState('');
+  const [success, setSuccess] = useState(true);
 
-  useEffect(() => { }, []);
+  const dbUserName = selectedCode.dial_code.replace('+', '') + phoneNumber;
+  //const getCurrentPositionAsync = async () => {
+  //  //console.log('entered c');
+
+  //  try {
+  //    const { status } = await Location.requestForegroundPermissionsAsync();
+  //    if (status !== 'granted') {
+  //      Alert.alert(
+  //        'Permission denied',
+  //        'You need to grant location permission to use this feature',
+  //        [{ text: 'OK' }]
+  //      );
+  //      return;
+  //    }
+  //    const location = await Location.getCurrentPositionAsync();
+  //    return location;
+  //  } catch (e) {
+  //    //console.log(e);
+  //  }
+  //};
+  const [userLocation, setUserLocation] = useState(null);
+  const calculateDistance = (startLocation, endLocation) => {
+    return haversine(startLocation, endLocation, { unit: 'meter' });
+  };
+
+  const checkInUser = (venueId) => {
+    //console.log('entered if');
+    //console.log(venueId);
+
+    //setIsRequested(true);
+    ////console.log('entered func');
+
+    ////console.log('userLocation', userLocation);
+    let { latitude, longitude } = userLocation?.coords;
+    let locUser = { latitude, longitude };
+    ////console.log('locUser', locUser);
+    let locationInfo = '';
+    instanceToken
+      .get(`/api/venues/${venueId}`)
+      .then((result) => {
+        //console.log(result.data, 'api/venues/venueId');
+        if (result.data) {
+          console.log(result.data.location, 'api/venues/venueId if');
+          setLocationVenue(result.data.location);
+          locationInfo = result.data.location;
+          console.log('locationInfo', locationInfo);
+
+          if (locationInfo == '') {
+            console.log('locationVenue not found', locationInfo);
+            setIsRequested(false);
+            Toast.show({
+              type: 'error',
+              text1: 'Error',
+              text2: 'Something went wrong',
+            });
+            return;
+          }
+          let latitudeV = locationInfo.split(',')[0];
+          let longitudeV = locationInfo.split(',')[1];
+
+          if (!userLocation) {
+            console.log('user location not found');
+
+            setIsRequested(false);
+            Toast.show({
+              type: 'error',
+              text1: 'Error',
+              text2: 'Something went wrong',
+            });
+            return;
+          }
+          const venueLocation = {
+            latitude: latitudeV,
+            longitude: longitudeV,
+          };
+          const distance = calculateDistance(locUser, venueLocation);
+          ////console.log('venueLocation', venueLocation);
+
+          ////console.log('distance', distance);
+          if (distance > 10000) {
+            Alert.alert(
+              'Out of range',
+              'You are not in the range of the venue',
+              [{ text: 'OK' }]
+            );
+            setIsRequested(false);
+            setStartCamera(false);
+            return;
+          }
+          instanceToken
+            .post(`/api/venues/${venueId}/checkIn/${dbUserName}`)
+            .then((result) => {
+              //console.log(result.data, 'api/venues/venueId/checkIn/username');
+              if (result.data) {
+                //console.log('entered if api/venues/venueId/checkIn/username');
+                setIsCheckIn(true);
+                setIsRequested(false);
+              }
+            })
+            .catch((e) => {
+              Toast.show({
+                type: 'error',
+                text1: 'Error',
+                text2: 'Something went wrong',
+              });
+              console.log(e);
+              setIsRequested(false);
+            });
+        }
+      })
+      .catch((e) => {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Something went wrong',
+        });
+        console.log(e);
+        setIsRequested(false);
+      });
+  };
+
+  const handleScan = (res) => {
+    //console.log(
+    //  '=======================================================HANDLESCAN HANDLESCAN',
+    //  res
+    //);
+    //setStartCamera(false);
+    ////console.log('res', res);
+    //let locationVenue = '';
+
+    checkInUser(res);
+    //setStartCamera(false);
+  };
+
+  const fetchUsers = () => {
+    ////console.log('fetching');
+    instanceToken.get(`/api/customers`).then((res) => {
+      ////console.log(res.data);
+      setFilteredUserList(
+        res.data.filter((user) => user.username !== dbUserName)
+      );
+      setUserList(res.data.filter((user) => user.username !== dbUserName));
+    });
+    instanceToken.get(`/api/customers/${dbUserName}/friends`).then((res) => {
+      ////console.log(res.data);
+      setFriendList(res.data.filter((user) => user.checkedInVenue !== null));
+    });
+  };
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    fetchUsers();
+  }, [clicked, isFocused]);
+  //useEffect(() => {
+  //  instanceToken.get(`/api/customers/${dbUserName}/friends`).then((res) => {
+  //    //console.log(res.data);
+  //    setFriendList(res.data.filter((user) => user.checkedInVenue !== null));
+  //  });
+  //}, []);
   const __startCamera = async () => {
+    //let { status } = await Location.requestForegroundPermissionsAsync();
+    ////console.log(status);
+    //if (status !== 'granted') {
+    //  Alert.alert(
+    //    'Permission denied',
+    //    'You need to grant location permission to use this feature',
+    //    [{ text: 'OK' }]
+    //  );
+    //  return;
+    //}
+    setSuccess(false);
+    try {
+      let location = await Location.getCurrentPositionAsync({});
+      setUserLocation(location);
+    } catch (error) {
+      Alert.alert(
+        'Permission denied',
+        'You need to grant location permission to use this feature',
+        [{ text: 'OK' }]
+      );
+      setSuccess(true);
+      setIsCamOpen(false);
+
+      //console.log('Error getting current location:', error);
+      return;
+    }
+    //setUserLocation(location);
+    setSuccess(true);
     const { status } = await Camera.requestCameraPermissionsAsync();
 
     if (status === 'granted') {
@@ -74,6 +310,17 @@ const HomeNotCheckedIn = () => {
       Alert.alert('Please grant access to camera from device settings!');
     }
   };
+
+  useEffect(() => {
+    ////console.log('searchPhrase', searchPhrase);
+    const filteredArray = userList.filter((user) => {
+      return (
+        user.name.toLowerCase().includes(searchPhrase.toLowerCase()) ||
+        user.surname.toLowerCase().includes(searchPhrase.toLowerCase())
+      );
+    });
+    setFilteredUserList(filteredArray);
+  }, [searchPhrase]);
 
   const [fontsLoaded] = Font.useFonts({
     'Inter-Bold': require('../../assets/fonts/Inter/static/Inter-Bold.ttf'),
@@ -113,9 +360,37 @@ const HomeNotCheckedIn = () => {
       'ProfileDetails',
       { id: id }
     );
-  }
+  };
 
-  return !startCamera ? (
+  return !success ? (
+    <View
+      style={{
+        backgroundColor: '#000',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Text
+        style={{
+          fontFamily: 'Inter-Regular',
+          fontSize: 12,
+          marginBottom: 20,
+          color: '#fff',
+        }}
+      >
+        {'Please wait while we check your location...'}
+      </Text>
+      <ActivityIndicator size='large' color='#EA34C9' />
+      {/*<StyledButton
+        buttonText='Cancel'
+        onPress={() => {
+          setStartCamera(false);
+          setSuccess(true);
+        }}
+      />*/}
+    </View>
+  ) : !startCamera ? (
     <View style={styles.container}>
       <View
         style={{
@@ -142,7 +417,7 @@ const HomeNotCheckedIn = () => {
                   }
                   android_ripple={{ color: '#000' }}
                   onPress={() => {
-                    setClicked(true)
+                    setClicked(true);
                   }}
                 >
                   <Image source={SearchIcon} />
@@ -161,40 +436,66 @@ const HomeNotCheckedIn = () => {
 
         {clicked ? (
           <ScrollView style={{ height: '100%', marginBottom: 100 }}>
-            {userList.map((user) => (
+            {filteredUserList.map((user) => (
               <Pressable
-                key={user.id}
-                onPress={() => handleUserPress(user.id)}>
+                key={user.username}
+                onPress={() => handleUserPress(user.username)}
+              >
                 <ListItem
-                  key={user.id}
-                  topText={user.name}
-                  subText={user.status}
+                  key={user.username}
+                  topText={user.name + ' ' + user.surname}
+                  subText={
+                    user.checkedInVenue
+                      ? user.checkedInVenue.name
+                      : 'Not checked in'
+                    //profilePic = {user.}
+                  }
                 />
               </Pressable>
             ))}
           </ScrollView>
         ) : (
           <>
-            <FlatList
+            {/*<FlatList
               data={data}
               renderItem={({ item }) => <GroupItem text={item.text} />}
               horizontal={true}
               style={{ flexGrow: 0, marginBottom: 100 }}
-            />
-            <Text style={[styles.textStyle, { marginBottom: 20 }]}>
-              {'Friends currently Vybing'}
-            </Text>
-            <ListItem topText={'Friend name'} subText={'Location'} />
+            />*/}
+            {friendList.length > 0 ? (
+              <>
+                <Text style={[styles.textStyle]}>
+                  {'Friends currently Vybing'}
+                </Text>
+
+                {friendList.map((friend) => (
+                  <Pressable
+                    key={friend.username}
+                    onPress={() => handleUserPress(friend.username)}
+                  >
+                    <ListItem
+                      key={friend.username}
+                      topText={friend.name + ' ' + friend.surname}
+                      subText={friend.checkedInVenue.name}
+                    />
+                  </Pressable>
+                ))}
+              </>
+            ) : (
+              <Text style={[styles.textStyle, { marginBottom: 20 }]}>
+                {'No friends currently Vybing'}
+              </Text>
+            )}
           </>
         )}
       </View>
 
-      {(!clicked) &&
+      {!clicked && (
         <FAButton
           style={{ zIndex: 100, bottom: 100, position: 'absolute' }}
           onPress={__startCamera}
         />
-      }
+      )}
     </View>
   ) : (
     <View
@@ -211,7 +512,15 @@ const HomeNotCheckedIn = () => {
         }}
         onBarCodeScanned={(result: any) => {
           //TODO: fetch data if is valid
-          setIsCheckIn(true);
+          //console.log(result);
+          //console.log(
+          //  '====================== QR CODE SCANNED ======================'
+          //);
+          //console.log(result.data);
+          handleScan(result.data);
+          setStartCamera(false);
+
+          //setIsCheckIn(true);
         }}
       >
         <Pressable

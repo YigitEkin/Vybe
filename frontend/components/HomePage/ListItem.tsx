@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import * as Font from 'expo-font';
+import Icon from '../../assets/appIcon.png';
 type ListItemProps = {
   name?: String;
   venue?: String;
@@ -21,7 +22,15 @@ const ListItem = ({ topText, subText, profilePic }: any) => {
           alignItems: 'center',
         }}
       >
-        <View style={styles.profilePicture}></View>
+        <Image
+          style={styles.profilePicture}
+          source={
+            profilePic
+              ? { uri: profilePic }
+              : require('../../assets/avatarPlaceholder.png')
+          }
+          resizeMode='cover'
+        />
         <View
           style={{
             marginLeft: 20,
@@ -32,7 +41,7 @@ const ListItem = ({ topText, subText, profilePic }: any) => {
           <Text
             style={{
               color: '#fff',
-              fontSize: 20,
+              fontSize: 18,
               fontFamily: 'Inter-Medium',
             }}
           >
@@ -41,7 +50,7 @@ const ListItem = ({ topText, subText, profilePic }: any) => {
           <Text
             style={{
               color: '#979c9e',
-              fontSize: 18,
+              fontSize: 16,
               fontFamily: 'Inter-Medium',
             }}
           >

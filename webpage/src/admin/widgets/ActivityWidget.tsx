@@ -2,10 +2,12 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import { useTheme } from "@material-ui/core/styles";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
+import { fetchData } from "../config/request";
 
-const data = [
+const monthData = [
   {
     name: "Jan",
     pv: 2400,
@@ -34,12 +36,44 @@ const data = [
     name: "Jul",
     pv: 4300,
   },
+  {
+    name: "Aug",
+    pv: 4300,
+  },
+  {
+    name: "Sep",
+    pv: 4300,
+  },
+  {
+    name: "Oct",
+    pv: 4300,
+  },
+  {
+    name: "Nov",
+    pv: 4300,
+  },
+  {
+    name: "Dec",
+    pv: 4300,
+  },
 ];
 
 const ActivityWidget = () => {
   const { t } = useTranslation();
   const theme = useTheme();
-
+  const [checkInData, setCheckInData] = useState<any>([]);
+  //@ts-ignore
+  useEffect(async () => {
+    const data = await fetchData(`/api/venues/4/analytics/requests?inAYear=true`, 'GET')
+    // console.log(data);
+    setCheckInData(data.map((item: any, index: number) => {
+      return {
+        name: monthData[index].name,
+        pv: item
+      }
+    })
+    );
+  }, []);
   return (
     <Card>
       <CardHeader title={t("dashboard.activity.title")} />
@@ -48,7 +82,7 @@ const ActivityWidget = () => {
           <LineChart
             width={500}
             height={300}
-            data={data}
+            data={checkInData}
             margin={{
               top: 5,
               right: 16,

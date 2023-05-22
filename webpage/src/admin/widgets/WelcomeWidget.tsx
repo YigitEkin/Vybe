@@ -7,7 +7,7 @@ import { ReactComponent as WelcomeSvg } from '../../core/assets/welcome.svg';
 import SvgContainer from '../../core/components/SvgContainer';
 
 const WelcomeWidget = () => {
-  const { userInfo } = useAuth();
+  const userInfo = JSON.parse(localStorage.getItem('venueInfo'));
   const { t } = useTranslation();
 
   return (
