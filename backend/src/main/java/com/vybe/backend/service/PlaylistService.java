@@ -190,6 +190,8 @@ public class PlaylistService {
             customerRepository.findById(usernames[random.nextInt(usernames.length)]).ifPresent(songRequest::setRequestedBy);
             songRepository.findById(defaultPlaylist.get(random.nextInt(defaultPlaylist.size())).getId()).ifPresent(songRequest::setSong);
             songRequest.setRequestDate(getRandomDateInThisMonth());
+            // add random coin cost
+            songRequest.setCoinCost(random.nextInt(10)*10.0);
             songRequestRepository.save(songRequest);
         }
     }
@@ -206,6 +208,7 @@ public class PlaylistService {
         if (songIndex < 50) {
             songIndex = random.nextInt(50);
         }
+        songRequest.setCoinCost(random.nextInt(10)*10.0);
         songRepository.findById(defaultPlaylist.get(songIndex).getId()).ifPresent(songRequest::setSong);
         songRequest.setRequestDate(getRandomDateInThisMonth());
         songRequestRepository.save(songRequest);
