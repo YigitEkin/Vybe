@@ -4,11 +4,11 @@ Welcome to the Vybe GitHub repository! This repository contains the source code 
 
 ## Contributors
 
-- [Yiğit Ekin] ("https://github.com/YigitEkin")
-- [Can Önal] ("https://github.com/canonal7")
-- [Mehmet Berk Türkçapar] ("https://github.com/berkturkcapar")
-- [Harun Can Surav] ("https://github.com/cansrv")
-- [Oğuz Ata Çal] ("https://github.com/OguzAtaCal")
+- [Yiğit Ekin]("https://github.com/YigitEkin")
+- [Can Önal]("https://github.com/canonal7")
+- [Mehmet Berk Türkçapar]("https://github.com/berkturkcapar")
+- [Harun Can Surav]("https://github.com/cansrv")
+- [Oğuz Ata Çal]("https://github.com/OguzAtaCal")
 
 ## Features
 
