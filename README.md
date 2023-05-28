@@ -1,14 +1,14 @@
-[<img src="https://vybemusic.netlify.app/assets/logo-center.png" />](https://vybemusic.netlify.app)
+[<img src="https://vybemusic.netlify.app/assets/logo-center.png" />] (https://vybemusic.netlify.app)
 
 Welcome to the Vybe GitHub repository! This repository contains the source code for Vybe, a cutting-edge mobile application that aims to revolutionize the customer experience in venues. With Vybe, users can seamlessly request songs, shape the music ambiance in real-time, discover friends' whereabouts, stay up-to-date with the venue's current playlist, contribute and access venue reviews, and empower informed decision-making. Additionally, Vybe provides data-driven insights for businesses by offering monthly analysis of song trends and customer visit patterns. It is also the project of CS491, a senior design course at Bilkent University.
 
 ## Contributors
 
-- [Yiğit Ekin]("https://github.com/YigitEkin")
-- [Can Önal]("https://github.com/canonal7")
-- [Mehmet Berk Türkçapar]("https://github.com/berkturkcapar")
-- [Harun Can Surav]("https://github.com/cansrv")
-- [Oğuz Ata Çal]("https://github.com/OguzAtaCal")
+- [Yiğit Ekin] ("https://github.com/YigitEkin")
+- [Can Önal] ("https://github.com/canonal7")
+- [Mehmet Berk Türkçapar] ("https://github.com/berkturkcapar")
+- [Harun Can Surav] ("https://github.com/cansrv")
+- [Oğuz Ata Çal] ("https://github.com/OguzAtaCal")
 
 ## Features
 
