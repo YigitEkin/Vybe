@@ -3,7 +3,7 @@
   "version": "0.1.0-alpha",
   "description": "Free and open-source admin application made with React",
   "author": "m6v3l9 <m6v3l9@gmail.com>",
-  "homepage": "https://m6v3l9.github.io/react-material-admin",
+  "homepage": ".",
   "license": "MIT",
   "dependencies": {
     "@emotion/react": "^11.1.5",
@@ -48,11 +48,12 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "build": "react-scripts build",
     "build:staging": "env-cmd -f .env.staging npm run build",
-    "build:production": "env-cmd -f .env.production npm run build",
+    "build:production": "env-cmd -f .env.development npm run build",
     "predeploy": "yarn run build:production",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "build:dev": "env-cmd -f .env.development react-scripts build"
   },
   "eslintConfig": {
     "extends": [

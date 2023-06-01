@@ -104,7 +104,7 @@ const TeamProgressWidget = (props: TeamProgressWidgetProps) => {
                           aria-label={`${song[0].name} progress`}
                           color='inherit'
                           sx={{ color: colors[index].fill }}
-                          value={(song[1] * (100)) / (props.count)}
+                          value={((song[1] * (100)) / (props.count))}
                           variant='determinate'
                         />
                       </Box>
@@ -113,7 +113,7 @@ const TeamProgressWidget = (props: TeamProgressWidgetProps) => {
                           component='span'
                           variant='h6'
                           color={colors[index].fill}
-                        >{`${(song[1] * (100)) / (props.count)}%`}</Typography>
+                        >{`${((song[1] * (100)) / (props.count)).toFixed(2)}%`}</Typography>
                       </Box>
                     </Box>
                   </TableCell>
