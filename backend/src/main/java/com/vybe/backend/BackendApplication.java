@@ -221,9 +221,9 @@ public class BackendApplication {
 			}
 
 			// test adding a playlist
-			VenueCreationDTO venueCreationDTO2 = new VenueCreationDTO("Fameo Cafe", "Üniversiteler, 1597. Cd. No:3 D:3, 06800 Çankaya/Ankara", "39.883241251952455, 32.75711146158583", "U291bmRab25lLCwxZXB1NDM3OGJuay9Mb2NhdGlvbiwsMWZlbHNmMGFkcTgvQWNjb3VudCwsMW96ZDN6dGk0ZzAv","WkxnTVI0RW9YRWdPRWVsOEZ5TzZJZFBtSzFzOWpUQ0c6aVlxcVdIVXY3NGFLaXREQVFFQ2V3WmJHUHVxeVRNMlpybUo4Ulp3R3BQS2N3NEZpWGczT2FnUTFFVGtudGlPZQ==");
+			VenueCreationDTO venueCreationDTO2 = new VenueCreationDTO("Bilkent Merkez Spor Salonu", "Üniversiteler, 1598. Cd., 06800 Çankaya/Ankara", "39.865644, 32.746131", "U291bmRab25lLCwxZXB1NDM3OGJuay9Mb2NhdGlvbiwsMWZlbHNmMGFkcTgvQWNjb3VudCwsMW96ZDN6dGk0ZzAv", "WkxnTVI0RW9YRWdPRWVsOEZ5TzZJZFBtSzFzOWpUQ0c6aVlxcVdIVXY3NGFLaXREQVFFQ2V3WmJHUHVxeVRNMlpybUo4Ulp3R3BQS2N3NEZpWGczT2FnUTFFVGtudGlPZQ==");
 			venueDTO2 = venueService. addVenue(venueCreationDTO2);
-			PlaylistCreationDTO playlistCreationDTO = new PlaylistCreationDTO(venueDTO2.getId(), "Q29sbGVjdGlvbiwsMXBsNmFpYzVjMDAvU291bmRab25lLCwxZXB1NDM3OGJuay9Mb2NhdGlvbiwsMWZlbHNmMGFkcTgvQWNjb3VudCwsMW96ZDN6dGk0ZzAv", "Q29sbGVjdGlvbiwsMXBsNmFpYzVjMDAvU291bmRab25lLCwxZXB1NDM3OGJuay9Mb2NhdGlvbiwsMWZlbHNmMGFkcTgvQWNjb3VudCwsMW96ZDN6dGk0ZzAv");
+			PlaylistCreationDTO playlistCreationDTO = new PlaylistCreationDTO(venueDTO2.getId(), "Q29sbGVjdGlvbiwsMW96YmE1anpzM2svU291bmRab25lLCwxZXB1NDM3OGJuay9Mb2NhdGlvbiwsMWZlbHNmMGFkcTgvQWNjb3VudCwsMW96ZDN6dGk0ZzAv", "Q29sbGVjdGlvbiwsMW96YmE1anpzM2svU291bmRab25lLCwxZXB1NDM3OGJuay9Mb2NhdGlvbiwsMWZlbHNmMGFkcTgvQWNjb3VudCwsMW96ZDN6dGk0ZzAv");
 
 			VenueDTO venueDTO4 = venueService.getVenue(venueDTO2.getId());
 			assert venueDTO4.getName().equals("testname2");
@@ -386,7 +386,7 @@ public class BackendApplication {
 			CustomerDTO customerResult6 = userService.addCustomer(adminCustomer);
 
 			// ------------------------ Venues ------------------------
-			VenueCreationDTO venueCreationDTO1 = new VenueCreationDTO("Cafe-In", " Cafe İn adres Üniversiteler Mah., 1609. Sok., No:13, Çankaya, Ankara, Türkiye", "39.87066498564842, 32.750627715340116", "dummySounzoneId", "dummyToken");
+			VenueCreationDTO venueCreationDTO1 = new VenueCreationDTO("Fameo Cafe", "Üniversiteler, 1597. Cd. No:3 D:3, 06800 Çankaya/Ankara", "39.883241251952455, 32.75711146158583", "dummyZone", "dummyToken");
 			venueCreationDTO2 = new VenueCreationDTO("Express Cafe", "Bilkent Üniversitesi merkez kampüs Güzelsanatlar Fakültesi", "39.86645603831937, 32.74941298353142", "dummySounzoneId", "dummyToken");
 			VenueCreationDTO venueCreationDTO3 = new VenueCreationDTO("Keffçe", "Üniversiteler, Real-Praktiker Bilkent Station Avm 3/77, 06800 Çankaya/Ankara", "39.8839923932251, 32.75919199712163", "dummySounzoneId", "dummyToken");
 			VenueCreationDTO venueCreationDTO4 = new VenueCreationDTO("Federal Coffee Bilkent", "Üniversiteler, Ankuva AVM No:12 D:30, 06800 Çankaya/Ankara", "39.8834821708473, 32.75638623924946", "dummySounzoneId", "dummyToken");
@@ -461,9 +461,9 @@ public class BackendApplication {
 
 
 			SongRequestDTO songRequestDTO5 = new SongRequestDTO(92, customerResult1.getUsername(), 2, new Date(), 0, 1.0);
-			SongRequestDTO songRequestDTO6 = new SongRequestDTO(213, customerResult1.getUsername(), 2, new Date(), 0, 1.0);
-			SongRequestDTO songRequestDTO7 = new SongRequestDTO(421, customerResult3.getUsername(), 2, new Date(), 0, 2.0);
-			SongRequestDTO songRequestDTO8 = new SongRequestDTO(421, customerResult3.getUsername(), 2, new Date(), 0, 2.0);
+			SongRequestDTO songRequestDTO6 = new SongRequestDTO(100, customerResult1.getUsername(), 2, new Date(), 0, 1.0);
+			SongRequestDTO songRequestDTO7 = new SongRequestDTO(200, customerResult3.getUsername(), 2, new Date(), 0, 2.0);
+			SongRequestDTO songRequestDTO8 = new SongRequestDTO(150, customerResult3.getUsername(), 2, new Date(), 0, 2.0);
 
 			SongNodeDTO resultRequest2 = songService.addSongRequest(songRequestDTO2);
 			SongNodeDTO resultRequest1 = songService.addSongRequest(songRequestDTO1);
