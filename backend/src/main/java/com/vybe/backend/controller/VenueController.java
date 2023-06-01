@@ -111,9 +111,15 @@ public class VenueController {
     public List<SongDTO> syncDefaultPlaylist(@PathVariable Integer venueId) {
         return playlistService.addAllSongsToDefaultPlaylist(venueId);
     }
-    @PostMapping("/{venueId}/initialize")
+    @PostMapping("/{venueId}/startPlaying")
     public void initializeVenue(@PathVariable Integer venueId) {
         schedulerUtil.initializeVenue(venueId);
+    }
+
+    @PostMapping("/{venueId}/stopPlaying")
+    public String stopPlaying(@PathVariable Integer venueId) {
+        schedulerUtil.stop();
+        return "Stopped playing at venue: " + venueId + "!";
     }
 
 

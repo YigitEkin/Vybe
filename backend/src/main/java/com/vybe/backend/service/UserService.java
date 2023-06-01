@@ -220,6 +220,32 @@ public class UserService {
         return new VenueAdminDTO(venueAdminRepository.findByUsername(username));
     }
 
+    public void stopPlaying(Integer venueId) {
+        if (!venueRepository.existsById(venueId)) {
+            throw new VenueNotFoundException("Venue with id: " + venueId + " not found");
+        }
+        VenueAdmin venueAdmin = venueAdminRepository.findByVenueId(venueId);
+        venueAdmin.setEnabled(false);
+        venueAdminRepository.save(venueAdmin);
+    }
+
+    public void startPlaying(Integer venueId) {
+        if (!venueRepository.existsById(venueId)) {
+            throw new VenueNotFoundException("Venue with id: " + venueId + " not found");
+        }
+        VenueAdmin venueAdmin = venueAdminRepository.findByVenueId(venueId);
+        venueAdmin.setEnabled(true);
+        venueAdminRepository.save(venueAdmin);
+    }
+
+    public boolean getPlaying(Integer venueId) {
+        if (!venueRepository.existsById(venueId)) {
+            throw new VenueNotFoundException("Venue with id: " + venueId + " not found");
+        }
+        VenueAdmin venueAdmin = venueAdminRepository.findByVenueId(venueId);
+        return venueAdminRepository.findById(venueAdmin.getUsername()).get().getEnabled();
+    }
+
     public VenueAdminDTO updateVenueAdmin(VenueAdminCreationDTO venueAdminCreationDTO) {
         if (!venueAdminRepository.existsByUsername(venueAdminCreationDTO.getUsername())) {
             throw new VenueAdminNotFoundException("Venue Admin with username: " + venueAdminCreationDTO.getUsername() + " not found");

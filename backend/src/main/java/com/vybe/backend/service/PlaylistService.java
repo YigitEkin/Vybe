@@ -189,7 +189,9 @@ public class PlaylistService {
             venueRepository.findById(2).ifPresent(songRequest::setRequestedInVenue);
             customerRepository.findById(usernames[random.nextInt(usernames.length)]).ifPresent(songRequest::setRequestedBy);
             songRepository.findById(defaultPlaylist.get(random.nextInt(defaultPlaylist.size())).getId()).ifPresent(songRequest::setSong);
-            songRequest.setRequestDate(getRandomDateInThisMonth());
+            songRequest.setRequestDate(getRandomDateInPreviousMonth());
+            // add random coin cost
+            songRequest.setCoinCost(random.nextInt(10)*10.0);
             songRequestRepository.save(songRequest);
         }
     }
@@ -206,19 +208,22 @@ public class PlaylistService {
         if (songIndex < 50) {
             songIndex = random.nextInt(50);
         }
+        songRequest.setCoinCost(random.nextInt(10)*10.0);
         songRepository.findById(defaultPlaylist.get(songIndex).getId()).ifPresent(songRequest::setSong);
-        songRequest.setRequestDate(getRandomDateInThisMonth());
+        songRequest.setRequestDate(getRandomDateInPreviousMonth());
         songRequestRepository.save(songRequest);
     }
 }
 
-    private Date getRandomDateInThisMonth() {
+    private Date getRandomDateInPreviousMonth() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         long startOfMonth = calendar.getTimeInMillis();
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         long endOfMonth = calendar.getTimeInMillis();
-        long randomTimeInMillis = ThreadLocalRandom.current().nextLong(startOfMonth, endOfMonth);
+        // one month in milliseconds
+        long month = endOfMonth - startOfMonth;
+        long randomTimeInMillis = ThreadLocalRandom.current().nextLong(startOfMonth - month, endOfMonth - month);
         return new Date(randomTimeInMillis);
     }
 
