@@ -22,6 +22,7 @@ const Dashboard = () => {
   const [songsData, setSongsData] = useState<any[]>([]);
   const [topSongsData, setTopSongsData] = useState<any[]>([]);
   const [artistData, setArtistData] = useState<any[]>([]);
+  const [requestsInAYear, setRequestsInAYear] = useState<any[]>([]);
 
   //@ts-ignore
   useEffect(async () => {
@@ -45,23 +46,32 @@ const Dashboard = () => {
   useEffect(async () => {
     const data = await fetchData(`/api/venues/${venueId}/analytics/recentRequests`, 'GET')
     // console.log(data);
-    setSongsData(data);
+    setSongsData(data.slice(0, 5));
+  }, []);
+  //@ts-ignore
+  useEffect(async () => {
+    const data = await fetchData(`/api/venues/${venueId}/analytics/requests?inAYear=true`, 'GET')
+    console.log(data);
+    setRequestsInAYear(data);
   }, []);
   //@ts-ignore
   useEffect(async () => {
     const data = await fetchData(`/api/venues/${venueId}/analytics/topRequests`, 'GET')
     console.log(data);
+    data.sort((a, b) => b[1] - a[1]);
     setTopSongsData(data);
   }, []);
   //@ts-ignore
   useEffect(async () => {
     const data = await fetchData(`/api/venues/${venueId}/analytics/requestsPerArtist`, 'GET')
     // console.log(data);
+    const mappedData = data.map((item: any) => {
+      const [name, value] = item.split(":").map((part: any) => part.trim());
+      return { name, value };
+    });
+    mappedData.sort((a, b) => b.value - a.value);
     setArtistData(
-      data.slice(0, 4).map((item: any) => {
-        const [name, value] = item.split(":").map((part: any) => part.trim());
-        return { name, value };
-      })
+      mappedData.slice(0, 4)
     );
   }, []);
 
@@ -79,8 +89,10 @@ const Dashboard = () => {
     topSongsData.forEach((item) => {
       sum += item[1];
     });
+    console.log(topSongsData)
     return sum;
   }
+
 
   return (
     <React.Fragment>
@@ -104,7 +116,7 @@ const Dashboard = () => {
             title={getTotalCoins()} />
         </Grid>
         <Grid item xs={12} md={8}>
-          <ActivityWidget />
+          <ActivityWidget data={requestsInAYear} />
         </Grid>
         <Grid item xs={12} md={4}>
           {

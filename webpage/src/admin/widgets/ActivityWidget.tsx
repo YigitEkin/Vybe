@@ -58,14 +58,18 @@ const monthData = [
   },
 ];
 
-const ActivityWidget = () => {
+interface ActivityWidgetProps {
+  data: any[];
+}
+
+const ActivityWidget = (props: ActivityWidgetProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const [checkInData, setCheckInData] = useState<any>([]);
   //@ts-ignore
   useEffect(async () => {
-    const data = await fetchData(`/api/venues/4/analytics/requests?inAYear=true`, 'GET')
-    // console.log(data);
+    const data = await fetchData(`/api/venues/2/analytics/requests?inAYear=true`, 'GET')
+    // console.log(props.data);
     setCheckInData(data.map((item: any, index: number) => {
       return {
         name: monthData[index].name,
