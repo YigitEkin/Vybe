@@ -307,20 +307,16 @@ public class BackendApplication {
 			SongDTO songCreationDTO2 = new SongDTO(2, "testname2", "testartist2", "testart2", "testlink2");
 			SongDTO songCreationDTO3 = new SongDTO(3, "testname3", "testartist3", "testart3", "testlink3");
 			SongDTO songCreatedDTO = songService.addSong(songCreationDTO1);
-			SongDTO songCreatedDTO2 = songService.addSong(songCreationDTO2);
 			SongDTO songCreatedDTO3 = songService.addSong(songCreationDTO3);
 
 			assert songCreatedDTO.getName().equals("testname1");
-			assert songCreatedDTO2.getName().equals("testname2");
 			assert songCreatedDTO3.getName().equals("testname3");
 
 			// test adding songs to a playlist
 			playlistService.addSongToDefaultPlaylist(playlistDTO.getId(), songCreatedDTO.getId());
-			playlistService.addSongToDefaultPlaylist(playlistDTO.getId(), songCreatedDTO2.getId());
 
 			assert playlistService.getPlaylist(playlistDTO.getId()).getDefaultPlaylist().size() == 2;
 			assert playlistService.getPlaylist(playlistDTO.getId()).getDefaultPlaylist().contains(songCreatedDTO.toSong());
-			assert playlistService.getPlaylist(playlistDTO.getId()).getDefaultPlaylist().contains(songCreatedDTO2.toSong());
 
 
 			// test get song from playlist
@@ -332,7 +328,6 @@ public class BackendApplication {
 
 			// test adding songs to request playlist
 			SongNodeDTO songNodeDTO1 = new SongNodeDTO(playlistDTO.getId(), songCreatedDTO.getId(), 1.0);
-			SongNodeDTO songNodeDTO2 = new SongNodeDTO(playlistDTO.getId(), songCreatedDTO2.getId(), 1.0);
 
 			//songService.addSongRequest(songNodeDTO1);
 			//songService.addSongRequest(songNodeDTO2);
@@ -531,13 +526,16 @@ public class BackendApplication {
 			ratingService.addRating(ratingDTO10);
 
 			// ------------------------ Images ------------------------
-			userService.uploadCustomerPhoto("905332346981", new ImageDTO("image1", 99L));
-			userService.uploadCustomerPhoto("905332346981", new ImageDTO("image2", 99L));
-			venueService.uploadVenuePhoto(new ImageDTO("image4", 99L), 2);
-			venueService.uploadVenuePhoto(new ImageDTO("image5", 99L), 2);
-			venueService.uploadVenuePhoto(new ImageDTO("image6", 99L), 2);
-			venueService.uploadVenuePhoto(new ImageDTO("image7", 99L), 2);
+			userService.uploadCustomerPhoto("905332346981", new ImageDTO("https://avatars.githubusercontent.com/u/62554574?v=4", 99L));
+			userService.uploadCustomerPhoto("905309510454", new ImageDTO("https://avatars.githubusercontent.com/u/63585832?v=4", 99L));
+			userService.uploadCustomerPhoto("905387866001", new ImageDTO("https://avatars.githubusercontent.com/u/55083192?v=4", 99L));
 
+			venueService.uploadVenuePhoto(new ImageDTO("https://p2.nicelocal.biz.tr/preview/e1CI8cc-fuFbIARraC17Fw/1120x700x85/1/1/6/original_615812d87c0ab17c716b6785_615816fbade3d.jpg", 99L), 2);
+			venueService.uploadVenuePhoto(new ImageDTO("https://yiyegeze.com/wp-content/uploads/2019/12/hersey-cok-guzelsende.jpg", 99L), 3);
+			venueService.uploadVenuePhoto(new ImageDTO("https://fastly.4sqi.net/img/general/600x600/9401480_G1lYPMrGXFTmoSHrLEZld4DSQXnE5LIy6JfWSWk0JPE.jpg", 99L), 4);
+			venueService.uploadVenuePhoto(new ImageDTO("https://w3.bilkent.edu.tr/www/wp-content/uploads/sites/5/2015/06/Station_fotograf-10-e1460463982134.jpg", 99L), 5);
+			venueService.uploadVenuePhoto(new ImageDTO("https://fastly.4sqi.net/img/general/width960/64042939_1Ygst6BoNBAMMyQONw9E0zRZ06S28GpMPA7JYH-XIvQ.jpg", 99L), 6);
+			venueService.uploadVenuePhoto(new ImageDTO("https://10619-2.s.cdn12.com/rests/original/804_54689832.jpg", 99L), 7);
 			// ------------------------ Checkins ------------------------
 			userService.checkIn("905332346981", 3);
 			userService.checkIn("2", 4);
