@@ -544,7 +544,7 @@ public class BackendApplication {
 			userService.checkIn("905076011168", 5);
 
 			// ------------------------ Venue Admins ------------------------
-			VenueAdminCreationDTO venueAdminCreationDTO1 = new VenueAdminCreationDTO( "mehmet.yilmaz@fameo.com", "Mehmet", "Yılmaz", "12345678", "mehmet.yilmaz@fameo.com", "+905086023982", "Fameo Cafe");
+			VenueAdminCreationDTO venueAdminCreationDTO1 = new VenueAdminCreationDTO( "mehmet.yilmaz@bilkent.edu.tr", "Mehmet", "Yılmaz", "12345678", "mehmet.yilmaz@bilkent.edu.tr", "+905086023982", "Bilkent Merkez Spor Salonu");
 			VenueAdminDTO venueAdminResult = userService.addVenueAdmin(venueAdminCreationDTO1);
 
 
